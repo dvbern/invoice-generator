@@ -67,10 +67,9 @@ public class OrangerEinzahlungsscheinComponent
 		@Nonnull OrangerEinzahlungsschein orangerEinzahlungsschein,
 		@Nonnull OnPage onPage) {
 
-		super(new SimpleConfiguration(onPage));
+		super(new SimpleConfiguration(onPage), orangerEinzahlungsschein);
 
 		this.config = config;
-		setPayload(orangerEinzahlungsschein);
 	}
 
 	public static void createEinzahlungsschein(

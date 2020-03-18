@@ -24,19 +24,19 @@ import ch.dvbern.lib.invoicegenerator.strategy.einzahlungfuer.EinzahlungFuerStra
 import com.google.common.base.MoreObjects;
 import com.lowagie.text.Utilities;
 
-public class OrangerEinzahlungsscheinConfiguration {
+public class EinzahlungsscheinConfiguration {
 
 	private float xOffset;
 	private float yOffset;
 	private boolean addEsrBackgroundImage;
 	private boolean einzahlungsscheinNotOnPageOne = false;
 
-	public void setEsrLeftOffsetInMm(float esrLeftOffsetInMm) {
-		this.xOffset = Utilities.millimetersToPoints(esrLeftOffsetInMm);
+	public void setLeftOffsetInMm(float leftOffsetInMm) {
+		this.xOffset = Utilities.millimetersToPoints(leftOffsetInMm);
 	}
 
-	public void setEsrTopOffsetInMm(float esrTopOffsetInMm) {
-		this.yOffset = -Utilities.millimetersToPoints(esrTopOffsetInMm);
+	public void setTopOffsetInMm(float topOffsetInMm) {
+		this.yOffset = -Utilities.millimetersToPoints(topOffsetInMm);
 	}
 
 	@Nonnull

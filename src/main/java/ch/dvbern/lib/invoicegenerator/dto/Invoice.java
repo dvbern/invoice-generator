@@ -52,7 +52,7 @@ public class Invoice {
 	@Nonnull
 	private final List<String> adresse;
 	@Nullable
-	private final OrangerEinzahlungsschein orangerEinzahlungsschein;
+	private final Einzahlungsschein einzahlungsschein;
 	@Nonnull
 	private final List<Position> positionen;
 	@Nonnull
@@ -69,7 +69,7 @@ public class Invoice {
 	 * dargestellt
 	 * @param einleitung Nach dem Titel kann eine einleitung angezeigt werden
 	 * @param adresse Die Empfänger-Adresse
-	 * @param orangerEinzahlungsschein Die Daten des orangen Einzahlungsscheins
+	 * @param einzahlungsschein Die Daten des Einzahlungsscheins
 	 * @param positionen Sämtliche Positionen der Rechnung
 	 * @param total Eine Liste von SummaryEntrys als Total
 	 */
@@ -79,11 +79,11 @@ public class Invoice {
 		@Nonnull List<SummaryEntry> summary,
 		@Nullable List<String> einleitung,
 		@Nonnull List<String> adresse,
-		@Nullable OrangerEinzahlungsschein orangerEinzahlungsschein,
+		@Nullable Einzahlungsschein einzahlungsschein,
 		@Nonnull List<Position> positionen,
 		@Nonnull List<SummaryEntry> total) {
 
-		this(rechnungsPositionColumnTitle, title, summary, einleitung, adresse, orangerEinzahlungsschein, positionen,
+		this(rechnungsPositionColumnTitle, title, summary, einleitung, adresse, einzahlungsschein, positionen,
 			total, null);
 	}
 
@@ -96,7 +96,7 @@ public class Invoice {
 	 * dargestellt
 	 * @param einleitung Nach dem Titel kann eine einleitung angezeigt werden
 	 * @param adresse Die Empfänger-Adresse
-	 * @param orangerEinzahlungsschein Die Daten des orangen Einzahlungsscheins
+	 * @param einzahlungsschein Die Daten des Einzahlungsscheins
 	 * @param positionen Sämtliche Positionen der Rechnung
 	 * @param total Eine Liste von SummaryEntrys als Total
 	 * @param konditionen Nach dem Total können Konditionen angezeigt werden
@@ -107,7 +107,7 @@ public class Invoice {
 		@Nonnull List<SummaryEntry> summary,
 		@Nullable List<String> einleitung,
 		@Nonnull List<String> adresse,
-		@Nullable OrangerEinzahlungsschein orangerEinzahlungsschein,
+		@Nullable Einzahlungsschein einzahlungsschein,
 		@Nonnull List<Position> positionen,
 		@Nonnull List<SummaryEntry> total,
 		@Nullable List<String> konditionen) {
@@ -122,7 +122,7 @@ public class Invoice {
 		this.title = title;
 		this.summary = summary;
 		this.adresse = adresse;
-		this.orangerEinzahlungsschein = orangerEinzahlungsschein;
+		this.einzahlungsschein = einzahlungsschein;
 		this.einleitung = einleitung;
 		this.positionen = positionen;
 		this.total = total;
@@ -145,10 +145,10 @@ public class Invoice {
 		checkNotNull(konto);
 
 		List<String> adresse = Arrays.asList("Sandra Muster", "Thomas Muster", "Musterstrasse 21", "3000 Bern");
-		OrangerEinzahlungsscheinBank einzahlungsschein = new OrangerEinzahlungsscheinBank(einzahlungFuer,
+		OrangerEinzahlungsscheinBank orangerEinzahlungsscheinBank = new OrangerEinzahlungsscheinBank(einzahlungFuer,
 			zugunstenVon, new BigInteger("83144100000000000000006015"), new BigDecimal("224.00"), konto, adresse);
 
-		return createDemoInvoice(einzahlungsschein);
+		return createDemoInvoice(orangerEinzahlungsscheinBank);
 	}
 
 	/**
@@ -164,15 +164,15 @@ public class Invoice {
 		checkNotNull(konto);
 
 		List<String> adresse = Arrays.asList("Sandra Muster", "Thomas Muster", "Musterstrasse 21", "3000 Bern");
-		OrangerEinzahlungsschein einzahlungsschein = new OrangerEinzahlungsschein(einzahlungFuer,
+		Einzahlungsschein einzahlungsschein = new OrangerEinzahlungsschein(einzahlungFuer,
 			new BigInteger("83144100000000000000006015"), new BigDecimal("224.00"), konto, adresse);
 
 		return createDemoInvoice(einzahlungsschein);
 	}
 
 	@Nonnull
-	private static Invoice createDemoInvoice(@Nonnull OrangerEinzahlungsschein orangerEinzahlungsschein) {
-		checkNotNull(orangerEinzahlungsschein);
+	private static Invoice createDemoInvoice(@Nonnull Einzahlungsschein einzahlungsschein) {
+		checkNotNull(einzahlungsschein);
 
 		RechnungsPositionColumnTitle rechnungsPositionColumnTitle = new RechnungsPositionColumnTitle(
 			"Dienstleistung", "Menge", "Preis", "Total");
@@ -210,7 +210,7 @@ public class Invoice {
 		List<String> konditionen = Collections.singletonList("Zahlbar innerhalb 30 Tagen.");
 
 		return new Invoice(rechnungsPositionColumnTitle, "Rechnung", summary, einleitung, adresse,
-			orangerEinzahlungsschein, positionen, total, konditionen);
+			einzahlungsschein, positionen, total, konditionen);
 	}
 
 	@Nonnull
@@ -229,8 +229,8 @@ public class Invoice {
 	}
 
 	@Nullable
-	public OrangerEinzahlungsschein getOrangerEinzahlungsschein() {
-		return orangerEinzahlungsschein;
+	public Einzahlungsschein getEinzahlungsschein() {
+		return einzahlungsschein;
 	}
 
 	@Nonnull

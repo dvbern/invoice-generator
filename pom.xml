@@ -138,5 +138,10 @@
             <!-- soll nur von der IDE genutzt werden -->
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>net.codecrete.qrbill</groupId>
+            <artifactId>qrbill-generator</artifactId>
+            <version>2.2.0</version>
+        </dependency>
     </dependencies>
 </project>

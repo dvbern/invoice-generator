@@ -17,8 +17,6 @@ package ch.dvbern.lib.invoicegenerator.dto;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -39,7 +37,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author Xaver Weibel
  * @see OrangerEinzahlungsscheinBank
  */
-public class OrangerEinzahlungsschein {
+public class OrangerEinzahlungsschein extends Einzahlungsschein{
 
 	public static final int CHECKSUMME_MODULO = 10;
 
@@ -59,12 +57,6 @@ public class OrangerEinzahlungsschein {
 
 	@Nonnull
 	private final List<String> einzahlungFuer;
-	@Nonnull
-	private final BigInteger referenzNr;
-	@Nonnull
-	private final BigDecimal betrag;
-	@Nonnull
-	private final String konto;
 	@Nonnull
 	private final String kontoForKodierzeile;
 	@Nonnull
@@ -89,19 +81,15 @@ public class OrangerEinzahlungsschein {
 		@Nonnull BigDecimal betrag,
 		@Nonnull String konto,
 		@Nonnull List<String> einbezahltVon) throws IllegalKontoException {
+		super(EinzahlungType.ORANGE_EINZAHLUNGSCHEIN, referenzNrMitPruefziffer, betrag, konto);
+
 		checkNotNull(einzahlungFuer);
-		checkNotNull(referenzNrMitPruefziffer);
-		checkNotNull(betrag);
-		checkNotNull(konto);
 		checkNotNull(einbezahltVon);
 		checkArgument(betrag.scale() == 2,
 			"betrag.scale() was %s but expected 2", betrag.scale());
 
-		this.konto = konto;
 		this.kontoForKodierzeile = parseKontoForKodierzeile(konto);
 		this.einzahlungFuer = einzahlungFuer;
-		this.referenzNr = referenzNrMitPruefziffer;
-		this.betrag = betrag;
 		this.einbezahltVon = einbezahltVon;
 	}
 
@@ -112,13 +100,11 @@ public class OrangerEinzahlungsschein {
 		@Nonnull String konto,
 		@Nonnull String kontoForKodierzeile,
 		@Nonnull List<String> einbezahltVon) {
+		super(EinzahlungType.ORANGE_EINZAHLUNGSCHEIN, referenzNrMitPruefziffer, betrag, konto);
 
-		this.konto = konto;
-		this.kontoForKodierzeile = kontoForKodierzeile;
 		this.einzahlungFuer = einzahlungFuer;
-		this.referenzNr = referenzNrMitPruefziffer;
-		this.betrag = betrag;
 		this.einbezahltVon = einbezahltVon;
+		this.kontoForKodierzeile = kontoForKodierzeile;
 	}
 
 	@Nonnull
@@ -155,7 +141,7 @@ public class OrangerEinzahlungsschein {
 	}
 
 	public int getBetragInChf() {
-		return betrag.intValue();
+		return getBetrag().intValue();
 	}
 
 	@Nonnull
@@ -164,7 +150,7 @@ public class OrangerEinzahlungsschein {
 	}
 
 	public int getBetragInRp() {
-		return betrag.remainder(BigDecimal.ONE).movePointRight(2).intValue();
+		return getBetrag().remainder(BigDecimal.ONE).movePointRight(2).intValue();
 	}
 
 	@Nonnull
@@ -173,28 +159,13 @@ public class OrangerEinzahlungsschein {
 	}
 
 	@Nonnull
-	public String getKonto() {
-		return konto;
-	}
-
-	@Nonnull
-	public String getReferenzNrAsText() {
-		DecimalFormat decimalFormat = new DecimalFormat("#,#####");
-		DecimalFormatSymbols formatSymbols = decimalFormat.getDecimalFormatSymbols();
-		formatSymbols.setGroupingSeparator(' ');
-		decimalFormat.setDecimalFormatSymbols(formatSymbols);
-
-		return decimalFormat.format(this.referenzNr);
-	}
-
-	@Nonnull
 	public String getReferenzNrAsTextFuerEmpfangsschein() {
-		return this.referenzNr.toString();
+		return getReferenzNr().toString();
 	}
 
 	@Nonnull
 	public String getReferenzNrForPruefzifferAsText() {
-		return String.format("%027d", this.referenzNr);
+		return String.format("%027d", getReferenzNr());
 	}
 
 	@Nonnull
@@ -215,9 +186,6 @@ public class OrangerEinzahlungsschein {
 	public String toString() {
 		return MoreObjects.toStringHelper(this)
 			.add("einzahlungFuer", einzahlungFuer)
-			.add("referenzNr", referenzNr)
-			.add("betrag", betrag)
-			.add("konto", konto)
 			.add("kontoForKodierzeile", kontoForKodierzeile)
 			.add("einbezahltVon", einbezahltVon)
 			.toString();

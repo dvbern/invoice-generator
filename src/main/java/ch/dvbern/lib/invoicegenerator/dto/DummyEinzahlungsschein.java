@@ -30,7 +30,7 @@ public class DummyEinzahlungsschein extends OrangerEinzahlungsschein {
 		super(
 			Arrays.asList(DUMMY_ESR_PLACEHOLDER, DUMMY_ESR_PLACEHOLDER),
 			BigInteger.ZERO,
-			BigDecimal.ZERO,
+			BigDecimal.ZERO.setScale(2,BigDecimal.ROUND_HALF_UP),
 			DUMMY_ESR_PLACEHOLDER,
 			DUMMY_ESR_PLACEHOLDER,
 			Arrays.asList(DUMMY_ESR_PLACEHOLDER, DUMMY_ESR_PLACEHOLDER)

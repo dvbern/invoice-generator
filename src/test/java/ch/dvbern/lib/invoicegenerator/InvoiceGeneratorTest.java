@@ -42,6 +42,7 @@ import ch.dvbern.lib.invoicegenerator.dto.Invoice;
 import ch.dvbern.lib.invoicegenerator.dto.InvoiceGeneratorConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
 import ch.dvbern.lib.invoicegenerator.dto.OrangerEinzahlungsschein;
+import ch.dvbern.lib.invoicegenerator.dto.QRCodeEinzahlungsschein;
 import ch.dvbern.lib.invoicegenerator.dto.SummaryEntry;
 import ch.dvbern.lib.invoicegenerator.dto.component.Logo;
 import ch.dvbern.lib.invoicegenerator.dto.component.PhraseRenderer;
@@ -55,6 +56,8 @@ import ch.dvbern.lib.invoicegenerator.errors.InvoiceGeneratorException;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities;
 import com.lowagie.text.Font;
 import com.lowagie.text.pdf.PdfReader;
+import net.codecrete.qrbill.generator.Address;
+import net.codecrete.qrbill.generator.Language;
 import org.apache.pdfbox.io.IOUtils;
 import org.apache.pdfbox.io.MemoryUsageSetting;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
@@ -125,6 +128,8 @@ public class InvoiceGeneratorTest {
 	private final List<String> einbezahltVon = Arrays.asList("Rutschmann Pia", "Marktgasse 28", "94900 Rorschach");
 	private final List<String> einzahlungFuer = Arrays.asList(
 		"Robert Schneider SA", "Grands magasins", "Case postale", "2501 Biel/Bienne");
+	private final Address vonAddress = new Address();
+	private final Address fuerAddress = new Address();
 
 	private final List<Position> positionen = Arrays.asList(
 		new H1Position("Lovelace Ada"),
@@ -138,13 +143,45 @@ public class InvoiceGeneratorTest {
 		new RechnungsPosition("Betreuungsgebühr", "1", "1'728.00", "1'728.00"),
 		new RechnungsPosition("Verpflegung", "4", "10.00", "40.00"));
 
-	private OrangerEinzahlungsschein einzahlungsschein = null;
+	private OrangerEinzahlungsschein orangerEinzahlungsschein = null;
+	private QRCodeEinzahlungsschein qrCodeEinzahlungsschein = null;
 
 	@Before
 	public void init() throws IllegalKontoException {
 		initConfiguration(configuration);
-		einzahlungsschein = new OrangerEinzahlungsschein(
-			einzahlungFuer, new BigInteger("120000000000234478943216899"), betrag, "01-162-8", einbezahltVon);
+		initAddress(vonAddress, "Rutschmann Pia", "28", "Marktgasse", "Rorschach", "94900");
+		initAddress(fuerAddress, "Robert Schneider SA", "55A", "Case postale", "Biel/Bienne", "2501");
+
+		orangerEinzahlungsschein = new OrangerEinzahlungsschein(
+			einzahlungFuer,
+			new BigInteger("120000000000234478943216899"),
+			betrag,
+			"01-162-8",
+			einbezahltVon);
+
+		qrCodeEinzahlungsschein = new QRCodeEinzahlungsschein(
+			fuerAddress,
+			new BigInteger("120000000000234478943216899"),
+			betrag,
+			"CH44 3199 9123 0008 8901 2",
+			vonAddress,
+			null,
+			Language.EN);
+	}
+
+	private void initAddress(
+		Address address,
+		String name,
+		String houseNumber,
+		String street,
+		String town,
+		String postcode) {
+		address.setName(name);
+		address.setHouseNo(houseNumber);
+		address.setStreet(street);
+		address.setTown(town);
+		address.setPostalCode(postcode);
+		address.setCountryCode("CH");
 	}
 
 	private void initConfiguration(@Nonnull InvoiceGeneratorConfiguration config) {
@@ -160,7 +197,7 @@ public class InvoiceGeneratorTest {
 	@Test
 	public void testTheCreationOfASampleInvoice() throws InvoiceGeneratorException, IOException {
 		InvoiceGenerator invoiceGenerator = new InvoiceGenerator(configuration);
-		final Invoice invoice = new Invoice(columnTitle, TITEL, summary, einleitung, adresse, einzahlungsschein,
+		final Invoice invoice = new Invoice(columnTitle, TITEL, summary, einleitung, adresse, orangerEinzahlungsschein,
 			positionen, total, konditionen);
 
 		assertTrue(createFile(invoiceGenerator, invoice, "target/Invoice.pdf").isFile());
@@ -190,7 +227,7 @@ public class InvoiceGeneratorTest {
 			new SummaryEntry("Ausstehend", "CHF 3'488.00", true, true));
 
 		final Invoice invoice = new Invoice(columnTitle, TITEL, summary, null,
-			adresse, einzahlungsschein, positionen.subList(0, 2), totalEntires, konditionen);
+			adresse, orangerEinzahlungsschein, positionen.subList(0, 2), totalEntires, konditionen);
 
 		File file = createFile(invoiceGenerator, invoice, "target/InvoiceOnePage.pdf");
 		assertTrue(file.isFile());
@@ -211,7 +248,7 @@ public class InvoiceGeneratorTest {
 			new SummaryEntry("Ausstehend", "CHF 3'488.00", true, true));
 
 		final Invoice invoice = new Invoice(columnTitle, TITEL, summary, null,
-			adresse, einzahlungsschein, positionen.subList(0, 3), totalEntires, konditionen);
+			adresse, orangerEinzahlungsschein, positionen.subList(0, 3), totalEntires, konditionen);
 
 		File file = createFile(invoiceGenerator, invoice, "target/InvoiceOnePageEinzahlunggscheinPage2.pdf");
 		assertTrue(file.isFile());
@@ -223,6 +260,44 @@ public class InvoiceGeneratorTest {
 		Iterable<T> iterable = () -> iterator;
 
 		return StreamSupport.stream(iterable.spliterator(), false);
+	}
+
+	@Test
+	public void testTheCreationOfASampleQRCode() throws Exception {
+		InvoiceGenerator invoiceGenerator = new InvoiceGenerator(configuration);
+
+		List<SummaryEntry> totalEntires = Arrays.asList(
+			new SummaryEntry("Subtotal", "CHF 3'488.00", false, true),
+			new SummaryEntry("Total", "CHF 3'488.00", true, true),
+			new SummaryEntry("Ausstehend", "CHF 3'488.00", true, true));
+
+		final Invoice invoice = new Invoice(columnTitle, TITEL, summary, null,
+			adresse, qrCodeEinzahlungsschein, positionen.subList(0, 3), totalEntires, konditionen);
+
+		File file = createFile(invoiceGenerator, invoice, "target/InvoiceQRCode.pdf");
+		assertTrue(file.isFile());
+		assertEquals(2, getNumberOfPages(file));
+	}
+
+	@Test
+	public void testTheCreationOfASampleInvoiceOnOnePageWithQRCodeOnPage2()
+		throws InvoiceGeneratorException, IOException {
+
+		configuration.setEinzahlungsscheinNotOnPageOne(true);
+
+		InvoiceGenerator invoiceGenerator = new InvoiceGenerator(configuration);
+
+		List<SummaryEntry> totalEntires = Arrays.asList(
+			new SummaryEntry("Subtotal", "CHF 3'488.00", false, true),
+			new SummaryEntry("Total", "CHF 3'488.00", true, true),
+			new SummaryEntry("Ausstehend", "CHF 3'488.00", true, true));
+
+		final Invoice invoice = new Invoice(columnTitle, TITEL, summary, null,
+			adresse, qrCodeEinzahlungsschein, positionen.subList(0, 3), totalEntires, konditionen);
+
+		File file = createFile(invoiceGenerator, invoice, "target/InvoiceOnePageQRCodePage2.pdf");
+		assertTrue(file.isFile());
+		assertEquals(2, getNumberOfPages(file));
 	}
 
 	@Test
@@ -241,7 +316,7 @@ public class InvoiceGeneratorTest {
 			new SummaryEntry("Ausstehend", "CHF 3'488.00", true, true));
 
 		final Invoice invoice = new Invoice(columnTitle, TITEL, summary, Collections.singletonList("Mai 2017"),
-			adresse, einzahlungsschein, positionen.subList(0, 4), totalEntires, null);
+			adresse, orangerEinzahlungsschein, positionen.subList(0, 4), totalEntires, null);
 
 		File file = createFile(invoiceGenerator, invoice, "target/InvoiceAddsNewPage.pdf");
 		assertTrue(file.isFile());
@@ -273,7 +348,7 @@ public class InvoiceGeneratorTest {
 		final InvoiceGeneratorConfiguration configurationRight = new InvoiceGeneratorConfiguration(Alignment.RIGHT);
 		configurationRight.setPp(PP_ADRESS_ZUSATZ);
 		InvoiceGenerator invoiceGenerator = new InvoiceGenerator(configurationRight);
-		final Invoice invoice = new Invoice(columnTitle, TITEL, summary, einleitung, adresse, einzahlungsschein,
+		final Invoice invoice = new Invoice(columnTitle, TITEL, summary, einleitung, adresse, orangerEinzahlungsschein,
 			positionen, total, konditionen);
 
 		assertTrue(createFile(invoiceGenerator, invoice, "target/InvoiceRight.pdf").isFile());
@@ -283,7 +358,7 @@ public class InvoiceGeneratorTest {
 	public void testTheCreationOfASampleInvoiceWithLotOfLinesInTheOutro()
 		throws InvoiceGeneratorException, IOException {
 		InvoiceGenerator invoiceGenerator = new InvoiceGenerator(configuration);
-		final Invoice invoice = new Invoice(columnTitle, TITEL, summary, einleitung, adresse, einzahlungsschein,
+		final Invoice invoice = new Invoice(columnTitle, TITEL, summary, einleitung, adresse, orangerEinzahlungsschein,
 			positionen, total, konditionen);
 
 		assertTrue(createFile(invoiceGenerator, invoice, "target/InvoiceOutro.pdf").isFile());
@@ -294,7 +369,7 @@ public class InvoiceGeneratorTest {
 		throws InvoiceGeneratorException, IOException {
 		InvoiceGenerator invoiceGenerator = new InvoiceGenerator(configuration);
 		final Invoice invoice = new Invoice(columnTitle, LONG_STRING, summary, looongStrings, adresse,
-			einzahlungsschein, positionen, total, konditionen);
+			orangerEinzahlungsschein, positionen, total, konditionen);
 
 		assertTrue(createFile(invoiceGenerator, invoice, "target/InvoiceXL.pdf").isFile());
 	}
@@ -307,7 +382,7 @@ public class InvoiceGeneratorTest {
 			"Bei der nächsten Mahnung wird eine zusätzliche Bearbeitungsgebühr von 30.- fällig.",
 			"Zahlbar innert 10 Tagen.");
 		final Invoice invoice = new Invoice(columnTitle, LONG_STRING, summary, looongStrings, adresse,
-			einzahlungsschein, positionen, total, specKonditionen);
+			orangerEinzahlungsschein, positionen, total, specKonditionen);
 
 		assertTrue(createFile(invoiceGenerator, invoice, "target/InvoiceKonditionen.pdf").isFile());
 	}
@@ -315,7 +390,7 @@ public class InvoiceGeneratorTest {
 	@Test
 	public void testTheCreationOf100Invoices() throws InvoiceGeneratorException, IOException {
 		InvoiceGenerator invoiceGenerator = new InvoiceGenerator(configuration);
-		final Invoice invoice = new Invoice(columnTitle, TITEL, summary, einleitung, adresse, einzahlungsschein,
+		final Invoice invoice = new Invoice(columnTitle, TITEL, summary, einleitung, adresse, orangerEinzahlungsschein,
 			positionen, total, konditionen);
 		long startTime = System.currentTimeMillis();
 		for (int i = 0; i < NUMBER_OF_INVOICES; i++) {
@@ -338,8 +413,8 @@ public class InvoiceGeneratorTest {
 		PDFMergerUtility merger = new PDFMergerUtility();
 		for (int i = 0; i < TEST_NR_OF_DIFFEREN_CONTENT; i++) {
 			growingPositions.add(new RechnungsPosition("Betreuungsgebühr", "1", "1'728.00", "1'728.00"));
-			final Invoice invoice = new Invoice(columnTitle, TITEL, summary, einleitung, adresse, einzahlungsschein,
-				growingPositions, total, konditionen);
+			final Invoice invoice = new Invoice(columnTitle, TITEL, summary, einleitung, adresse,
+				orangerEinzahlungsschein, growingPositions, total, konditionen);
 			//noinspection StringConcatenationMissingWhitespace
 			String filename = "target/TmpInvoice" + (i + 1) + ".pdf";
 			invoiceGenerator.generateInvoice(new FileOutputStream(filename), invoice);
@@ -353,8 +428,8 @@ public class InvoiceGeneratorTest {
 	@Test
 	public void testByteArrayOutputStream() throws Exception {
 		InvoiceGenerator invoiceGenerator = new InvoiceGenerator(configuration);
-		Invoice invoice = new Invoice(columnTitle, TITEL, summary, einleitung, adresse, einzahlungsschein, positionen,
-			total, konditionen);
+		Invoice invoice = new Invoice(columnTitle, TITEL, summary, einleitung, adresse,
+			orangerEinzahlungsschein, positionen, total, konditionen);
 		ByteArrayOutputStream outputStream = invoiceGenerator.generateInvoice(invoice);
 
 		FileOutputStream fileOutputStream = new FileOutputStream("target/StreamedInvoice.pdf");
@@ -374,7 +449,7 @@ public class InvoiceGeneratorTest {
 			summary,
 			einleitung,
 			adresse,
-			einzahlungsschein,
+			orangerEinzahlungsschein,
 			positionen,
 			total,
 			null);
@@ -398,7 +473,7 @@ public class InvoiceGeneratorTest {
 			new SummaryEntry("Ausstehend", "CHF 3'488.00", true, true));
 
 		final Invoice invoice = new Invoice(columnTitle, TITEL, summary, null,
-			adresse, einzahlungsschein, positionen.subList(0, 5), totalEntires, konditionen);
+			adresse, orangerEinzahlungsschein, positionen.subList(0, 5), totalEntires, konditionen);
 
 		File file = createFile(invoiceGenerator, invoice, "target/InvoiceEinzahlunggscheinPage2.pdf");
 		assertTrue(file.isFile());
@@ -441,7 +516,7 @@ public class InvoiceGeneratorTest {
 
 		InvoiceGenerator invoiceGenerator = new InvoiceGenerator(config);
 		final Invoice invoice = new Invoice(columnTitle, TITEL, summary, einleitung, adresse,
-			einzahlungsschein, positionen, total, konditionen);
+			orangerEinzahlungsschein, positionen, total, konditionen);
 
 		File file = createFile(invoiceGenerator, invoice, "target/InvoiceFonts.pdf");
 		assertTrue(file.isFile());
@@ -488,7 +563,7 @@ public class InvoiceGeneratorTest {
 
 		InvoiceGenerator invoiceGenerator = new InvoiceGenerator(config);
 		final Invoice invoice = new Invoice(columnTitle, TITEL, summary, einleitung, adresse,
-			einzahlungsschein, positionen, total, konditionen);
+			orangerEinzahlungsschein, positionen, total, konditionen);
 
 		File file = createFile(invoiceGenerator, invoice, "target/InvoiceMultipliedLeading.pdf");
 		assertTrue(file.isFile());

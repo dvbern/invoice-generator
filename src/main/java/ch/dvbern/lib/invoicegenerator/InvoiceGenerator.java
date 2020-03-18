@@ -24,14 +24,18 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import ch.dvbern.lib.invoicegenerator.dto.Alignment;
+import ch.dvbern.lib.invoicegenerator.dto.Einzahlungsschein;
 import ch.dvbern.lib.invoicegenerator.dto.Invoice;
 import ch.dvbern.lib.invoicegenerator.dto.InvoiceGeneratorConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
-import ch.dvbern.lib.invoicegenerator.dto.OrangerEinzahlungsscheinConfiguration;
+import ch.dvbern.lib.invoicegenerator.dto.EinzahlungsscheinConfiguration;
+import ch.dvbern.lib.invoicegenerator.dto.OrangerEinzahlungsschein;
+import ch.dvbern.lib.invoicegenerator.dto.QRCodeEinzahlungsschein;
 import ch.dvbern.lib.invoicegenerator.dto.SummaryEntry;
 import ch.dvbern.lib.invoicegenerator.dto.component.ComponentConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.component.ComponentRenderer;
 import ch.dvbern.lib.invoicegenerator.dto.component.OrangerEinzahlungsscheinComponent;
+import ch.dvbern.lib.invoicegenerator.dto.component.QRCodeComponent;
 import ch.dvbern.lib.invoicegenerator.errors.InvoiceGeneratorException;
 import ch.dvbern.lib.invoicegenerator.errors.InvoiceGeneratorRuntimeException;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfGenerator;
@@ -43,6 +47,7 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPTable;
 
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.ESR_HEIGHT_WITH_MARGIN;
+import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.QR_RECHNUNG_HEIGHT_WITH_MARGIN;
 import static com.lowagie.text.PageSize.A4;
 import static com.lowagie.text.Utilities.millimetersToPoints;
 
@@ -97,11 +102,19 @@ public class InvoiceGenerator extends BaseGenerator<InvoiceGeneratorConfiguratio
 		List<ComponentRenderer<? extends ComponentConfiguration, ?>> componentRenderers =
 			getComponentRenderers(invoice.getAdresse());
 
-		if (invoice.getOrangerEinzahlungsschein() != null) {
-			componentRenderers.add(new OrangerEinzahlungsscheinComponent(
-				configuration.getEsrConfig(),
-				invoice.getOrangerEinzahlungsschein(),
-				OnPage.LAST));
+		Einzahlungsschein einzahlungsschein = invoice.getEinzahlungsschein();
+		if (einzahlungsschein != null) {
+			if (einzahlungsschein instanceof OrangerEinzahlungsschein) {
+				componentRenderers.add(new OrangerEinzahlungsscheinComponent(
+					configuration.getEinzahlungsscheinConfiguration(),
+					(OrangerEinzahlungsschein) einzahlungsschein,
+					OnPage.LAST));
+			} else {
+				componentRenderers.add(new QRCodeComponent(
+					(QRCodeEinzahlungsschein) einzahlungsschein,
+					configuration.getEinzahlungsscheinConfiguration(),
+					OnPage.LAST));
+			}
 		}
 
 		OnPageHandler onPageHandler = new OnPageHandler(
@@ -171,16 +184,27 @@ public class InvoiceGenerator extends BaseGenerator<InvoiceGeneratorConfiguratio
 	}
 
 	public boolean isNewPageRequired(@Nonnull PdfGenerator pdfGenerator, @Nonnull Invoice invoice) {
-		if (invoice.getOrangerEinzahlungsschein() == null) {
+		if (invoice.getEinzahlungsschein() == null) {
 			return false;
 		}
 
-		OrangerEinzahlungsscheinConfiguration esrConfig = getConfiguration().getEsrConfig();
-		if (pdfGenerator.getVerticalPosition() < ESR_HEIGHT_WITH_MARGIN + esrConfig.getYOffset()) {
+		EinzahlungsscheinConfiguration einzahlungsscheinConfiguration =
+			getConfiguration().getEinzahlungsscheinConfiguration();
+
+		if (invoice.getEinzahlungsschein() instanceof QRCodeEinzahlungsschein &&
+			pdfGenerator.getVerticalPosition()
+				< QR_RECHNUNG_HEIGHT_WITH_MARGIN + einzahlungsscheinConfiguration.getYOffset()) {
 			return true;
 		}
 
-		return esrConfig.isEinzahlungsscheinNotOnPageOne() && pdfGenerator.getDocument().getPageNumber() == 0;
+		if (invoice.getEinzahlungsschein() instanceof OrangerEinzahlungsschein &&
+			pdfGenerator.getVerticalPosition()
+				< ESR_HEIGHT_WITH_MARGIN + einzahlungsscheinConfiguration.getYOffset()) {
+			return true;
+		}
+
+		return einzahlungsscheinConfiguration.isEinzahlungsscheinNotOnPageOne()
+			&& pdfGenerator.getDocument().getPageNumber() == 0;
 	}
 
 	public void createKonditionenIfExist(@Nonnull Document document, @Nullable List<String> konditionen)

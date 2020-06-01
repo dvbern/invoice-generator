@@ -25,17 +25,15 @@ import javax.annotation.Nullable;
 
 import ch.dvbern.lib.invoicegenerator.dto.Alignment;
 import ch.dvbern.lib.invoicegenerator.dto.Einzahlungsschein;
+import ch.dvbern.lib.invoicegenerator.dto.EinzahlungsscheinConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.Invoice;
 import ch.dvbern.lib.invoicegenerator.dto.InvoiceGeneratorConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
-import ch.dvbern.lib.invoicegenerator.dto.EinzahlungsscheinConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.OrangerEinzahlungsschein;
 import ch.dvbern.lib.invoicegenerator.dto.QRCodeEinzahlungsschein;
 import ch.dvbern.lib.invoicegenerator.dto.SummaryEntry;
 import ch.dvbern.lib.invoicegenerator.dto.component.ComponentConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.component.ComponentRenderer;
-import ch.dvbern.lib.invoicegenerator.dto.component.OrangerEinzahlungsscheinComponent;
-import ch.dvbern.lib.invoicegenerator.dto.component.QRCodeComponent;
 import ch.dvbern.lib.invoicegenerator.errors.InvoiceGeneratorException;
 import ch.dvbern.lib.invoicegenerator.errors.InvoiceGeneratorRuntimeException;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfGenerator;
@@ -104,17 +102,8 @@ public class InvoiceGenerator extends BaseGenerator<InvoiceGeneratorConfiguratio
 
 		Einzahlungsschein einzahlungsschein = invoice.getEinzahlungsschein();
 		if (einzahlungsschein != null) {
-			if (einzahlungsschein instanceof OrangerEinzahlungsschein) {
-				componentRenderers.add(new OrangerEinzahlungsscheinComponent(
-					configuration.getEinzahlungsscheinConfiguration(),
-					(OrangerEinzahlungsschein) einzahlungsschein,
-					OnPage.LAST));
-			} else {
-				componentRenderers.add(new QRCodeComponent(
-					(QRCodeEinzahlungsschein) einzahlungsschein,
-					configuration.getEinzahlungsscheinConfiguration(),
-					OnPage.LAST));
-			}
+			EinzahlungsscheinConfiguration einzahlungsscheinConfig = configuration.getEinzahlungsscheinConfiguration();
+			componentRenderers.add(einzahlungsschein.componentRenderer(einzahlungsscheinConfig, OnPage.LAST));
 		}
 
 		OnPageHandler onPageHandler = new OnPageHandler(

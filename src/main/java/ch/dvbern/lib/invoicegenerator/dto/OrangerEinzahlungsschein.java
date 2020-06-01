@@ -21,12 +21,14 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import ch.dvbern.lib.invoicegenerator.dto.component.ComponentRenderer;
+import ch.dvbern.lib.invoicegenerator.dto.component.OrangerEinzahlungsscheinComponent;
+import ch.dvbern.lib.invoicegenerator.dto.component.SimpleConfiguration;
 import ch.dvbern.lib.invoicegenerator.errors.IllegalKontoException;
 import com.google.common.base.MoreObjects;
 
 import static ch.dvbern.lib.invoicegenerator.OrangerEinzahlungsscheinConstants.KONTO_PARTS;
 import static ch.dvbern.lib.invoicegenerator.OrangerEinzahlungsscheinConstants.MAX_LENGTH_OF_ORDNUNGSNUMMER;
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -37,7 +39,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author Xaver Weibel
  * @see OrangerEinzahlungsscheinBank
  */
-public class OrangerEinzahlungsschein extends Einzahlungsschein{
+public class OrangerEinzahlungsschein extends Einzahlungsschein {
 
 	public static final int CHECKSUMME_MODULO = 10;
 
@@ -85,8 +87,6 @@ public class OrangerEinzahlungsschein extends Einzahlungsschein{
 
 		checkNotNull(einzahlungFuer);
 		checkNotNull(einbezahltVon);
-		checkArgument(betrag.scale() == 2,
-			"betrag.scale() was %s but expected 2", betrag.scale());
 
 		this.kontoForKodierzeile = parseKontoForKodierzeile(konto);
 		this.einzahlungFuer = einzahlungFuer;
@@ -133,6 +133,14 @@ public class OrangerEinzahlungsschein extends Einzahlungsschein{
 				"The Ordnungsnummer and the Prüfziffer must be a number",
 				numberFormatException);
 		}
+	}
+
+	@Nonnull
+	@Override
+	public ComponentRenderer<SimpleConfiguration, ? extends Einzahlungsschein> componentRenderer(
+		@Nonnull EinzahlungsscheinConfiguration configuration,
+		@Nonnull OnPage onPage) {
+		return new OrangerEinzahlungsscheinComponent(configuration, this, onPage);
 	}
 
 	@Nonnull

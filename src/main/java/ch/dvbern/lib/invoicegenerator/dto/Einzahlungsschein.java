@@ -17,12 +17,14 @@ import java.text.DecimalFormatSymbols;
 
 import javax.annotation.Nonnull;
 
+import ch.dvbern.lib.invoicegenerator.dto.component.ComponentRenderer;
+import ch.dvbern.lib.invoicegenerator.dto.component.SimpleConfiguration;
 import com.google.common.base.MoreObjects;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class Einzahlungsschein {
+public abstract class Einzahlungsschein {
 	@Nonnull
 	private final BigInteger referenzNr;
 	@Nonnull
@@ -58,6 +60,11 @@ public class Einzahlungsschein {
 
 		return decimalFormat.format(this.referenzNr);
 	}
+
+	@Nonnull
+	public abstract ComponentRenderer<SimpleConfiguration, ? extends Einzahlungsschein> componentRenderer(
+		@Nonnull EinzahlungsscheinConfiguration configuration,
+		@Nonnull OnPage onPage);
 
 	@Nonnull
 	public BigInteger getReferenzNr() {

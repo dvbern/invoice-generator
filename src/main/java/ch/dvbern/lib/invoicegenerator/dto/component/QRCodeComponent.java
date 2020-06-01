@@ -15,8 +15,8 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import ch.dvbern.lib.invoicegenerator.dto.OnPage;
 import ch.dvbern.lib.invoicegenerator.dto.EinzahlungsscheinConfiguration;
+import ch.dvbern.lib.invoicegenerator.dto.OnPage;
 import ch.dvbern.lib.invoicegenerator.dto.QRCodeEinzahlungsschein;
 import ch.dvbern.lib.invoicegenerator.errors.InvoiceGeneratorRuntimeException;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfElementGenerator;
@@ -42,37 +42,16 @@ public class QRCodeComponent extends ComponentRenderer<SimpleConfiguration, QRCo
 	private float yOffset = 0;
 
 	public QRCodeComponent(
-		@Nonnull QRCodeEinzahlungsschein qrCodeEinzahlungsschein,
 		@Nonnull EinzahlungsscheinConfiguration config,
+		@Nonnull QRCodeEinzahlungsschein qrCodeEinzahlungsschein,
 		@Nonnull OnPage onPage) {
-		super(new SimpleConfiguration(onPage));
+		super(new SimpleConfiguration(onPage), qrCodeEinzahlungsschein);
 
 		this.xOffset = config.getXOffset();
 		this.yOffset = config.getYOffset();
-		setPayload(qrCodeEinzahlungsschein);
 	}
 
-	@Override
-	public void render(
-		@Nonnull PdfContentByte directContent, @Nonnull PdfElementGenerator pdfElementGenerator)
-		throws InvoiceGeneratorRuntimeException {
-		Objects.requireNonNull(getPayload());
-
-		try {
-			byte[] png = generateQRCode(getPayload());
-			Image image = Image.getInstance(png);
-			float percent = PERCENT_MULTIPLIER * millimetersToPoints(QR_RECHNUNG_IMAGE_WIDTH_IN_MM) / image.getWidth();
-			image.scalePercent(percent);
-			image.setAbsolutePosition(this.xOffset, this.yOffset);
-
-			PdfContentByte canvas = directContent.getPdfWriter().getDirectContentUnder();
-			canvas.addImage(image);
-		} catch (QRBillValidationError | IOException e) {
-			throw new InvoiceGeneratorRuntimeException("Could not initialize QR Code", e);
-		}
-	}
-
-	public static byte[] generateQRCode(QRCodeEinzahlungsschein qrCodeEinzahlungsschein) throws IOException,
+	public static byte[] generateQRCode(@Nonnull QRCodeEinzahlungsschein qrCodeEinzahlungsschein) throws IOException,
 		QRBillValidationError {
 		// Set Rechnung format
 		Bill bill = new Bill();
@@ -102,5 +81,26 @@ public class QRCodeComponent extends ComponentRenderer<SimpleConfiguration, QRCo
 		QRBill.draw(bill, canvas);
 
 		return canvas.toByteArray();
+	}
+
+	@Override
+	public void render(
+		@Nonnull PdfContentByte directContent, @Nonnull PdfElementGenerator pdfElementGenerator)
+		throws InvoiceGeneratorRuntimeException {
+		Objects.requireNonNull(getPayload());
+
+		try {
+			byte[] png = generateQRCode(getPayload());
+			Image image = Image.getInstance(png);
+			float percent = PERCENT_MULTIPLIER * millimetersToPoints(QR_RECHNUNG_IMAGE_WIDTH_IN_MM) / image.getWidth();
+			// Warum wird skaliert?
+			image.scalePercent(percent);
+			image.setAbsolutePosition(this.xOffset, this.yOffset);
+
+			PdfContentByte canvas = directContent.getPdfWriter().getDirectContentUnder();
+			canvas.addImage(image);
+		} catch (QRBillValidationError | IOException e) {
+			throw new InvoiceGeneratorRuntimeException("Could not initialize QR Code", e);
+		}
 	}
 }

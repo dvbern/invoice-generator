@@ -16,6 +16,9 @@ import java.math.BigInteger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import ch.dvbern.lib.invoicegenerator.dto.component.ComponentRenderer;
+import ch.dvbern.lib.invoicegenerator.dto.component.QRCodeComponent;
+import ch.dvbern.lib.invoicegenerator.dto.component.SimpleConfiguration;
 import net.codecrete.qrbill.generator.Address;
 import net.codecrete.qrbill.generator.Language;
 
@@ -28,19 +31,19 @@ public class QRCodeEinzahlungsschein extends Einzahlungsschein {
 	private final Address einzahlungVon;
 
 	@Nonnull
-	private Language language = Language.DE ;
+	private Language language = Language.DE;
 
 	@Nullable
 	private final String additionalText;
 
 	/**
-	 * Erstellt eine neue OrangerEinzahlungsschein-Instanz.
+	 * Erstellt eine neue QRCodeEinzahlungsschein-Instanz.
 	 *
 	 * @param einzahlungFuer Das Feld "Einzahlung für" auf dem QR Code
 	 * @param referenzNr Die Referenznummer mit Prüfziffer (letzte Ziffer).
 	 * Die Prüfziffer wird berechnet.
 	 * @param betrag Der Betrag
-	 * @param konto Das Konto im Format QR-IBAN (ISO 13616) . Das Zahlverfahren mit
+	 * @param konto Das Konto im Format QR-IBAN (ISO 13616). Das Zahlverfahren mit
 	 * Referenz wird über eine spezielle Identifikation des Finanzinstituts (QR-IID) erkannt.
 	 * Für die QR-IID sind exklusiv Werte im Bereich 30000 – 31999 reserviert.
 	 * @param einbezahltVon Das Feld "Einbezahlt von" auf dem ESR
@@ -61,6 +64,14 @@ public class QRCodeEinzahlungsschein extends Einzahlungsschein {
 		if (language != null) {
 			this.language = language;
 		}
+	}
+
+	@Nonnull
+	@Override
+	public ComponentRenderer<SimpleConfiguration, ? extends Einzahlungsschein> componentRenderer(
+		@Nonnull EinzahlungsscheinConfiguration configuration,
+		@Nonnull OnPage onPage) {
+		return new QRCodeComponent(configuration, this, onPage);
 	}
 
 	@Nonnull

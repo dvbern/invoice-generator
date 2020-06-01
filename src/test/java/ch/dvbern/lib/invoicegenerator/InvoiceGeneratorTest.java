@@ -170,12 +170,13 @@ public class InvoiceGeneratorTest {
 	}
 
 	private void initAddress(
-		Address address,
-		String name,
-		String houseNumber,
-		String street,
-		String town,
-		String postcode) {
+		@Nonnull Address address,
+		@Nonnull String name,
+		@Nonnull String houseNumber,
+		@Nonnull String street,
+		@Nonnull String town,
+		@Nonnull String postcode) {
+
 		address.setName(name);
 		address.setHouseNo(houseNumber);
 		address.setStreet(street);

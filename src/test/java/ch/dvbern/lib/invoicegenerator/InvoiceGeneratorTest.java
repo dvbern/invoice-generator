@@ -18,6 +18,7 @@ package ch.dvbern.lib.invoicegenerator;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -32,19 +33,18 @@ import ch.dvbern.lib.invoicegenerator.dto.Alignment;
 import ch.dvbern.lib.invoicegenerator.dto.Invoice;
 import ch.dvbern.lib.invoicegenerator.dto.InvoiceGeneratorConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
-import ch.dvbern.lib.invoicegenerator.dto.OrangerEinzahlungsschein;
-import ch.dvbern.lib.invoicegenerator.dto.QRCodeEinzahlungsschein;
 import ch.dvbern.lib.invoicegenerator.dto.SummaryEntry;
 import ch.dvbern.lib.invoicegenerator.dto.component.Logo;
 import ch.dvbern.lib.invoicegenerator.dto.component.PhraseRenderer;
+import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.Einzahlungsschein;
+import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.OrangerEinzahlungsschein;
+import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.QRCodeEinzahlungsschein;
 import ch.dvbern.lib.invoicegenerator.dto.position.H1Position;
 import ch.dvbern.lib.invoicegenerator.dto.position.H2Position;
 import ch.dvbern.lib.invoicegenerator.dto.position.Position;
 import ch.dvbern.lib.invoicegenerator.dto.position.RechnungsPosition;
 import ch.dvbern.lib.invoicegenerator.dto.position.RechnungsPositionColumnTitle;
 import ch.dvbern.lib.invoicegenerator.errors.InvoiceGeneratorException;
-import ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities;
-import com.lowagie.text.Font;
 import org.apache.pdfbox.io.MemoryUsageSetting;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,17 +52,15 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static ch.dvbern.lib.invoicegenerator.TestUtil.containsFonts;
 import static ch.dvbern.lib.invoicegenerator.TestUtil.createFile;
 import static ch.dvbern.lib.invoicegenerator.TestUtil.withPages;
 import static ch.dvbern.lib.invoicegenerator.dto.PageConfiguration.TOP_PAGE_DEFAULT_MARGIN_MM;
 import static ch.dvbern.lib.invoicegenerator.dto.component.AddressComponent.RECHTE_ADRESSE_LEFT_MARGIN_MM;
-import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.createFontWithSize;
 import static com.lowagie.text.Utilities.millimetersToPoints;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.io.FileMatchers.anExistingFile;
 
 public class InvoiceGeneratorTest {
@@ -167,45 +165,23 @@ public class InvoiceGeneratorTest {
 	}
 
 	@Test
-	public void testTheCreationOfASampleInvoiceOnOnePageWithAllConfigurations()
-		throws InvoiceGeneratorException, IOException {
-		InvoiceGenerator invoiceGenerator = new InvoiceGenerator(configuration);
-
-		List<SummaryEntry> totalEntires = Arrays.asList(
-			new SummaryEntry("Subtotal", "CHF 3'488.00", false, true),
-			new SummaryEntry("Total", "CHF 3'488.00", true, true),
-			new SummaryEntry("Ausstehend", "CHF 3'488.00", true, true));
-
-		final Invoice invoice = new Invoice(columnTitle, TITEL, summary, null,
-			adresse, orangerEinzahlungsschein, positionen.subList(0, 2), totalEntires, konditionen);
-
-		File file = createFile(invoiceGenerator, invoice, "target/InvoiceOnePage.pdf");
-
-		assertThat(file, allOf(
-			anExistingFile(),
-			withPages(1)
-		));
-	}
-
-	@Test
 	public void testTheCreationOfASampleInvoiceOnOnePageWithEinzahlungsscheinOnPage2()
 		throws InvoiceGeneratorException, IOException {
 
-		configuration.setEinzahlungsscheinNotOnPageOne(true);
-
 		InvoiceGenerator invoiceGenerator = new InvoiceGenerator(configuration);
 
-		List<SummaryEntry> totalEntires = Arrays.asList(
-			new SummaryEntry("Subtotal", "CHF 3'488.00", false, true),
-			new SummaryEntry("Total", "CHF 3'488.00", true, true),
-			new SummaryEntry("Ausstehend", "CHF 3'488.00", true, true));
+		final Invoice invoice = invoiceFittingOnePage(orangerEinzahlungsschein);
 
-		final Invoice invoice = new Invoice(columnTitle, TITEL, summary, null,
-			adresse, orangerEinzahlungsschein, positionen.subList(0, 3), totalEntires, konditionen);
+		// verify setup: should fit onto one page
+		assertThat(createFile(invoiceGenerator, invoice, "target/InvoiceOnePageEinzahlunggschein.pdf"), allOf(
+			anExistingFile(),
+			withPages(1)
+		));
 
-		File file = createFile(invoiceGenerator, invoice, "target/InvoiceOnePageEinzahlunggscheinPage2.pdf");
+		// force creation of a new page
+		configuration.setEinzahlungsscheinNotOnPageOne(true);
 
-		assertThat(file, allOf(
+		assertThat(createFile(invoiceGenerator, invoice, "target/InvoiceOnePageEinzahlunggscheinPage2.pdf"), allOf(
 			anExistingFile(),
 			withPages(2)
 		));
@@ -215,44 +191,32 @@ public class InvoiceGeneratorTest {
 	public void testTheCreationOfASampleQRCode() throws Exception {
 		InvoiceGenerator invoiceGenerator = new InvoiceGenerator(configuration);
 
-		List<SummaryEntry> totalEntires = Arrays.asList(
-			new SummaryEntry("Subtotal", "CHF 3'488.00", false, true),
-			new SummaryEntry("Total", "CHF 3'488.00", true, true),
-			new SummaryEntry("Ausstehend", "CHF 3'488.00", true, true));
+		final Invoice invoice = invoiceFittingOnePage(qrCodeEinzahlungsschein);
 
-		final Invoice invoice = new Invoice(columnTitle, TITEL, summary, null,
-			adresse, qrCodeEinzahlungsschein, positionen.subList(0, 3), totalEntires, konditionen);
-
-		File file = createFile(invoiceGenerator, invoice, "target/InvoiceQRCode.pdf");
-
-		assertThat(file, allOf(
+		// verify setup: should fit onto one page
+		assertThat(createFile(invoiceGenerator, invoice, "target/qrInvoice.pdf"), allOf(
 			anExistingFile(),
 			withPages(1)
 		));
-	}
 
-	@Test
-	public void testTheCreationOfASampleInvoiceOnOnePageWithQRCodeOnPage2()
-		throws InvoiceGeneratorException, IOException {
-
+		// force creation of a new page
 		configuration.setEinzahlungsscheinNotOnPageOne(true);
 
-		InvoiceGenerator invoiceGenerator = new InvoiceGenerator(configuration);
-
-		List<SummaryEntry> totalEntires = Arrays.asList(
-			new SummaryEntry("Subtotal", "CHF 3'488.00", false, true),
-			new SummaryEntry("Total", "CHF 3'488.00", true, true),
-			new SummaryEntry("Ausstehend", "CHF 3'488.00", true, true));
-
-		final Invoice invoice = new Invoice(columnTitle, TITEL, summary, null,
-			adresse, qrCodeEinzahlungsschein, positionen.subList(0, 3), totalEntires, konditionen);
-
-		File file = createFile(invoiceGenerator, invoice, "target/InvoiceOnePageQRCodePage2.pdf");
-
-		assertThat(file, allOf(
+		assertThat(createFile(invoiceGenerator, invoice, "target/qrInvoicePage2.pdf"), allOf(
 			anExistingFile(),
 			withPages(2)
 		));
+	}
+
+	@Nonnull
+	private Invoice invoiceFittingOnePage(@Nonnull Einzahlungsschein einzahlungsschein) {
+		List<SummaryEntry> totalEntires = Arrays.asList(
+			new SummaryEntry("Subtotal", "CHF 3'488.00", false, true),
+			new SummaryEntry("Total", "CHF 3'488.00", true, true)
+		);
+
+		return new Invoice(columnTitle, TITEL, summary, null,
+			adresse, einzahlungsschein, positionen.subList(0, 3), totalEntires, konditionen);
 	}
 
 	@Test
@@ -348,18 +312,16 @@ public class InvoiceGeneratorTest {
 	}
 
 	@Test
-	public void testTheCreationOf100Invoices() throws InvoiceGeneratorException, IOException {
+	public void testTheCreationOf100Invoices() throws InvoiceGeneratorException {
 		InvoiceGenerator invoiceGenerator = new InvoiceGenerator(configuration);
 		final Invoice invoice = new Invoice(columnTitle, TITEL, summary, einleitung, adresse, orangerEinzahlungsschein,
 			positionen, total, konditionen);
 		long startTime = System.currentTimeMillis();
 		for (int i = 0; i < NUMBER_OF_INVOICES; i++) {
-			//noinspection StringConcatenationMissingWhitespace
-			String filename = "target/zBulkInvoice" + (i + 1) + ".pdf";
-			assertThat(createFile(invoiceGenerator, invoice, filename), anExistingFile());
+			assertThat(invoiceGenerator.generateInvoice(invoice), notNullValue());
 		}
 		long time = System.currentTimeMillis() - startTime;
-		LOG.info(String.format("%1$d invoices createt in %2$dms (%3$dms/s)", NUMBER_OF_INVOICES, time, (time /
+		LOG.info(String.format("%1$d invoices createt in %2$dms (%3$dms/invoice)", NUMBER_OF_INVOICES, time, (time /
 			NUMBER_OF_INVOICES)));
 	}
 
@@ -449,53 +411,31 @@ public class InvoiceGeneratorTest {
 	}
 
 	@Test
-	public void testFontsAreConfigurable() throws Exception {
+	public void testFooter() throws Exception {
 		InvoiceGeneratorConfiguration config = new InvoiceGeneratorConfiguration(Alignment.LEFT);
 		initConfiguration(config);
 
-		Font baseFont = new Font(Font.HELVETICA, 8);
-		config.setFont(baseFont);
+		String expected = "XXX-Footer-XXX";
 
-		Font fontBold = new Font(baseFont);
-		fontBold.setStyle(Font.BOLDITALIC);
-
-		Font fontItalic = new Font(baseFont);
-		fontItalic.setStyle(Font.ITALIC);
-
-		final PhraseRenderer footer = new PhraseRenderer(
-			Collections.singletonList("Footer"),
+		PhraseRenderer footer = new PhraseRenderer(
+			Collections.singletonList(expected),
 			42,
 			280,
 			80,
 			10,
 			OnPage.NOT_LAST,
-			createFontWithSize(fontItalic, 5),
+			null,
 			Alignment.LEFT,
-			5);
+			1);
 		config.setFooter(footer);
 
-		config.setFontBold(fontBold);
-		config.setFontTitle(PdfUtilities.createFontWithSize(fontBold, 12));
-		config.setFontH1(PdfUtilities.createFontWithSize(baseFont, 12));
-		config.setFontH2(PdfUtilities.createFontWithSize(fontBold, 8));
-
-		config.getPositionStrategyMap().get(RechnungsPosition.class)
-			.setFont(fontItalic);
-
 		InvoiceGenerator invoiceGenerator = new InvoiceGenerator(config);
-		final Invoice invoice = new Invoice(columnTitle, TITEL, summary, einleitung, adresse,
-			orangerEinzahlungsschein, positionen, total, konditionen);
+		Invoice invoice = Invoice.createDemoInvoice(orangerEinzahlungsschein);
 
-		File file = createFile(invoiceGenerator, invoice, "target/InvoiceFonts.pdf");
+		File file = createFile(invoiceGenerator, invoice, "target/InvoiceWithFooter.pdf");
+		String text = TestUtil.getText(new FileInputStream(file));
 
-		assertThat(file, allOf(
-			anExistingFile(),
-			containsFonts(
-				equalTo("Helvetica"),
-				equalTo("Helvetica-BoldOblique"),
-				equalTo("Helvetica-Oblique"),
-				containsString("ArialMT"))
-		));
+		assertThat(text, containsString(expected));
 	}
 
 	@Test

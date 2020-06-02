@@ -25,6 +25,9 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.Einzahlungsschein;
+import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.OrangerEinzahlungsschein;
+import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.OrangerEinzahlungsscheinBank;
 import ch.dvbern.lib.invoicegenerator.dto.position.H1Position;
 import ch.dvbern.lib.invoicegenerator.dto.position.H2Position;
 import ch.dvbern.lib.invoicegenerator.dto.position.Position;
@@ -171,7 +174,7 @@ public class Invoice {
 	}
 
 	@Nonnull
-	private static Invoice createDemoInvoice(@Nonnull Einzahlungsschein einzahlungsschein) {
+	public static Invoice createDemoInvoice(@Nonnull Einzahlungsschein einzahlungsschein) {
 		checkNotNull(einzahlungsschein);
 
 		RechnungsPositionColumnTitle rechnungsPositionColumnTitle = new RechnungsPositionColumnTitle(

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 DV Bern AG, Switzerland
+ * Copyright (C) 2020 DV Bern AG, Switzerland
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ch.dvbern.lib.invoicegenerator.dto;
+package ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -21,6 +21,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import ch.dvbern.lib.invoicegenerator.dto.OnPage;
 import ch.dvbern.lib.invoicegenerator.dto.component.ComponentRenderer;
 import ch.dvbern.lib.invoicegenerator.dto.component.OrangerEinzahlungsscheinComponent;
 import ch.dvbern.lib.invoicegenerator.dto.component.SimpleConfiguration;
@@ -124,7 +125,7 @@ public class OrangerEinzahlungsschein extends Einzahlungsschein {
 			final int ordnungsnummer = Integer.parseInt(parts[1]);
 			final String ordnungsmummerString = String.format("%06d", ordnungsnummer);
 			final int pruefziffer = calcPruefziffer(parts[0] + ordnungsmummerString);
-			if (pruefziffer != Integer.valueOf(parts[2])) {
+			if (pruefziffer != Integer.parseInt(parts[2])) {
 				throw new IllegalKontoException("Invalid Prüfziffer");
 			}
 			return parts[0] + ordnungsmummerString + pruefziffer;
@@ -153,7 +154,7 @@ public class OrangerEinzahlungsschein extends Einzahlungsschein {
 	}
 
 	@Nonnull
-	public String getBetragInCHFpAsText() {
+	public String getBetragInCHFAsText() {
 		return String.format("%08d", this.getBetragInChf());
 	}
 
@@ -183,7 +184,7 @@ public class OrangerEinzahlungsschein extends Einzahlungsschein {
 
 	@Nonnull
 	public String getKodierzeile() {
-		final String belegartCodeAndBetrag = ESR_IN_CHF_BELEGARTCODE + getBetragInCHFpAsText() + getBetragInRpAsText();
+		final String belegartCodeAndBetrag = ESR_IN_CHF_BELEGARTCODE + getBetragInCHFAsText() + getBetragInRpAsText();
 
 		int pruefziffer = calcPruefziffer(belegartCodeAndBetrag);
 		return belegartCodeAndBetrag + pruefziffer + '>' + getReferenzNrForPruefzifferAsText() + "+ " +

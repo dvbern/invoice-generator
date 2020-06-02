@@ -23,7 +23,6 @@ import javax.annotation.Nullable;
 
 import ch.dvbern.lib.invoicegenerator.dto.Alignment;
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
-import ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities;
 import com.google.common.base.MoreObjects;
 import com.lowagie.text.Font;
 
@@ -89,7 +88,7 @@ public class PhraseComponent extends TextComponent {
 			topInMm,
 			widthInMm,
 			heightInMm,
-			PdfUtilities.DEFAULT_FONT,
+			null,
 			Alignment.LEFT,
 			DEFAULT_MULTIPLIED_LEADING);
 	}
@@ -110,7 +109,7 @@ public class PhraseComponent extends TextComponent {
 		float topInMm,
 		float widthInMm,
 		float heightInMm,
-		@Nonnull Font font,
+		@Nullable Font font,
 		@Nonnull Alignment alignment,
 		float multipliedLeading) {
 

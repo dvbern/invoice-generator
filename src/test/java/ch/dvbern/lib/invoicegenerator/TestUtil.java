@@ -24,9 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -150,12 +148,7 @@ public final class TestUtil {
 
 			@Override
 			public void describeTo(@Nonnull Description description) {
-				List<Matcher<String>> nameMatchers = Arrays.stream(fontNames)
-					.collect(Collectors.toList());
-
-				description
-					.appendText("Fonts is ")
-					.appendList("[", ", ", "]", nameMatchers);
+				iterableMatcher.describeTo(description);
 			}
 		};
 	}

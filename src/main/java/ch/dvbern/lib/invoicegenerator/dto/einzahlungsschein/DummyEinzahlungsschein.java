@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 DV Bern AG, Switzerland
+ * Copyright (C) 2020 DV Bern AG, Switzerland
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ch.dvbern.lib.invoicegenerator.dto;
+package ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -39,7 +39,7 @@ public class DummyEinzahlungsschein extends OrangerEinzahlungsschein {
 
 	@Nonnull
 	@Override
-	public String getBetragInCHFpAsText() {
+	public String getBetragInCHFAsText() {
 		return "";
 	}
 

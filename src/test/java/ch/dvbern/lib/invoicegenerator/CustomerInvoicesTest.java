@@ -28,15 +28,15 @@ import ch.dvbern.lib.invoicegenerator.dto.InvoiceGeneratorConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
 import ch.dvbern.lib.invoicegenerator.dto.component.Logo;
 import ch.dvbern.lib.invoicegenerator.dto.component.PhraseRenderer;
+import ch.dvbern.lib.invoicegenerator.dto.fonts.FontBuilder;
+import ch.dvbern.lib.invoicegenerator.dto.fonts.FontModifier;
 import ch.dvbern.lib.invoicegenerator.dto.position.RechnungsPosition;
 import ch.dvbern.lib.invoicegenerator.errors.InvoiceGeneratorException;
-import ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities;
 import org.junit.jupiter.api.Test;
 
 import static ch.dvbern.lib.invoicegenerator.TestUtil.createFile;
 import static ch.dvbern.lib.invoicegenerator.dto.component.AddressComponent.RECHTE_ADRESSE_LEFT_MARGIN_MM;
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.DEFAULT_MULTIPLIED_H2_LEADING;
-import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.createFontWithSize;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.io.FileMatchers.anExistingFile;
 
@@ -49,6 +49,10 @@ public class CustomerInvoicesTest {
 		final List<String> footerLines = Arrays.asList(
 			"DV Bern AG • Nussbaumstrasse 21 • CH-3000 Bern 22",
 			"031 378 24 24 • hallo@dvbern.ch • www.dvbern.ch");
+		final List<String> zahlungskonto = Arrays.asList("Zahlungsverbindung:", "Berner Kantonalbank AG",
+			"IBAN: CH44 0079 0016 2683 1167");
+		final InvoiceGeneratorConfiguration configuration = new InvoiceGeneratorConfiguration(Alignment.RIGHT);
+
 		final PhraseRenderer footer = new PhraseRenderer(
 			footerLines,
 			42,
@@ -56,12 +60,10 @@ public class CustomerInvoicesTest {
 			80,
 			10,
 			OnPage.NOT_LAST,
-			createFontWithSize(PdfUtilities.DEFAULT_FONT, 8),
+			FontBuilder.of(configuration.getFonts().getFont()).with(FontModifier.size(8)).build(),
 			Alignment.LEFT,
 			DEFAULT_MULTIPLIED_H2_LEADING);
-		final List<String> zahlungskonto = Arrays.asList("Zahlungsverbindung:", "Berner Kantonalbank AG",
-			"IBAN: CH44 0079 0016 2683 1167");
-		final InvoiceGeneratorConfiguration configuration = new InvoiceGeneratorConfiguration(Alignment.RIGHT);
+
 		configuration.setLogo(logo);
 		configuration.setFooter(footer);
 		configuration.setMargins(33, 32, 100, 15);
@@ -72,10 +74,12 @@ public class CustomerInvoicesTest {
 		final Invoice invoice = Invoice.createDemoInvoiceForBank(Arrays.asList("Berner Kantonalbank AG", "3001 Bern"),
 			Arrays.asList("DV Bern", "Abteilung X", "Nussbaumstrasse 21", "CH-3000 22"), "01-123456-9");
 
-		assertThat(createFile(invoiceGenerator, invoice, "target/dvbernInvoice1"), anExistingFile());
+		assertThat(createFile(invoiceGenerator, invoice, "target/dvbernInvoice1.pdf"), anExistingFile());
 
 		replacePositionenWith30SimplePositionen(invoice);
-		assertThat(createFile(invoiceGenerator, invoice, "target/dvbernInvoiceWith25Positionen1"), anExistingFile());
+		assertThat(
+			createFile(invoiceGenerator, invoice, "target/dvbernInvoiceWith25Positionen1.pdf"),
+			anExistingFile());
 	}
 
 	@Test
@@ -95,10 +99,12 @@ public class CustomerInvoicesTest {
 		final Invoice invoice = Invoice.createDemoInvoice(Arrays.asList("DV Bern AG", "Nussbaumstrasse 21",
 			"CH-3000 Bern 22"), "01-123456-9");
 
-		assertThat(createFile(invoiceGenerator, invoice, "target/dvbernInvoice2"), anExistingFile());
+		assertThat(createFile(invoiceGenerator, invoice, "target/dvbernInvoice2.pdf"), anExistingFile());
 
 		replacePositionenWith30SimplePositionen(invoice);
-		assertThat(createFile(invoiceGenerator, invoice, "target/dvbernInvoiceWith25Positionen2"), anExistingFile());
+		assertThat(
+			createFile(invoiceGenerator, invoice, "target/dvbernInvoiceWith25Positionen2.pdf"),
+			anExistingFile());
 	}
 
 	@Test
@@ -115,10 +121,12 @@ public class CustomerInvoicesTest {
 		final Invoice invoice = Invoice.createDemoInvoiceForBank(Arrays.asList("Berner Kantonalbank AG", "3001 Bern"),
 			Arrays.asList("DV Bern AG", "Nussbaumstrasse 21", "3000 Bern 22"), "01-123456-9");
 
-		assertThat(createFile(invoiceGenerator, invoice, "target/dvbernInvoice3"), anExistingFile());
+		assertThat(createFile(invoiceGenerator, invoice, "target/dvbernInvoice3.pdf"), anExistingFile());
 
 		replacePositionenWith30SimplePositionen(invoice);
-		assertThat(createFile(invoiceGenerator, invoice, "target/dvbernInvoiceWith25Positionen3"), anExistingFile());
+		assertThat(
+			createFile(invoiceGenerator, invoice, "target/dvbernInvoiceWith25Positionen3.pdf"),
+			anExistingFile());
 	}
 
 	private void replacePositionenWith30SimplePositionen(@Nonnull Invoice invoice) {

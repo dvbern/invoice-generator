@@ -18,6 +18,7 @@ package ch.dvbern.lib.invoicegenerator.strategy.position;
 import javax.annotation.Nonnull;
 
 import ch.dvbern.lib.invoicegenerator.dto.PageConfiguration;
+import ch.dvbern.lib.invoicegenerator.dto.fonts.FontConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.position.H1Position;
 import ch.dvbern.lib.invoicegenerator.dto.position.Position;
 import com.lowagie.text.Font;
@@ -40,7 +41,7 @@ public class H1Strategy extends PositionStrategy {
 
 	@Nonnull
 	@Override
-	protected Font getFont(@Nonnull PageConfiguration configuration) {
+	protected Font getFont(@Nonnull FontConfiguration configuration) {
 		return getFont()
 			.orElseGet(configuration::getFontH1);
 	}

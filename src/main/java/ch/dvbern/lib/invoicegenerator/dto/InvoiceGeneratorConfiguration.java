@@ -22,6 +22,8 @@ import javax.annotation.Nullable;
 
 import ch.dvbern.lib.invoicegenerator.dto.component.AddressComponent;
 import ch.dvbern.lib.invoicegenerator.dto.component.OrangerEinzahlungsscheinComponent;
+import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.DummyEinzahlungsschein;
+import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.EinzahlungsscheinConfiguration;
 import com.google.common.base.MoreObjects;
 
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.ESR_HEIGHT_WITH_MARGIN;

@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import ch.dvbern.lib.invoicegenerator.dto.PageConfiguration;
+import ch.dvbern.lib.invoicegenerator.dto.fonts.FontConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.position.Position;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfElementGenerator;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities;
@@ -45,7 +46,7 @@ public abstract class PositionStrategy {
 		boolean lastPosition);
 
 	@Nonnull
-	protected abstract Font getFont(@Nonnull PageConfiguration configuration);
+	protected abstract Font getFont(@Nonnull FontConfiguration configuration);
 
 	protected abstract float getMultipliedLeading(@Nonnull PageConfiguration configuration);
 
@@ -55,7 +56,7 @@ public abstract class PositionStrategy {
 		@Nonnull String text,
 		boolean underlined) {
 
-		Phrase phrase = new Phrase(text, getFont(configuration));
+		Phrase phrase = new Phrase(text, getFont(configuration.getFonts()));
 		PdfPCell cell = new PdfPCell(phrase);
 		cell.setLeading(0, getMultipliedLeading(configuration));
 		if (underlined) {

@@ -28,10 +28,10 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import ch.dvbern.lib.invoicegenerator.dto.Alignment;
-import ch.dvbern.lib.invoicegenerator.dto.EinzahlungsscheinConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.InvoiceGeneratorConfiguration;
-import ch.dvbern.lib.invoicegenerator.dto.OrangerEinzahlungsschein;
-import ch.dvbern.lib.invoicegenerator.dto.OrangerEinzahlungsscheinBank;
+import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.EinzahlungsscheinConfiguration;
+import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.OrangerEinzahlungsschein;
+import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.OrangerEinzahlungsscheinBank;
 import ch.dvbern.lib.invoicegenerator.errors.IllegalKontoException;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfElementGenerator;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfGenerator;

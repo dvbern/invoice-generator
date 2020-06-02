@@ -44,14 +44,14 @@ public class AddressRenderer extends TextComponentRenderer<AddressComponent, Lis
 
 		String pp = componentConfiguration.getPp();
 		if (pp != null) {
-			Font underlined = new Font(pageConfiguration.getFontBold());
+			Font underlined = new Font(pageConfiguration.getFonts().getFontBold());
 			underlined.setStyle(Font.UNDERLINE);
 			Paragraph ppParagraph = new Paragraph(pp, underlined);
 			ppParagraph.setSpacingAfter(PP_PADDING_BOTTOM);
 			columnText.addElement(ppParagraph);
 		}
 
-		Paragraph address = new Paragraph(joinListToString(payload), pageConfiguration.getFont());
+		Paragraph address = new Paragraph(joinListToString(payload), pageConfiguration.getFonts().getFont());
 		address.setMultipliedLeading(1);
 		columnText.addElement(address);
 	}

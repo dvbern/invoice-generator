@@ -20,7 +20,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
-import ch.dvbern.lib.invoicegenerator.dto.OrangerEinzahlungsschein;
+import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.OrangerEinzahlungsschein;
 import ch.dvbern.lib.invoicegenerator.errors.IllegalKontoException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -96,7 +96,7 @@ public class OrangerEinzahlungsscheinTest {
 	public void getBetragInChfAsTextShouldReturn00003949IfTheBetragIs3949() throws IllegalKontoException {
 		final OrangerEinzahlungsschein einzahlungsschein = new OrangerEinzahlungsschein(einzahlungFuer,
 			new BigInteger("93045400000604076404024403"), betrag, "01-200027-2", einbezahltVon);
-		Assertions.assertEquals("00003949", einzahlungsschein.getBetragInCHFpAsText());
+		Assertions.assertEquals("00003949", einzahlungsschein.getBetragInCHFAsText());
 	}
 
 	@Test

@@ -29,8 +29,6 @@ import ch.dvbern.lib.invoicegenerator.dto.EinzahlungsscheinConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.Invoice;
 import ch.dvbern.lib.invoicegenerator.dto.InvoiceGeneratorConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
-import ch.dvbern.lib.invoicegenerator.dto.OrangerEinzahlungsschein;
-import ch.dvbern.lib.invoicegenerator.dto.QRCodeEinzahlungsschein;
 import ch.dvbern.lib.invoicegenerator.dto.SummaryEntry;
 import ch.dvbern.lib.invoicegenerator.dto.component.ComponentConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.component.ComponentRenderer;
@@ -45,7 +43,6 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPTable;
 
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.ESR_HEIGHT_WITH_MARGIN;
-import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.QR_RECHNUNG_HEIGHT_WITH_MARGIN;
 import static com.lowagie.text.PageSize.A4;
 import static com.lowagie.text.Utilities.millimetersToPoints;
 
@@ -177,22 +174,14 @@ public class InvoiceGenerator extends BaseGenerator<InvoiceGeneratorConfiguratio
 			return false;
 		}
 
-		EinzahlungsscheinConfiguration einzahlungsscheinConfiguration =
-			getConfiguration().getEinzahlungsscheinConfiguration();
+		EinzahlungsscheinConfiguration config = getConfiguration().getEinzahlungsscheinConfiguration();
 
-		if (invoice.getEinzahlungsschein() instanceof QRCodeEinzahlungsschein &&
-			pdfGenerator.getVerticalPosition()
-				< QR_RECHNUNG_HEIGHT_WITH_MARGIN + einzahlungsscheinConfiguration.getYOffset()) {
+		// this works for qr bill as well, there is only 1 mm difference in the specified height
+		if (pdfGenerator.getVerticalPosition() < ESR_HEIGHT_WITH_MARGIN + config.getYOffset()) {
 			return true;
 		}
 
-		if (invoice.getEinzahlungsschein() instanceof OrangerEinzahlungsschein &&
-			pdfGenerator.getVerticalPosition()
-				< ESR_HEIGHT_WITH_MARGIN + einzahlungsscheinConfiguration.getYOffset()) {
-			return true;
-		}
-
-		return einzahlungsscheinConfiguration.isEinzahlungsscheinNotOnPageOne()
+		return config.isEinzahlungsscheinNotOnPageOne()
 			&& pdfGenerator.getDocument().getPageNumber() == 0;
 	}
 

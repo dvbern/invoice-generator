@@ -33,9 +33,6 @@ public final class PdfUtilities {
 	public static final float ESR_HEIGHT = Utilities.millimetersToPoints(106);
 	public static final float ESR_HEIGHT_WITH_MARGIN = ESR_HEIGHT + 12;
 	public static final float DEFAULT_SPACE_BEFORE = Utilities.millimetersToPoints(5);
-	public static final int QR_RECHNUNG_IMAGE_WIDTH_IN_MM = 220;
-	public static final float QR_RECHNUNG_HEIGHT = Utilities.millimetersToPoints(220);
-	public static final float QR_RECHNUNG_HEIGHT_WITH_MARGIN = QR_RECHNUNG_HEIGHT + 10;
 
 	public static final String FONT_FACE_OCRB = "OCRB";
 	public static final float FONT_SIZE_OCRB = 12;

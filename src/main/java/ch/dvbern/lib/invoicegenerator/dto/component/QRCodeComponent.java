@@ -20,22 +20,25 @@ import ch.dvbern.lib.invoicegenerator.dto.OnPage;
 import ch.dvbern.lib.invoicegenerator.dto.QRCodeEinzahlungsschein;
 import ch.dvbern.lib.invoicegenerator.errors.InvoiceGeneratorRuntimeException;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfElementGenerator;
-import com.lowagie.text.Image;
+import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfContentByte;
-import net.codecrete.qrbill.canvas.PNGCanvas;
+import com.lowagie.text.pdf.PdfImportedPage;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfWriter;
+import net.codecrete.qrbill.canvas.PDFCanvas;
 import net.codecrete.qrbill.generator.Bill;
 import net.codecrete.qrbill.generator.GraphicsFormat;
 import net.codecrete.qrbill.generator.OutputSize;
 import net.codecrete.qrbill.generator.QRBill;
 import net.codecrete.qrbill.generator.QRBillValidationError;
 
-import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.QR_RECHNUNG_IMAGE_WIDTH_IN_MM;
-import static com.lowagie.text.Utilities.millimetersToPoints;
-
+/**
+ * Can be used to add a QR Code Receipt and Payment part to a page.
+ *
+ * Assumes, that the page dimensions are A4.
+ */
 public class QRCodeComponent extends ComponentRenderer<SimpleConfiguration, QRCodeEinzahlungsschein> {
 
-	private static final int QR_RECHNUNG_RESOLUTION = 315;
-	private static final int PERCENT_MULTIPLIER = 100;
 	private static final String CURRENCY = "CHF";
 
 	private float xOffset = 0;
@@ -56,7 +59,7 @@ public class QRCodeComponent extends ComponentRenderer<SimpleConfiguration, QRCo
 		// Set Rechnung format
 		Bill bill = new Bill();
 		bill.getFormat().setLanguage(qrCodeEinzahlungsschein.getLanguage());
-		bill.getFormat().setGraphicsFormat(GraphicsFormat.PNG);
+		bill.getFormat().setGraphicsFormat(GraphicsFormat.PDF);
 
 		// Set Rechnung data
 		bill.setAccount(qrCodeEinzahlungsschein.getKonto());
@@ -72,35 +75,32 @@ public class QRCodeComponent extends ComponentRenderer<SimpleConfiguration, QRCo
 		bill.setDebtor(qrCodeEinzahlungsschein.getEinzahlungVon());
 
 		// Generate QR bill
-		PNGCanvas canvas = new PNGCanvas(
-			QRBill.QR_BILL_WIDTH,
-			QRBill.QR_BILL_HEIGHT,
-			QR_RECHNUNG_RESOLUTION,
-			bill.getFormat().getFontFamily());
-		bill.getFormat().setOutputSize(OutputSize.QR_BILL_ONLY);
+		PDFCanvas canvas = new PDFCanvas(QRBill.A4_PORTRAIT_WIDTH, QRBill.A4_PORTRAIT_HEIGHT);
+		bill.getFormat().setOutputSize(OutputSize.A4_PORTRAIT_SHEET);
 		QRBill.draw(bill, canvas);
 
 		return canvas.toByteArray();
 	}
 
 	@Override
-	public void render(
-		@Nonnull PdfContentByte directContent, @Nonnull PdfElementGenerator pdfElementGenerator)
+	public void render(@Nonnull PdfWriter pdfWriter, @Nonnull PdfElementGenerator pdfElementGenerator)
 		throws InvoiceGeneratorRuntimeException {
 		Objects.requireNonNull(getPayload());
 
 		try {
-			byte[] png = generateQRCode(getPayload());
-			Image image = Image.getInstance(png);
-			float percent = PERCENT_MULTIPLIER * millimetersToPoints(QR_RECHNUNG_IMAGE_WIDTH_IN_MM) / image.getWidth();
-			// Warum wird skaliert?
-			image.scalePercent(percent);
-			image.setAbsolutePosition(this.xOffset, this.yOffset);
-
-			PdfContentByte canvas = directContent.getPdfWriter().getDirectContentUnder();
-			canvas.addImage(image);
+			byte[] pdf = generateQRCode(getPayload());
+			// reads the binary PDF file generated from the QR Bill library and adds it to actual invoice
+			PdfReader pdfReader = new PdfReader(pdf);
+			PdfImportedPage importedPage = pdfWriter.getImportedPage(pdfReader, 1);
+			pdfWriter.getDirectContent().addTemplate(importedPage, xOffset, yOffset);
 		} catch (QRBillValidationError | IOException e) {
 			throw new InvoiceGeneratorRuntimeException("Could not initialize QR Code", e);
 		}
+	}
+
+	@Override
+	public void render(
+		@Nonnull PdfContentByte directContent,
+		@Nonnull PdfElementGenerator pdfElementGenerator) throws DocumentException {
 	}
 }

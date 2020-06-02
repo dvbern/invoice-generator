@@ -84,7 +84,7 @@ public class OnPageHandler extends PdfPageEventHelper {
 			.flatMap(Collection::stream)
 			.forEach(component -> {
 				try {
-					component.render(directContent, pdfElementGenerator);
+					component.render(pdfWriter, pdfElementGenerator);
 				} catch (DocumentException ex) {
 					throw new InvoiceGeneratorRuntimeException("Could not write component " + component, ex);
 				}

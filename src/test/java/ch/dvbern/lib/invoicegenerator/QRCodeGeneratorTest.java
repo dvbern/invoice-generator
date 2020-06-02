@@ -10,118 +10,104 @@
 
 package ch.dvbern.lib.invoicegenerator;
 
-import java.io.File;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import ch.dvbern.lib.invoicegenerator.dto.Alignment;
-import ch.dvbern.lib.invoicegenerator.dto.InvoiceGeneratorConfiguration;
+import ch.dvbern.lib.invoicegenerator.dto.EinzahlungsscheinConfiguration;
+import ch.dvbern.lib.invoicegenerator.dto.OnPage;
+import ch.dvbern.lib.invoicegenerator.dto.PageConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.QRCodeEinzahlungsschein;
 import ch.dvbern.lib.invoicegenerator.dto.component.QRCodeComponent;
-import ch.dvbern.lib.invoicegenerator.pdf.PdfGenerator;
+import ch.dvbern.lib.invoicegenerator.errors.InvoiceGeneratorRuntimeException;
+import ch.dvbern.lib.invoicegenerator.pdf.PdfElementGenerator;
+import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
-import com.lowagie.text.Image;
-import com.lowagie.text.PageSize;
-import com.lowagie.text.pdf.PdfContentByte;
-import net.codecrete.qrbill.generator.Address;
+import com.lowagie.text.pdf.PdfWriter;
 import net.codecrete.qrbill.generator.QRBillValidationError;
 import net.codecrete.qrbill.generator.ValidationMessage;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import net.codecrete.qrbill.generator.ValidationMessage.Type;
+import net.codecrete.qrbill.generator.ValidationResult;
+import org.junit.jupiter.api.Test;
 
-import static com.lowagie.text.Utilities.millimetersToPoints;
-import static org.junit.Assert.assertEquals;
+import static com.spotify.hamcrest.pojo.IsPojo.pojo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class QRCodeGeneratorTest {
-	private final BigDecimal betrag = new BigDecimal("3949.75");
-	private final Address einbezahltVon = new Address();
-	private final Address einzahlungFuer = new Address();
-
-	private final InvoiceGeneratorConfiguration configuration = new InvoiceGeneratorConfiguration(Alignment.LEFT);
-
-	@Before
-	public void init() {
-		initAddress(einbezahltVon, "Rutschmann Pia", "28", "Marktgasse", "Rorschach", "94900");
-		initAddress(einzahlungFuer, "Robert Schneider SA", "55A", "Case postale", "Biel/Bienne", "2501");
-	}
-
-	private void initAddress(Address address,
-		String name,
-		String houseNumber,
-		String street,
-		String town,
-		String postcode) {
-		address.setName(name);
-		address.setHouseNo(houseNumber);
-		address.setStreet(street);
-		address.setTown(town);
-		address.setPostalCode(postcode);
-		address.setCountryCode("CH");
-	}
 
 	@Test
 	public void testTheCreationOfABankEsrWithLoooongContent()
 		throws DocumentException, IOException {
-		final QRCodeEinzahlungsschein einzahlungsschein = new QRCodeEinzahlungsschein(
-			einzahlungFuer,
-			new BigInteger("120000000000234478943216899"),
-			betrag,
-			"CH44 3199 9123 0008 8901 2",
-			einbezahltVon,
-			null,
-			null);
 
-		create("target/QRCode.pdf", einzahlungsschein);
+		ByteArrayOutputStream outputStream = create(TestDataUtil.QR_CODE_EINZAHLUNGSSCHEIN);
+
+		String path = "target/QRCode.pdf";
+		FileOutputStream fileOutputStream = new FileOutputStream(path);
+		outputStream.writeTo(fileOutputStream);
+
+		FileInputStream fileInputStream = new FileInputStream(path);
+		String text = TestUtil.getText(fileInputStream);
+
+		assertThat(text, allOf(
+			containsString(TestDataUtil.QR_IBAN),
+			containsString(TestDataUtil.CREDITOR.getName()),
+			containsString(TestDataUtil.DEBTOR.getName()),
+			containsString(TestDataUtil.QR_REFERENCE_FORMATTED)
+		));
 	}
 
 	@Test
 	public void testQRIBANValidation() throws DocumentException {
 		final QRCodeEinzahlungsschein einzahlungsschein = new QRCodeEinzahlungsschein(
-			einzahlungFuer,
-			new BigInteger("120000000000234478943216899"),
-			betrag,
-			"CH93 0076 2011 6238 5295 7", //Not a valid QR-IBAN
-			einbezahltVon,
+			TestDataUtil.CREDITOR,
+			TestDataUtil.QR_REFERENCE,
+			TestDataUtil.AMOUNT,
+			"CH93 0076 2011 6238 5295 7", // not a valid QR-IBAN
+			TestDataUtil.DEBTOR,
 			null,
 			null);
-		try {
-			create("target/QRCodeGenerationError.pdf", einzahlungsschein);
-		} catch (QRBillValidationError e) {
-			List<ValidationMessage> valMessages = e.getValidationResult().getValidationMessages();
 
-			assertEquals (1, valMessages.size());
-			assertEquals ("ERROR", valMessages.get(0).getType().toString());
-			assertEquals("valid_iso11649_creditor_ref", valMessages.get(0).getMessageKey());
+		//noinspection ResultOfMethodCallIgnored
+		InvoiceGeneratorRuntimeException ex =
+			assertThrows(InvoiceGeneratorRuntimeException.class, () -> create(einzahlungsschein));
 
-		} catch (IOException e) {
-			// do Nothing
-		}
+		QRBillValidationError cause = (QRBillValidationError) ex.getCause();
+		assertThat(cause, pojo(QRBillValidationError.class)
+			.where(QRBillValidationError::getValidationResult, pojo(ValidationResult.class)
+				.where(ValidationResult::getValidationMessages, containsInAnyOrder(
+					pojo(ValidationMessage.class)
+						.where(ValidationMessage::getType, equalTo(Type.ERROR))
+						.where(ValidationMessage::getField, equalTo("reference"))
+						.where(ValidationMessage::getMessageKey, equalTo("valid_iso11649_creditor_ref"))
+				))
+			));
 	}
 
-	private void create(
-		@Nonnull String path,
-		@Nonnull QRCodeEinzahlungsschein einzahlungsschein) throws IOException, QRBillValidationError {
+	@Nonnull
+	private ByteArrayOutputStream create(@Nonnull QRCodeEinzahlungsschein einzahlungsschein)
+		throws QRBillValidationError {
 
-		PdfGenerator generator = new PdfGenerator(new FileOutputStream(path), configuration);
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-		PdfContentByte content = generator.getDirectContent();
+		Document document = new Document();
+		PdfWriter writer = PdfWriter.getInstance(document, outputStream);
+		document.open();
+		document.newPage();
 
-		// Save QR bill
-		byte[] png = QRCodeComponent.generateQRCode(einzahlungsschein);
-		Image image = Image.getInstance(png);
-		float percent = 100 * millimetersToPoints(200) / image.getWidth();
-		image.scalePercent(percent);
-		float absoluteY = PageSize.A4.getHeight() - image.getScaledHeight();
-		image.setAbsolutePosition(20, absoluteY);
-		content.addImage(image);
+		EinzahlungsscheinConfiguration config = new EinzahlungsscheinConfiguration();
+		QRCodeComponent component = new QRCodeComponent(config, einzahlungsschein, OnPage.LAST);
+		component.render(writer, new PdfElementGenerator(new PageConfiguration()));
 
-		generator.close();
-		Assert.assertTrue(new File(path).isFile());
+		document.close();
+
+		return outputStream;
 	}
 }

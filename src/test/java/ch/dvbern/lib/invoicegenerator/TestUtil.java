@@ -17,13 +17,36 @@
 package ch.dvbern.lib.invoicegenerator;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import javax.annotation.Nonnull;
 
 import ch.dvbern.lib.invoicegenerator.dto.Invoice;
 import ch.dvbern.lib.invoicegenerator.errors.InvoiceGeneratorException;
+import com.lowagie.text.pdf.PdfReader;
+import org.apache.pdfbox.io.IOUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDFontLike;
+import org.apache.pdfbox.text.PDFTextStripper;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
+import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 public final class TestUtil {
 
@@ -39,5 +62,132 @@ public final class TestUtil {
 		invoiceGenerator.generateInvoice(new FileOutputStream(filename), invoice);
 
 		return new File(filename);
+	}
+
+	@Nonnull
+	public static byte[] readURL(@Nonnull URL url) {
+		try {
+			URLConnection con = url.openConnection();
+			try (InputStream is = con.getInputStream()) {
+				return IOUtils.toByteArray(is);
+			}
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
+		}
+	}
+
+	public static int getNumberOfPages(@Nonnull File file) throws IOException {
+		PdfReader reader = new PdfReader(new FileInputStream(file));
+		int numberOfPages = reader.getNumberOfPages();
+		reader.close();
+
+		return numberOfPages;
+	}
+
+	@Nonnull
+	public static String getText(@Nonnull InputStream pdfStream) {
+		try (PDDocument document = PDDocument.load(pdfStream)) {
+			PDFTextStripper pdfStripper = new PDFTextStripper();
+			return pdfStripper.getText(document);
+		} catch (@Nonnull IOException ex) {
+			throw new IllegalStateException("Could not extract text", ex);
+		}
+	}
+
+	@Nonnull
+	public static Matcher<File> withPages(int numberOfPages) {
+		return new TypeSafeDiagnosingMatcher<File>() {
+			@Override
+			public boolean matchesSafely(@Nonnull File actual, @Nonnull Description mismatchDescription) {
+				try {
+					int actualNumberOfPages = getNumberOfPages(actual);
+
+					if (actualNumberOfPages == numberOfPages) {
+						return true;
+					}
+
+					mismatchDescription.appendText("has ")
+						.appendValue(actualNumberOfPages)
+						.appendText(" pages");
+
+					return false;
+				} catch (IOException e) {
+					mismatchDescription.appendText("could not read pages due to ").appendText(e.getMessage());
+
+					return false;
+				}
+			}
+
+			@Override
+			public void describeTo(@Nonnull Description description) {
+				description.appendText("A file with  ")
+					.appendValue(numberOfPages)
+					.appendText(" pages");
+			}
+		};
+	}
+
+	@SafeVarargs
+	@Nonnull
+	public static Matcher<File> containsFonts(@Nonnull Matcher<String>... fontNames) {
+		Matcher<Iterable<? extends String>> iterableMatcher = Matchers.containsInAnyOrder(fontNames);
+
+		return new TypeSafeDiagnosingMatcher<File>() {
+			@Override
+			protected boolean matchesSafely(@Nonnull File actual, @Nonnull Description mismatchDescription) {
+				Set<String> fonts = getFonts(actual).stream()
+					.map(PDFontLike::getName)
+					.collect(Collectors.toSet());
+
+				if (iterableMatcher.matches(fonts)) {
+					return true;
+				}
+
+				iterableMatcher.describeMismatch(fonts, mismatchDescription);
+
+				return false;
+			}
+
+			@Override
+			public void describeTo(@Nonnull Description description) {
+				List<Matcher<String>> nameMatchers = Arrays.stream(fontNames)
+					.collect(Collectors.toList());
+
+				description
+					.appendText("Fonts is ")
+					.appendList("[", ", ", "]", nameMatchers);
+			}
+		};
+	}
+
+	@Nonnull
+	public static Set<PDFont> getFonts(@Nonnull File file) {
+		try {
+			Set<PDFont> fonts = stream(PDDocument.load(file).getPages().iterator())
+				.map(PDPage::getResources)
+				.flatMap(r -> stream(r.getFontNames())
+					.map(c -> {
+						try {
+							return r.getFont(c);
+						} catch (IOException e) {
+							throw new IllegalStateException("Failed to get Font " + c, e);
+						}
+					}))
+				.collect(Collectors.toSet());
+
+			return fonts;
+		} catch (IOException ex) {
+			throw new IllegalStateException("Could not load PDF " + file, ex);
+		}
+	}
+
+	@Nonnull
+	private static <T> Stream<T> stream(@Nonnull final Iterator<T> iterator) {
+		return stream(() -> iterator);
+	}
+
+	@Nonnull
+	private static <T> Stream<T> stream(@Nonnull Iterable<T> iterable) {
+		return StreamSupport.stream(iterable.spliterator(), false);
 	}
 }

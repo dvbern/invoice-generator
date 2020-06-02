@@ -28,17 +28,17 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import ch.dvbern.lib.invoicegenerator.dto.Alignment;
+import ch.dvbern.lib.invoicegenerator.dto.EinzahlungsscheinConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.InvoiceGeneratorConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.OrangerEinzahlungsschein;
 import ch.dvbern.lib.invoicegenerator.dto.OrangerEinzahlungsscheinBank;
-import ch.dvbern.lib.invoicegenerator.dto.EinzahlungsscheinConfiguration;
 import ch.dvbern.lib.invoicegenerator.errors.IllegalKontoException;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfElementGenerator;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfGenerator;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfContentByte;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static ch.dvbern.lib.invoicegenerator.dto.component.OrangerEinzahlungsscheinComponent.createEinzahlungsschein;
 
@@ -164,7 +164,7 @@ public class OrangerEinzahlungsscheinGeneratorTest {
 		createEinzahlungsschein(content, pdfElementGenerator, config, einzahlungsschein);
 
 		generator.close();
-		Assert.assertTrue(new File(path).isFile());
+		Assertions.assertTrue(new File(path).isFile());
 	}
 
 	@Nonnull

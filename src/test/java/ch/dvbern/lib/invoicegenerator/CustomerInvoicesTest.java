@@ -15,37 +15,37 @@
  */
 package ch.dvbern.lib.invoicegenerator;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
+
+import javax.annotation.Nonnull;
 
 import ch.dvbern.lib.invoicegenerator.dto.Alignment;
 import ch.dvbern.lib.invoicegenerator.dto.Invoice;
 import ch.dvbern.lib.invoicegenerator.dto.InvoiceGeneratorConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
-import ch.dvbern.lib.invoicegenerator.dto.PageConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.component.Logo;
 import ch.dvbern.lib.invoicegenerator.dto.component.PhraseRenderer;
 import ch.dvbern.lib.invoicegenerator.dto.position.RechnungsPosition;
 import ch.dvbern.lib.invoicegenerator.errors.InvoiceGeneratorException;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static ch.dvbern.lib.invoicegenerator.InvoiceGeneratorTest.readURL;
+import static ch.dvbern.lib.invoicegenerator.TestUtil.createFile;
 import static ch.dvbern.lib.invoicegenerator.dto.component.AddressComponent.RECHTE_ADRESSE_LEFT_MARGIN_MM;
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.DEFAULT_MULTIPLIED_H2_LEADING;
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.createFontWithSize;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.io.FileMatchers.anExistingFile;
 
 // CHECKSTYLE:OFF
 public class CustomerInvoicesTest {
 
 	@Test
 	public void dvbernInvoiceTest_1() throws InvoiceGeneratorException, IOException {
-		final Logo logo = new Logo(readURL(CustomerInvoicesTest.class.getResource("dvbern.png")),
-			11, 9, 42);
+		final Logo logo = TestDataUtil.defaultLogo();
 		final List<String> footerLines = Arrays.asList(
 			"DV Bern AG • Nussbaumstrasse 21 • CH-3000 Bern 22",
 			"031 378 24 24 • hallo@dvbern.ch • www.dvbern.ch");
@@ -71,17 +71,16 @@ public class CustomerInvoicesTest {
 		InvoiceGenerator invoiceGenerator = new InvoiceGenerator(configuration);
 		final Invoice invoice = Invoice.createDemoInvoiceForBank(Arrays.asList("Berner Kantonalbank AG", "3001 Bern"),
 			Arrays.asList("DV Bern", "Abteilung X", "Nussbaumstrasse 21", "CH-3000 22"), "01-123456-9");
-		invoiceGenerator.generateInvoice(new FileOutputStream("target/dvbernInvoice1.pdf"), invoice);
-		Assert.assertTrue(new File("target/dvbernInvoice1.pdf").isFile());
+
+		assertThat(createFile(invoiceGenerator, invoice, "target/dvbernInvoice1"), anExistingFile());
+
 		replacePositionenWith30SimplePositionen(invoice);
-		invoiceGenerator.generateInvoice(new FileOutputStream("target/dvbernInvoiceWith25Positionen1.pdf"), invoice);
-		Assert.assertTrue(new File("target/dvbernInvoiceWith25Positionen1.pdf").isFile());
+		assertThat(createFile(invoiceGenerator, invoice, "target/dvbernInvoiceWith25Positionen1"), anExistingFile());
 	}
 
 	@Test
 	public void dvbernInvoiceTest_2() throws InvoiceGeneratorException, IOException {
-		final Logo logo = new Logo(readURL(CustomerInvoicesTest.class.getResource("dvbern.png")),
-			PageConfiguration.LEFT_PAGE_DEFAULT_MARGIN_MM, 10, 38);
+		final Logo logo = TestDataUtil.defaultLogo();
 		final List<String> headerLines = Arrays.asList("DV Bern AG", "Nussbaumstrasse 21", "CH-3000 Bern 22",
 			"Tel.: 031 378 24 24", "hallo@dvbern.ch", "www.dvbern.ch");
 		final PhraseRenderer header = new PhraseRenderer(headerLines, RECHTE_ADRESSE_LEFT_MARGIN_MM, 18, 80, 40);
@@ -95,17 +94,16 @@ public class CustomerInvoicesTest {
 		InvoiceGenerator invoiceGenerator = new InvoiceGenerator(configuration);
 		final Invoice invoice = Invoice.createDemoInvoice(Arrays.asList("DV Bern AG", "Nussbaumstrasse 21",
 			"CH-3000 Bern 22"), "01-123456-9");
-		invoiceGenerator.generateInvoice(new FileOutputStream("target/dvbernInvoice2.pdf"), invoice);
-		Assert.assertTrue(new File("target/dvbernInvoice2.pdf").isFile());
+
+		assertThat(createFile(invoiceGenerator, invoice, "target/dvbernInvoice2"), anExistingFile());
+
 		replacePositionenWith30SimplePositionen(invoice);
-		invoiceGenerator.generateInvoice(new FileOutputStream("target/dvbernInvoiceWith25Positionen2.pdf"), invoice);
-		Assert.assertTrue(new File("target/dvbernInvoiceWith25Positionen2.pdf").isFile());
+		assertThat(createFile(invoiceGenerator, invoice, "target/dvbernInvoiceWith25Positionen2"), anExistingFile());
 	}
 
 	@Test
 	public void dvbernInvoiceTest_3() throws InvoiceGeneratorException, IOException {
-		final Logo logo = new Logo(readURL(CustomerInvoicesTest.class.getResource("dvbern.png")),
-			PageConfiguration.LEFT_PAGE_DEFAULT_MARGIN_MM, 10, 20);
+		final Logo logo = TestDataUtil.defaultLogo();
 		final List<String> headerLines = Arrays.asList("DV Bern AG", "Nussbaumstrasse 21", "CH-3000 Bern 22",
 			"http://www.dvbern.ch");
 		final PhraseRenderer header = new PhraseRenderer(headerLines, RECHTE_ADRESSE_LEFT_MARGIN_MM, 10, 80, 40);
@@ -116,17 +114,18 @@ public class CustomerInvoicesTest {
 		InvoiceGenerator invoiceGenerator = new InvoiceGenerator(configuration);
 		final Invoice invoice = Invoice.createDemoInvoiceForBank(Arrays.asList("Berner Kantonalbank AG", "3001 Bern"),
 			Arrays.asList("DV Bern AG", "Nussbaumstrasse 21", "3000 Bern 22"), "01-123456-9");
-		invoiceGenerator.generateInvoice(new FileOutputStream("target/dvbernInvoice3.pdf"), invoice);
-		Assert.assertTrue(new File("target/dvbernInvoice3.pdf").isFile());
+
+		assertThat(createFile(invoiceGenerator, invoice, "target/dvbernInvoice3"), anExistingFile());
+
 		replacePositionenWith30SimplePositionen(invoice);
-		invoiceGenerator.generateInvoice(new FileOutputStream("target/dvbernInvoiceWith25Positionen3.pdf"), invoice);
-		Assert.assertTrue(new File("target/dvbernInvoiceWith25Positionen3.pdf").isFile());
+		assertThat(createFile(invoiceGenerator, invoice, "target/dvbernInvoiceWith25Positionen3"), anExistingFile());
 	}
 
-	private void replacePositionenWith30SimplePositionen(Invoice invoice) {
+	private void replacePositionenWith30SimplePositionen(@Nonnull Invoice invoice) {
 		invoice.getPositionen().clear();
-		for (int i = 0; i < 30; i++) {
-			invoice.getPositionen().add(new RechnungsPosition("Testposition", "1", "1.00", "1.00"));
-		}
+
+		IntStream.range(0, 30)
+			.mapToObj(i -> new RechnungsPosition("Testposition", "1", "1.00", "1.00"))
+			.forEach(pos -> invoice.getPositionen().add(pos));
 	}
 }

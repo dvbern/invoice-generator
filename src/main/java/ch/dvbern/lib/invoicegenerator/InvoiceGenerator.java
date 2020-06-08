@@ -27,11 +27,11 @@ import ch.dvbern.lib.invoicegenerator.dto.Alignment;
 import ch.dvbern.lib.invoicegenerator.dto.Invoice;
 import ch.dvbern.lib.invoicegenerator.dto.InvoiceGeneratorConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
-import ch.dvbern.lib.invoicegenerator.dto.OrangerEinzahlungsscheinConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.SummaryEntry;
 import ch.dvbern.lib.invoicegenerator.dto.component.ComponentConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.component.ComponentRenderer;
-import ch.dvbern.lib.invoicegenerator.dto.component.OrangerEinzahlungsscheinComponent;
+import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.Einzahlungsschein;
+import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.EinzahlungsscheinConfiguration;
 import ch.dvbern.lib.invoicegenerator.errors.InvoiceGeneratorException;
 import ch.dvbern.lib.invoicegenerator.errors.InvoiceGeneratorRuntimeException;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfGenerator;
@@ -97,11 +97,10 @@ public class InvoiceGenerator extends BaseGenerator<InvoiceGeneratorConfiguratio
 		List<ComponentRenderer<? extends ComponentConfiguration, ?>> componentRenderers =
 			getComponentRenderers(invoice.getAdresse());
 
-		if (invoice.getOrangerEinzahlungsschein() != null) {
-			componentRenderers.add(new OrangerEinzahlungsscheinComponent(
-				configuration.getEsrConfig(),
-				invoice.getOrangerEinzahlungsschein(),
-				OnPage.LAST));
+		Einzahlungsschein einzahlungsschein = invoice.getEinzahlungsschein();
+		if (einzahlungsschein != null) {
+			EinzahlungsscheinConfiguration einzahlungsscheinConfig = configuration.getEinzahlungsscheinConfiguration();
+			componentRenderers.add(einzahlungsschein.componentRenderer(einzahlungsscheinConfig, OnPage.LAST));
 		}
 
 		OnPageHandler onPageHandler = new OnPageHandler(
@@ -171,16 +170,19 @@ public class InvoiceGenerator extends BaseGenerator<InvoiceGeneratorConfiguratio
 	}
 
 	public boolean isNewPageRequired(@Nonnull PdfGenerator pdfGenerator, @Nonnull Invoice invoice) {
-		if (invoice.getOrangerEinzahlungsschein() == null) {
+		if (invoice.getEinzahlungsschein() == null) {
 			return false;
 		}
 
-		OrangerEinzahlungsscheinConfiguration esrConfig = getConfiguration().getEsrConfig();
-		if (pdfGenerator.getVerticalPosition() < ESR_HEIGHT_WITH_MARGIN + esrConfig.getYOffset()) {
+		EinzahlungsscheinConfiguration config = getConfiguration().getEinzahlungsscheinConfiguration();
+
+		// this works for qr bill as well, there is only 1 mm difference in the specified height
+		if (pdfGenerator.getVerticalPosition() < ESR_HEIGHT_WITH_MARGIN + config.getYOffset()) {
 			return true;
 		}
 
-		return esrConfig.isEinzahlungsscheinNotOnPageOne() && pdfGenerator.getDocument().getPageNumber() == 0;
+		return config.isEinzahlungsscheinNotOnPageOne()
+			&& pdfGenerator.getDocument().getPageNumber() == 0;
 	}
 
 	public void createKonditionenIfExist(@Nonnull Document document, @Nullable List<String> konditionen)

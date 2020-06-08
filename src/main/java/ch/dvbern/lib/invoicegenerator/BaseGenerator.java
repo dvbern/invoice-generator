@@ -39,7 +39,7 @@ public class BaseGenerator<T extends BaseLayoutConfiguration> {
 	@Nonnull
 	private final T configuration;
 	@Nonnull
-	private final PdfElementGenerator pdfElementGenerator;
+	private PdfElementGenerator pdfElementGenerator;
 
 	/**
 	 * Erstellt einen neuen default BaseGenerator für die ensprechende Konfiguration.
@@ -144,5 +144,9 @@ public class BaseGenerator<T extends BaseLayoutConfiguration> {
 	@Nonnull
 	public PdfElementGenerator getPdfElementGenerator() {
 		return pdfElementGenerator;
+	}
+
+	public void setPdfElementGenerator(@Nonnull PdfElementGenerator pdfElementGenerator) {
+		this.pdfElementGenerator = pdfElementGenerator;
 	}
 }

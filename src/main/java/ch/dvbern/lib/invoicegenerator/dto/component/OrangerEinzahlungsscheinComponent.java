@@ -21,8 +21,8 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
-import ch.dvbern.lib.invoicegenerator.dto.OrangerEinzahlungsschein;
-import ch.dvbern.lib.invoicegenerator.dto.OrangerEinzahlungsscheinConfiguration;
+import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.EinzahlungsscheinConfiguration;
+import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.OrangerEinzahlungsschein;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfElementGenerator;
 import ch.dvbern.lib.invoicegenerator.strategy.einzahlungfuer.EinzahlungFuerStrategy;
 import com.lowagie.text.DocumentException;
@@ -60,23 +60,22 @@ public class OrangerEinzahlungsscheinComponent
 	extends ComponentRenderer<SimpleConfiguration, OrangerEinzahlungsschein> {
 
 	@Nonnull
-	private final OrangerEinzahlungsscheinConfiguration config;
+	private final EinzahlungsscheinConfiguration config;
 
 	public OrangerEinzahlungsscheinComponent(
-		@Nonnull OrangerEinzahlungsscheinConfiguration config,
+		@Nonnull EinzahlungsscheinConfiguration config,
 		@Nonnull OrangerEinzahlungsschein orangerEinzahlungsschein,
 		@Nonnull OnPage onPage) {
 
-		super(new SimpleConfiguration(onPage));
+		super(new SimpleConfiguration(onPage), orangerEinzahlungsschein);
 
 		this.config = config;
-		setPayload(orangerEinzahlungsschein);
 	}
 
 	public static void createEinzahlungsschein(
 		@Nonnull PdfContentByte directContent,
 		@Nonnull PdfElementGenerator pdfElementGenerator,
-		@Nonnull OrangerEinzahlungsscheinConfiguration config,
+		@Nonnull EinzahlungsscheinConfiguration config,
 		@Nonnull OrangerEinzahlungsschein orangerEinzahlungsschein) throws DocumentException {
 
 		float xOffset = config.getXOffset();

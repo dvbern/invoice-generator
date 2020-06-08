@@ -20,6 +20,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import ch.dvbern.lib.invoicegenerator.dto.fonts.FontConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.position.H1Position;
 import ch.dvbern.lib.invoicegenerator.dto.position.H2Position;
 import ch.dvbern.lib.invoicegenerator.dto.position.Position;
@@ -33,16 +34,11 @@ import com.lowagie.text.Font;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Rectangle;
 
-import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.DEFAULT_FONT;
-import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.DEFAULT_FONT_BOLD;
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.DEFAULT_MULTIPLIED_H1_LEADING;
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.DEFAULT_MULTIPLIED_H2_LEADING;
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.DEFAULT_MULTIPLIED_LEADING;
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.DEFAULT_MULTIPLIED_TITLE_LEADING;
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.DEFAULT_SPACE_BEFORE;
-import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.H1_FONT;
-import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.H2_FONT;
-import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.TITLE_FONT;
 import static com.lowagie.text.Utilities.millimetersToPoints;
 
 /**
@@ -69,15 +65,7 @@ public class PageConfiguration {
 	private float multipliedLeadingH2 = DEFAULT_MULTIPLIED_H2_LEADING;
 
 	@Nonnull
-	private Font font = DEFAULT_FONT;
-	@Nonnull
-	private Font fontBold = DEFAULT_FONT_BOLD;
-	@Nonnull
-	private Font fontTitle = TITLE_FONT;
-	@Nonnull
-	private Font fontH1 = H1_FONT;
-	@Nonnull
-	private Font fontH2 = H2_FONT;
+	private FontConfiguration fonts = new FontConfiguration(Font.TIMES_ROMAN);
 
 	@Nonnull
 	private Rectangle pageSize = PageSize.A4;
@@ -197,48 +185,12 @@ public class PageConfiguration {
 	}
 
 	@Nonnull
-	public Font getFont() {
-		return font;
+	public FontConfiguration getFonts() {
+		return fonts;
 	}
 
-	public void setFont(@Nonnull Font font) {
-		this.font = font;
-	}
-
-	@Nonnull
-	public Font getFontBold() {
-		return fontBold;
-	}
-
-	public void setFontBold(@Nonnull Font fontBold) {
-		this.fontBold = fontBold;
-	}
-
-	@Nonnull
-	public Font getFontTitle() {
-		return fontTitle;
-	}
-
-	public void setFontTitle(@Nonnull Font fontTitle) {
-		this.fontTitle = fontTitle;
-	}
-
-	@Nonnull
-	public Font getFontH1() {
-		return fontH1;
-	}
-
-	public void setFontH1(@Nonnull Font fontH1) {
-		this.fontH1 = fontH1;
-	}
-
-	@Nonnull
-	public Font getFontH2() {
-		return fontH2;
-	}
-
-	public void setFontH2(@Nonnull Font fontH2) {
-		this.fontH2 = fontH2;
+	public void setFonts(@Nonnull FontConfiguration fonts) {
+		this.fonts = fonts;
 	}
 
 	@Override

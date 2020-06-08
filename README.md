@@ -19,18 +19,15 @@ invoiceGenerator.generateInvoice(new FileOutputStream("target/Invoice.pdf"), inv
 
 ## Configuring fonts
 
-To be able to use specific fonts, in particular the OCR-B font required for the coding line of the payment slip, these must
-be registered as follows:
-
+To be able to use specific fonts, in particular the OCR-B font, required for the coding line of the payment slip,
+the fonts must be registered before they are accessed, e.g.
 ```java
-// Must be defined before calling FontFactory.getFont()
-static {
-	FontFactory.register("/font/br_ocrb.ttf", FONT_FACE_OCRB);				// font for coding line of the payment slip 
-	FontFactory.register("/font/arial.ttf", FONT_FACE_PROXIMA_NOVA); 		// font for invoice
-	FontFactory.register("/font/arial.ttf", FONT_FACE_PROXIMA_NOVA_BOLD); 	// font for invoice (bold)
-}
+FontFactory.register("/font/br_ocrb.ttf", FontConfiguration.FONT_FACE_OCRB);
+Font ocrbFont = FontFactory.getFont(FontConfiguration.FONT_FACE_OCRB);
 ```
-By default, the font Arial is used both for the invoice and for the coding line.
+
+The `FontConfiguration` can be used as a container for the default fonts of the generator. You can define your own
+`FontConfiguration` and set it in `PageConfiguration`.
 
 ## Where can I get the artifact?
 Sorry, we don't have any artifacts on a public repository. You will have to build this project and https://github.com/dvbern/oss-maven-parent-pom yourself.

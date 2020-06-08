@@ -31,9 +31,9 @@ import ch.dvbern.lib.invoicegenerator.dto.position.Position;
 import ch.dvbern.lib.invoicegenerator.dto.position.RechnungsPosition;
 import ch.dvbern.lib.invoicegenerator.dto.position.RechnungsPositionColumnTitle;
 import ch.dvbern.lib.invoicegenerator.errors.InvoiceGeneratorException;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static ch.dvbern.lib.invoicegenerator.TestUtil.createFile;
 import static ch.dvbern.lib.invoicegenerator.dto.component.AddressComponent.RECHTE_ADRESSE_LEFT_MARGIN_MM;
@@ -93,7 +93,7 @@ public class SteuerbescheinigungTest {
 		new SummaryEntry("Total", "8'468.00", true, true)
 	);
 
-	@Before
+	@BeforeEach
 	public void init() {
 		configuration.setHeader(header);
 	}
@@ -104,6 +104,6 @@ public class SteuerbescheinigungTest {
 		final Invoice invoice = new Invoice(columnTitle, TITLE, summary, einleitung, empfaengerAdresse,
 			null, positionen, total, null);
 
-		Assert.assertTrue(createFile(invoiceGenerator, invoice, "target/Steuerbescheinigung.pdf").isFile());
+		Assertions.assertTrue(createFile(invoiceGenerator, invoice, "target/Steuerbescheinigung.pdf").isFile());
 	}
 }

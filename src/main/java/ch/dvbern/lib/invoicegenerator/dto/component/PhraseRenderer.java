@@ -110,7 +110,7 @@ public class PhraseRenderer extends TextComponentRenderer<PhraseComponent, List<
 
 		columnText.setLeading(0, componentConfiguration.getMultipliedLeading());
 		Font font = componentConfiguration.getFont()
-			.orElseGet(pageConfiguration::getFont);
+			.orElseGet(() -> pageConfiguration.getFonts().getFont());
 
 		columnText.setText(new Phrase(joinListToString(payload), font));
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 DV Bern AG, Switzerland
+ * Copyright (C) 2020 DV Bern AG, Switzerland
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ch.dvbern.lib.invoicegenerator.dto;
+package ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import ch.dvbern.lib.invoicegenerator.dto.OnPage;
+import ch.dvbern.lib.invoicegenerator.dto.component.ComponentRenderer;
+import ch.dvbern.lib.invoicegenerator.dto.component.OrangerEinzahlungsscheinComponent;
+import ch.dvbern.lib.invoicegenerator.dto.component.SimpleConfiguration;
 import ch.dvbern.lib.invoicegenerator.errors.IllegalKontoException;
 import com.google.common.base.MoreObjects;
 
 import static ch.dvbern.lib.invoicegenerator.OrangerEinzahlungsscheinConstants.KONTO_PARTS;
 import static ch.dvbern.lib.invoicegenerator.OrangerEinzahlungsscheinConstants.MAX_LENGTH_OF_ORDNUNGSNUMMER;
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -39,7 +40,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author Xaver Weibel
  * @see OrangerEinzahlungsscheinBank
  */
-public class OrangerEinzahlungsschein {
+public class OrangerEinzahlungsschein extends Einzahlungsschein {
 
 	public static final int CHECKSUMME_MODULO = 10;
 
@@ -59,12 +60,6 @@ public class OrangerEinzahlungsschein {
 
 	@Nonnull
 	private final List<String> einzahlungFuer;
-	@Nonnull
-	private final BigInteger referenzNr;
-	@Nonnull
-	private final BigDecimal betrag;
-	@Nonnull
-	private final String konto;
 	@Nonnull
 	private final String kontoForKodierzeile;
 	@Nonnull
@@ -89,19 +84,13 @@ public class OrangerEinzahlungsschein {
 		@Nonnull BigDecimal betrag,
 		@Nonnull String konto,
 		@Nonnull List<String> einbezahltVon) throws IllegalKontoException {
-		checkNotNull(einzahlungFuer);
-		checkNotNull(referenzNrMitPruefziffer);
-		checkNotNull(betrag);
-		checkNotNull(konto);
-		checkNotNull(einbezahltVon);
-		checkArgument(betrag.scale() == 2,
-			"betrag.scale() was %s but expected 2", betrag.scale());
+		super(EinzahlungType.ORANGE_EINZAHLUNGSCHEIN, referenzNrMitPruefziffer, betrag, konto);
 
-		this.konto = konto;
+		checkNotNull(einzahlungFuer);
+		checkNotNull(einbezahltVon);
+
 		this.kontoForKodierzeile = parseKontoForKodierzeile(konto);
 		this.einzahlungFuer = einzahlungFuer;
-		this.referenzNr = referenzNrMitPruefziffer;
-		this.betrag = betrag;
 		this.einbezahltVon = einbezahltVon;
 	}
 
@@ -112,13 +101,11 @@ public class OrangerEinzahlungsschein {
 		@Nonnull String konto,
 		@Nonnull String kontoForKodierzeile,
 		@Nonnull List<String> einbezahltVon) {
+		super(EinzahlungType.ORANGE_EINZAHLUNGSCHEIN, referenzNrMitPruefziffer, betrag, konto);
 
-		this.konto = konto;
-		this.kontoForKodierzeile = kontoForKodierzeile;
 		this.einzahlungFuer = einzahlungFuer;
-		this.referenzNr = referenzNrMitPruefziffer;
-		this.betrag = betrag;
 		this.einbezahltVon = einbezahltVon;
+		this.kontoForKodierzeile = kontoForKodierzeile;
 	}
 
 	@Nonnull
@@ -138,7 +125,7 @@ public class OrangerEinzahlungsschein {
 			final int ordnungsnummer = Integer.parseInt(parts[1]);
 			final String ordnungsmummerString = String.format("%06d", ordnungsnummer);
 			final int pruefziffer = calcPruefziffer(parts[0] + ordnungsmummerString);
-			if (pruefziffer != Integer.valueOf(parts[2])) {
+			if (pruefziffer != Integer.parseInt(parts[2])) {
 				throw new IllegalKontoException("Invalid Prüfziffer");
 			}
 			return parts[0] + ordnungsmummerString + pruefziffer;
@@ -150,21 +137,29 @@ public class OrangerEinzahlungsschein {
 	}
 
 	@Nonnull
+	@Override
+	public ComponentRenderer<SimpleConfiguration, ? extends Einzahlungsschein> componentRenderer(
+		@Nonnull EinzahlungsscheinConfiguration configuration,
+		@Nonnull OnPage onPage) {
+		return new OrangerEinzahlungsscheinComponent(configuration, this, onPage);
+	}
+
+	@Nonnull
 	public List<String> getEinzahlungFuer() {
 		return einzahlungFuer;
 	}
 
 	public int getBetragInChf() {
-		return betrag.intValue();
+		return getBetrag().intValue();
 	}
 
 	@Nonnull
-	public String getBetragInCHFpAsText() {
+	public String getBetragInCHFAsText() {
 		return String.format("%08d", this.getBetragInChf());
 	}
 
 	public int getBetragInRp() {
-		return betrag.remainder(BigDecimal.ONE).movePointRight(2).intValue();
+		return getBetrag().remainder(BigDecimal.ONE).movePointRight(2).intValue();
 	}
 
 	@Nonnull
@@ -173,28 +168,13 @@ public class OrangerEinzahlungsschein {
 	}
 
 	@Nonnull
-	public String getKonto() {
-		return konto;
-	}
-
-	@Nonnull
-	public String getReferenzNrAsText() {
-		DecimalFormat decimalFormat = new DecimalFormat("#,#####");
-		DecimalFormatSymbols formatSymbols = decimalFormat.getDecimalFormatSymbols();
-		formatSymbols.setGroupingSeparator(' ');
-		decimalFormat.setDecimalFormatSymbols(formatSymbols);
-
-		return decimalFormat.format(this.referenzNr);
-	}
-
-	@Nonnull
 	public String getReferenzNrAsTextFuerEmpfangsschein() {
-		return this.referenzNr.toString();
+		return getReferenzNr().toString();
 	}
 
 	@Nonnull
 	public String getReferenzNrForPruefzifferAsText() {
-		return String.format("%027d", this.referenzNr);
+		return String.format("%027d", getReferenzNr());
 	}
 
 	@Nonnull
@@ -204,7 +184,7 @@ public class OrangerEinzahlungsschein {
 
 	@Nonnull
 	public String getKodierzeile() {
-		final String belegartCodeAndBetrag = ESR_IN_CHF_BELEGARTCODE + getBetragInCHFpAsText() + getBetragInRpAsText();
+		final String belegartCodeAndBetrag = ESR_IN_CHF_BELEGARTCODE + getBetragInCHFAsText() + getBetragInRpAsText();
 
 		int pruefziffer = calcPruefziffer(belegartCodeAndBetrag);
 		return belegartCodeAndBetrag + pruefziffer + '>' + getReferenzNrForPruefzifferAsText() + "+ " +
@@ -215,9 +195,6 @@ public class OrangerEinzahlungsschein {
 	public String toString() {
 		return MoreObjects.toStringHelper(this)
 			.add("einzahlungFuer", einzahlungFuer)
-			.add("referenzNr", referenzNr)
-			.add("betrag", betrag)
-			.add("konto", konto)
 			.add("kontoForKodierzeile", kontoForKodierzeile)
 			.add("einbezahltVon", einbezahltVon)
 			.toString();

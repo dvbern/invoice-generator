@@ -20,11 +20,11 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
-import ch.dvbern.lib.invoicegenerator.dto.OrangerEinzahlungsschein;
+import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.OrangerEinzahlungsschein;
 import ch.dvbern.lib.invoicegenerator.errors.IllegalKontoException;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class OrangerEinzahlungsscheinTest {
@@ -36,7 +36,7 @@ public class OrangerEinzahlungsscheinTest {
 		"Robert Schneider SA", "Grands magasins", "Case postale", "2501 Biel/Bienne");
 	private BigDecimal betrag = new BigDecimal("3949.75");
 
-	@Before
+	@BeforeEach
 	public void init() {
 		betrag = betrag.setScale(2, BigDecimal.ROUND_HALF_UP);
 	}
@@ -45,83 +45,86 @@ public class OrangerEinzahlungsscheinTest {
 	public void getBetragInRpShouldReturn75IfTheBetragIs3949Dot75() throws IllegalKontoException {
 		final OrangerEinzahlungsschein einzahlungsschein = new OrangerEinzahlungsschein(einzahlungFuer,
 			new BigInteger("930454000006040744040244035"), betrag, "01-200027-2", einbezahltVon);
-		Assert.assertEquals(EXPECTED_VALUE_IN_RP, einzahlungsschein.getBetragInRp());
+		Assertions.assertEquals(EXPECTED_VALUE_IN_RP, einzahlungsschein.getBetragInRp());
 	}
 
 	@Test
 	public void getBetragInRpAsTextShouldReturn75IfTheBetragIs3949Dot75() throws IllegalKontoException {
 		final OrangerEinzahlungsschein einzahlungsschein = new OrangerEinzahlungsschein(einzahlungFuer,
 			new BigInteger("930454000006040744040244035"), betrag, "01-200027-2", einbezahltVon);
-		Assert.assertEquals("75", einzahlungsschein.getBetragInRpAsText());
+		Assertions.assertEquals("75", einzahlungsschein.getBetragInRpAsText());
 	}
 
 	@Test
 	public void getBetragInChfShouldReturn3949IfTheBetragIs3949Dot75() throws IllegalKontoException {
 		final OrangerEinzahlungsschein einzahlungsschein = new OrangerEinzahlungsschein(einzahlungFuer,
 			new BigInteger("930454000006040744040244035"), betrag, "01-200027-2", einbezahltVon);
-		Assert.assertEquals(EXPECTED_VALUE_INC_CHF, einzahlungsschein.getBetragInChf());
+		Assertions.assertEquals(EXPECTED_VALUE_INC_CHF, einzahlungsschein.getBetragInChf());
 	}
 
 	@Test
 	public void getReferenzNrAsTextShoutReturnGroupsOfFife() throws IllegalKontoException {
 		final OrangerEinzahlungsschein einzahlungsschein = new OrangerEinzahlungsschein(einzahlungFuer,
 			new BigInteger("120000000000234478943216899"), betrag, "01-200027-2", einbezahltVon);
-		Assert.assertEquals("12 00000 00000 23447 89432 16899", einzahlungsschein.getReferenzNrAsText());
+		Assertions.assertEquals("12 00000 00000 23447 89432 16899", einzahlungsschein.getReferenzNrAsText());
 	}
 
 	@Test
 	public void getReferenzNrAsTextShoutReturnGroupsOfFifeWithZeroPadding() throws IllegalKontoException {
 		final OrangerEinzahlungsschein einzahlungsschein = new OrangerEinzahlungsschein(einzahlungFuer,
 			new BigInteger("1236"), betrag, "01-200027-2", einbezahltVon);
-		Assert.assertEquals("1236", einzahlungsschein.getReferenzNrAsText());
+		Assertions.assertEquals("1236", einzahlungsschein.getReferenzNrAsText());
 	}
 
 	@Test
 	public void getReferenzNrAsTextFuerEmpfangsscheinShoutReturnAHugeNumber() throws IllegalKontoException {
 		final OrangerEinzahlungsschein einzahlungsschein = new OrangerEinzahlungsschein(einzahlungFuer,
 			new BigInteger("120000000000234478943216899"), betrag, "01-200027-2", einbezahltVon);
-		Assert.assertEquals("120000000000234478943216899", einzahlungsschein.getReferenzNrAsTextFuerEmpfangsschein());
+		Assertions.assertEquals(
+			"120000000000234478943216899",
+			einzahlungsschein.getReferenzNrAsTextFuerEmpfangsschein());
 	}
 
 	@Test
 	public void getReferenzNrForPruefzifferShouldAlwysReturnANumberWith27Digits() throws IllegalKontoException {
 		final OrangerEinzahlungsschein einzahlungsschein = new OrangerEinzahlungsschein(einzahlungFuer,
 			new BigInteger("1236"), betrag, "01-200027-2", einbezahltVon);
-		Assert.assertEquals("000000000000000000000001236", einzahlungsschein.getReferenzNrForPruefzifferAsText());
+		Assertions.assertEquals("000000000000000000000001236", einzahlungsschein.getReferenzNrForPruefzifferAsText());
 	}
 
 	@Test
 	public void getBetragInChfAsTextShouldReturn00003949IfTheBetragIs3949() throws IllegalKontoException {
 		final OrangerEinzahlungsschein einzahlungsschein = new OrangerEinzahlungsschein(einzahlungFuer,
 			new BigInteger("93045400000604076404024403"), betrag, "01-200027-2", einbezahltVon);
-		Assert.assertEquals("00003949", einzahlungsschein.getBetragInCHFpAsText());
+		Assertions.assertEquals("00003949", einzahlungsschein.getBetragInCHFAsText());
 	}
 
-	@Test(expected = IllegalKontoException.class)
-	public void createAnEinzahlungsscheinWithAnInvalidKontoFormatShouldNotBeAllowed() throws IllegalKontoException {
-		new OrangerEinzahlungsschein(einzahlungFuer,
-			new BigInteger("120000000000234478943216899"), betrag, "162-8", einbezahltVon);
+	@Test
+	public void createAnEinzahlungsscheinWithAnInvalidKontoFormatShouldNotBeAllowed() {
+		Assertions.assertThrows(IllegalKontoException.class, () -> new OrangerEinzahlungsschein(einzahlungFuer,
+			new BigInteger("120000000000234478943216899"), betrag, "162-8", einbezahltVon));
 	}
 
-	@Test(expected = IllegalKontoException.class)
-	public void createAnEinzahlungsscheinWithAnInvalidEsrCodeInTheKontoShouldNotBeAllowed()
-		throws IllegalKontoException {
-
-		new OrangerEinzahlungsschein(einzahlungFuer,
-			new BigInteger("120000000000234478943216899"), betrag, "02-162-8", einbezahltVon);
+	@Test
+	public void createAnEinzahlungsscheinWithAnInvalidEsrCodeInTheKontoShouldNotBeAllowed() {
+		Assertions.assertThrows(IllegalKontoException.class, () -> new OrangerEinzahlungsschein(einzahlungFuer,
+			new BigInteger("120000000000234478943216899"), betrag, "02-162-8", einbezahltVon));
 	}
 
-	@Test(expected = IllegalKontoException.class)
-	public void createAnEinzahlungsscheinWithATooLongOrdnungsnummerShouldNotNeAllowed() throws IllegalKontoException {
-		new OrangerEinzahlungsschein(einzahlungFuer, new BigInteger("120000000000234478943216899"), betrag,
-			"02-164445646462-8", einbezahltVon);
+	@Test
+	public void createAnEinzahlungsscheinWithATooLongOrdnungsnummerShouldNotNeAllowed() {
+		Assertions.assertThrows(
+			IllegalKontoException.class,
+			() -> new OrangerEinzahlungsschein(einzahlungFuer, new BigInteger("120000000000234478943216899"), betrag,
+				"02-164445646462-8", einbezahltVon));
 	}
 
-	@Test(expected = IllegalKontoException.class)
-	public void createAnEinzahlungsscheinWithANonNumericOrdnungsnummerShouldNotBeAllowed() throws
-		IllegalKontoException {
-		new OrangerEinzahlungsschein(einzahlungFuer, new BigInteger("120000000000234478943216899"), betrag,
-			"02-1f222-8", einbezahltVon);
+	@Test
+	public void createAnEinzahlungsscheinWithANonNumericOrdnungsnummerShouldNotBeAllowed() {
+		Assertions.assertThrows(
+			IllegalKontoException.class,
+			() -> new OrangerEinzahlungsschein(einzahlungFuer, new BigInteger("120000000000234478943216899"), betrag,
+				"02-1f222-8", einbezahltVon));
 	}
 
 	@Test
@@ -130,6 +133,6 @@ public class OrangerEinzahlungsscheinTest {
 			einzahlungFuer, new BigInteger("120000000000234478943216899"), betrag, "01-162-8", einbezahltVon);
 
 		String expected = "0100003949753>120000000000234478943216899+ 010001628>";
-		Assert.assertEquals(expected, einzahlungsschein.getKodierzeile());
+		Assertions.assertEquals(expected, einzahlungsschein.getKodierzeile());
 	}
 }

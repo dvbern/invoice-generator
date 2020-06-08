@@ -20,6 +20,7 @@ import java.awt.Color;
 import javax.annotation.Nonnull;
 
 import ch.dvbern.lib.invoicegenerator.dto.PageConfiguration;
+import ch.dvbern.lib.invoicegenerator.dto.fonts.FontConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.position.Position;
 import ch.dvbern.lib.invoicegenerator.dto.position.RechnungsPosition;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities;
@@ -55,7 +56,7 @@ public class RechnungsPositionStrategy extends PositionStrategy {
 		boolean rigthAllign,
 		boolean lastPosition) {
 
-		PdfPCell cell = new PdfPCell(new Phrase(string, getFont(configuration)));
+		PdfPCell cell = new PdfPCell(new Phrase(string, getFont(configuration.getFonts())));
 		cell.setLeading(0, getMultipliedLeading(configuration));
 
 		if (lastPosition) {
@@ -75,7 +76,7 @@ public class RechnungsPositionStrategy extends PositionStrategy {
 
 	@Nonnull
 	@Override
-	protected Font getFont(@Nonnull PageConfiguration configuration) {
+	protected Font getFont(@Nonnull FontConfiguration configuration) {
 		return getFont()
 			.orElseGet(configuration::getFont);
 	}

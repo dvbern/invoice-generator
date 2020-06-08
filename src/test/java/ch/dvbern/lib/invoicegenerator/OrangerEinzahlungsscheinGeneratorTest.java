@@ -29,16 +29,16 @@ import javax.annotation.Nonnull;
 
 import ch.dvbern.lib.invoicegenerator.dto.Alignment;
 import ch.dvbern.lib.invoicegenerator.dto.InvoiceGeneratorConfiguration;
-import ch.dvbern.lib.invoicegenerator.dto.OrangerEinzahlungsschein;
-import ch.dvbern.lib.invoicegenerator.dto.OrangerEinzahlungsscheinBank;
-import ch.dvbern.lib.invoicegenerator.dto.OrangerEinzahlungsscheinConfiguration;
+import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.EinzahlungsscheinConfiguration;
+import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.OrangerEinzahlungsschein;
+import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.OrangerEinzahlungsscheinBank;
 import ch.dvbern.lib.invoicegenerator.errors.IllegalKontoException;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfElementGenerator;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfGenerator;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfContentByte;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static ch.dvbern.lib.invoicegenerator.dto.component.OrangerEinzahlungsscheinComponent.createEinzahlungsschein;
 
@@ -67,7 +67,7 @@ public class OrangerEinzahlungsscheinGeneratorTest {
 	private final List<String> zugunstenVonLong = LONG_TEXT;
 	private final InvoiceGeneratorConfiguration configuration = new InvoiceGeneratorConfiguration(Alignment.LEFT);
 	private final PdfElementGenerator pdfElementGenerator = new PdfElementGenerator(configuration);
-	private final OrangerEinzahlungsscheinConfiguration defaultConfig = createConfig();
+	private final EinzahlungsscheinConfiguration defaultConfig = createConfig();
 
 	@Test
 	public void testTheCreationOfASampleEsr() throws IllegalKontoException, DocumentException, IOException {
@@ -90,9 +90,9 @@ public class OrangerEinzahlungsscheinGeneratorTest {
 			"01-162-8",
 			einbezahltVon);
 
-		OrangerEinzahlungsscheinConfiguration config = createConfig();
-		config.setEsrLeftOffsetInMm(2);
-		config.setEsrTopOffsetInMm(-5);
+		EinzahlungsscheinConfiguration config = createConfig();
+		config.setLeftOffsetInMm(2);
+		config.setTopOffsetInMm(-5);
 
 		create("target/EinzahlungsscheinWithAnOffset.pdf", einzahlungsschein, config);
 	}
@@ -147,8 +147,8 @@ public class OrangerEinzahlungsscheinGeneratorTest {
 			"01-162-8",
 			einbezahltVon);
 
-		OrangerEinzahlungsscheinConfiguration config = createConfig();
-		config.setEsrTopOffsetInMm(5);
+		EinzahlungsscheinConfiguration config = createConfig();
+		config.setTopOffsetInMm(5);
 
 		create("target/EinzahlungsscheinBankWithOffset.pdf", einzahlungsschein, defaultConfig);
 	}
@@ -156,7 +156,7 @@ public class OrangerEinzahlungsscheinGeneratorTest {
 	private void create(
 		@Nonnull String path,
 		@Nonnull OrangerEinzahlungsschein einzahlungsschein,
-		@Nonnull OrangerEinzahlungsscheinConfiguration config) throws FileNotFoundException {
+		@Nonnull EinzahlungsscheinConfiguration config) throws FileNotFoundException {
 
 		PdfGenerator generator = new PdfGenerator(new FileOutputStream(path), configuration);
 
@@ -164,12 +164,12 @@ public class OrangerEinzahlungsscheinGeneratorTest {
 		createEinzahlungsschein(content, pdfElementGenerator, config, einzahlungsschein);
 
 		generator.close();
-		Assert.assertTrue(new File(path).isFile());
+		Assertions.assertTrue(new File(path).isFile());
 	}
 
 	@Nonnull
-	private OrangerEinzahlungsscheinConfiguration createConfig() {
-		OrangerEinzahlungsscheinConfiguration config = new OrangerEinzahlungsscheinConfiguration();
+	private EinzahlungsscheinConfiguration createConfig() {
+		EinzahlungsscheinConfiguration config = new EinzahlungsscheinConfiguration();
 		config.setAddEsrBackgroundImage(true);
 
 		return config;

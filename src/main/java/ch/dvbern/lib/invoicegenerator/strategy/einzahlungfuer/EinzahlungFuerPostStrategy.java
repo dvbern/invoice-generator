@@ -17,7 +17,7 @@ package ch.dvbern.lib.invoicegenerator.strategy.einzahlungfuer;
 
 import javax.annotation.Nonnull;
 
-import ch.dvbern.lib.invoicegenerator.dto.OrangerEinzahlungsschein;
+import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.OrangerEinzahlungsschein;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfElementGenerator;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfContentByte;

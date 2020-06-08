@@ -26,6 +26,8 @@ import javax.annotation.Nullable;
 import ch.dvbern.lib.invoicegenerator.dto.Alignment;
 import ch.dvbern.lib.invoicegenerator.dto.PageConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.SummaryEntry;
+import ch.dvbern.lib.invoicegenerator.dto.fonts.FontBuilder;
+import ch.dvbern.lib.invoicegenerator.dto.fonts.FontModifier;
 import ch.dvbern.lib.invoicegenerator.dto.position.Position;
 import ch.dvbern.lib.invoicegenerator.dto.position.RechnungsPositionColumnTitle;
 import ch.dvbern.lib.invoicegenerator.strategy.position.PositionStrategy;
@@ -44,7 +46,6 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import org.jetbrains.annotations.Contract;
 
-import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.OCRB_FONT;
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.PADDING_BOTTOM;
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.joinListToString;
 
@@ -81,7 +82,7 @@ public class PdfElementGenerator {
 
 	@Nonnull
 	public Paragraph createParagraph(@Nonnull String string) {
-		Paragraph paragraph = new Paragraph(string, configuration.getFont());
+		Paragraph paragraph = new Paragraph(string, configuration.getFonts().getFont());
 		paragraph.setLeading(0, configuration.getMultipliedLeadingDefault());
 
 		return paragraph;
@@ -94,7 +95,7 @@ public class PdfElementGenerator {
 
 	@Nonnull
 	public Paragraph createTitle(@Nonnull String title, float leading) {
-		Paragraph paragraph = new Paragraph(title, configuration.getFontTitle());
+		Paragraph paragraph = new Paragraph(title, configuration.getFonts().getFontTitle());
 		paragraph.setLeading(0, leading);
 		paragraph.setSpacingAfter(PADDING_BOTTOM);
 
@@ -107,7 +108,7 @@ public class PdfElementGenerator {
 		final boolean rightAlign,
 		final float multipliedLeading) {
 
-		final Phrase phrase = new Phrase(string, configuration.getFontBold());
+		final Phrase phrase = new Phrase(string, configuration.getFonts().getFontTitle());
 		PdfPCell cell = new PdfPCell(phrase);
 		cell.setBorder(Rectangle.BOTTOM);
 		cell.setBorderColor(Color.GRAY);
@@ -198,7 +199,8 @@ public class PdfElementGenerator {
 		int valueHorizontalAllign,
 		final float leading) {
 
-		Font font = summaryEntry.isBold() ? configuration.getFontBold() : configuration.getFont();
+		Font font = summaryEntry.isBold() ? configuration.getFonts().getFontBold() :
+			configuration.getFonts().getFont();
 		PdfPCell labelCell = new PdfPCell(new Phrase(summaryEntry.getLabel(), font));
 		PdfPCell valueCell = new PdfPCell(new Phrase(summaryEntry.getValue(), font));
 		labelCell.setLeading(0, leading);
@@ -239,7 +241,7 @@ public class PdfElementGenerator {
 			lowerLeftXPosition,
 			lowerLeftYPosition,
 			alignment,
-			new Phrase(text, configuration.getFont()));
+			new Phrase(text, configuration.getFonts().getFont()));
 	}
 
 	private void writeSingleLine(
@@ -259,7 +261,8 @@ public class PdfElementGenerator {
 		float lowerLeftYPosition,
 		int alignment) {
 
-		writeSingleLine(directContent, lowerLeftXPosition, lowerLeftYPosition, alignment, new Phrase(text, OCRB_FONT));
+		Font font = configuration.getFonts().getFontOcrb();
+		writeSingleLine(directContent, lowerLeftXPosition, lowerLeftYPosition, alignment, new Phrase(text, font));
 	}
 
 	public void writeSingleLine(
@@ -270,7 +273,7 @@ public class PdfElementGenerator {
 		int alignment,
 		float fontSize) {
 
-		Font font = PdfUtilities.createFontWithSize(configuration.getFont(), fontSize);
+		Font font = FontBuilder.of(configuration.getFonts().getFont()).with(FontModifier.size(fontSize)).build();
 
 		writeSingleLine(directContent, lowerLeftXPosition, lowerLeftYPosition, alignment, new Phrase(text, font));
 	}
@@ -289,7 +292,7 @@ public class PdfElementGenerator {
 		float ury = lowerLeftYPosition + height;
 		columnText.setSimpleColumn(lowerLeftXPosition, lowerLeftYPosition, urx, ury);
 		columnText.setLeading(0, configuration.getMultipliedLeadingDefault());
-		columnText.setText(new Phrase(joinListToString(text), configuration.getFont()));
+		columnText.setText(new Phrase(joinListToString(text), configuration.getFonts().getFont()));
 		columnText.go();
 	}
 

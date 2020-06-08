@@ -22,6 +22,7 @@ import javax.annotation.Nullable;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfElementGenerator;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfWriter;
 
 public abstract class ComponentRenderer<C extends ComponentConfiguration, Payload> {
 
@@ -44,6 +45,11 @@ public abstract class ComponentRenderer<C extends ComponentConfiguration, Payloa
 		@Nonnull PdfContentByte directContent,
 		@Nonnull PdfElementGenerator pdfElementGenerator)
 		throws DocumentException;
+
+	public void render(@Nonnull PdfWriter pdfWriter, @Nonnull PdfElementGenerator pdfElementGenerator)
+		throws DocumentException {
+		render(pdfWriter.getDirectContent(), pdfElementGenerator);
+	}
 
 	@Nonnull
 	public C getComponentConfiguration() {

@@ -22,6 +22,8 @@ import javax.annotation.Nullable;
 
 import ch.dvbern.lib.invoicegenerator.dto.component.AddressComponent;
 import ch.dvbern.lib.invoicegenerator.dto.component.OrangerEinzahlungsscheinComponent;
+import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.DummyEinzahlungsschein;
+import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.EinzahlungsscheinConfiguration;
 import com.google.common.base.MoreObjects;
 
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.ESR_HEIGHT_WITH_MARGIN;
@@ -40,7 +42,7 @@ public class InvoiceGeneratorConfiguration extends BaseLayoutConfiguration {
 	private List<String> zahlungsKonditionen = null;
 
 	@Nonnull
-	private final OrangerEinzahlungsscheinConfiguration esrConfig = new OrangerEinzahlungsscheinConfiguration();
+	private final EinzahlungsscheinConfiguration einzahlungsscheinConfiguration = new EinzahlungsscheinConfiguration();
 
 	/**
 	 * Erstellt eine neue InvoiceGeneratorConfiguration mit default Werten. Sämtliche Parameter können über
@@ -67,9 +69,12 @@ public class InvoiceGeneratorConfiguration extends BaseLayoutConfiguration {
 
 	public void addDummyESR(@Nonnull OnPage onPage) {
 		DummyEinzahlungsschein einzahlungsschein = new DummyEinzahlungsschein();
-		getCustomComponents().add(new OrangerEinzahlungsscheinComponent(esrConfig, einzahlungsschein, onPage));
+		getCustomComponents().add(new OrangerEinzahlungsscheinComponent(
+			einzahlungsscheinConfiguration,
+			einzahlungsschein,
+			onPage));
 
-		setBottomMarginInPoints(ESR_HEIGHT_WITH_MARGIN + esrConfig.getYOffset());
+		setBottomMarginInPoints(ESR_HEIGHT_WITH_MARGIN + einzahlungsscheinConfiguration.getYOffset());
 	}
 
 	@Nullable
@@ -92,29 +97,29 @@ public class InvoiceGeneratorConfiguration extends BaseLayoutConfiguration {
 		return MoreObjects.toStringHelper(this)
 			.add("summaryTablePosition", summaryTablePosition)
 			.add("zahlungsKonditionen", zahlungsKonditionen)
-			.add("esrConfig", esrConfig)
+			.add("einzahlungsscheinConfiguration", einzahlungsscheinConfiguration)
 			.addValue(super.toString())
 			.toString();
 	}
 
 	public void setEsrLeftOffsetInMm(float esrLeftOffsetInMm) {
-		this.esrConfig.setEsrLeftOffsetInMm(esrLeftOffsetInMm);
+		this.einzahlungsscheinConfiguration.setLeftOffsetInMm(esrLeftOffsetInMm);
 	}
 
 	public void setEsrTopOffsetInMm(float esrTopOffsetInMm) {
-		this.esrConfig.setEsrTopOffsetInMm(esrTopOffsetInMm);
+		this.einzahlungsscheinConfiguration.setTopOffsetInMm(esrTopOffsetInMm);
 	}
 
 	public void setEinzahlungsscheinNotOnPageOne(boolean einzahlungsscheinNotOnPageOne) {
-		this.esrConfig.setEinzahlungsscheinNotOnPageOne(einzahlungsscheinNotOnPageOne);
+		this.einzahlungsscheinConfiguration.setEinzahlungsscheinNotOnPageOne(einzahlungsscheinNotOnPageOne);
 	}
 
 	public void setAddEsrBackgroundImage(boolean addEsrBackgroundImage) {
-		this.esrConfig.setAddEsrBackgroundImage(addEsrBackgroundImage);
+		this.einzahlungsscheinConfiguration.setAddEsrBackgroundImage(addEsrBackgroundImage);
 	}
 
 	@Nonnull
-	public OrangerEinzahlungsscheinConfiguration getEsrConfig() {
-		return esrConfig;
+	public EinzahlungsscheinConfiguration getEinzahlungsscheinConfiguration() {
+		return einzahlungsscheinConfiguration;
 	}
 }

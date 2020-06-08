@@ -47,6 +47,7 @@ import ch.dvbern.lib.invoicegenerator.dto.position.RechnungsPositionColumnTitle;
 import ch.dvbern.lib.invoicegenerator.errors.InvoiceGeneratorException;
 import org.apache.pdfbox.io.MemoryUsageSetting;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -318,7 +319,11 @@ public class InvoiceGeneratorTest {
 			positionen, total, konditionen);
 		long startTime = System.currentTimeMillis();
 		for (int i = 0; i < NUMBER_OF_INVOICES; i++) {
-			assertThat(invoiceGenerator.generateInvoice(invoice), notNullValue());
+			try (ByteArrayOutputStream actual = invoiceGenerator.generateInvoice(invoice)) {
+				assertThat(actual, notNullValue());
+			} catch (IOException ex) {
+				Assertions.fail("Could not close output stream", ex);
+			}
 		}
 		long time = System.currentTimeMillis() - startTime;
 		LOG.info(String.format("%1$d invoices createt in %2$dms (%3$dms/invoice)", NUMBER_OF_INVOICES, time, (time /
@@ -335,9 +340,13 @@ public class InvoiceGeneratorTest {
 			growingPositions.add(new RechnungsPosition("Betreuungsgebühr", "1", "1'728.00", "1'728.00"));
 			final Invoice invoice = new Invoice(columnTitle, TITEL, summary, einleitung, adresse,
 				orangerEinzahlungsschein, growingPositions, total, konditionen);
-			ByteArrayOutputStream byteArrayOutputStream = invoiceGenerator.generateInvoice(invoice);
-			ByteArrayInputStream stream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-			merger.addSource(stream);
+			try (ByteArrayOutputStream byteArrayOutputStream = invoiceGenerator.generateInvoice(invoice)) {
+				try (ByteArrayInputStream stream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray())) {
+					merger.addSource(stream);
+				}
+			} catch (IOException ex) {
+				Assertions.fail("Could not close output stream", ex);
+			}
 		}
 		String mergedFileName = "target/InvoicesWithDifferentContent.pdf";
 		merger.setDestinationFileName(mergedFileName);

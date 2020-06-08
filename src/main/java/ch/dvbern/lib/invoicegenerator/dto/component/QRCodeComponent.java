@@ -75,11 +75,12 @@ public class QRCodeComponent extends ComponentRenderer<SimpleConfiguration, QRCo
 		bill.setDebtor(qrCodeEinzahlungsschein.getEinzahlungVon());
 
 		// Generate QR bill
-		PDFCanvas canvas = new PDFCanvas(QRBill.A4_PORTRAIT_WIDTH, QRBill.A4_PORTRAIT_HEIGHT);
-		bill.getFormat().setOutputSize(OutputSize.A4_PORTRAIT_SHEET);
-		QRBill.draw(bill, canvas);
+		try (PDFCanvas canvas = new PDFCanvas(QRBill.A4_PORTRAIT_WIDTH, QRBill.A4_PORTRAIT_HEIGHT)) {
+			bill.getFormat().setOutputSize(OutputSize.A4_PORTRAIT_SHEET);
+			QRBill.draw(bill, canvas);
 
-		return canvas.toByteArray();
+			return canvas.toByteArray();
+		}
 	}
 
 	@Override
@@ -87,10 +88,8 @@ public class QRCodeComponent extends ComponentRenderer<SimpleConfiguration, QRCo
 		throws InvoiceGeneratorRuntimeException {
 		Objects.requireNonNull(getPayload());
 
-		try {
-			byte[] pdf = generateQRCode(getPayload());
+		try (PdfReader pdfReader = new PdfReader(generateQRCode(getPayload()))) {
 			// reads the binary PDF file generated from the QR Bill library and adds it to actual invoice
-			PdfReader pdfReader = new PdfReader(pdf);
 			PdfImportedPage importedPage = pdfWriter.getImportedPage(pdfReader, 1);
 			pdfWriter.getDirectContent().addTemplate(importedPage, xOffset, yOffset);
 		} catch (QRBillValidationError | IOException e) {

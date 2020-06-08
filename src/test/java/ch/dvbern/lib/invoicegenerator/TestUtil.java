@@ -155,8 +155,8 @@ public final class TestUtil {
 
 	@Nonnull
 	public static Set<PDFont> getFonts(@Nonnull File file) {
-		try {
-			Set<PDFont> fonts = stream(PDDocument.load(file).getPages().iterator())
+		try (PDDocument document = PDDocument.load(file)) {
+			Set<PDFont> fonts = stream(document.getPages().iterator())
 				.map(PDPage::getResources)
 				.flatMap(r -> stream(r.getFontNames())
 					.map(c -> {

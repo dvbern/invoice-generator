@@ -326,7 +326,7 @@ public class InvoiceGeneratorTest {
 			}
 		}
 		long time = System.currentTimeMillis() - startTime;
-		LOG.info(String.format("%1$d invoices createt in %2$dms (%3$dms/invoice)", NUMBER_OF_INVOICES, time, (time /
+		LOG.info(String.format("%1$d invoices created in %2$dms (%3$dms/invoice)", NUMBER_OF_INVOICES, time, (time /
 			NUMBER_OF_INVOICES)));
 	}
 

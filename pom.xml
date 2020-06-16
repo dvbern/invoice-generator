@@ -27,7 +27,7 @@
 
 	<groupId>ch.dvbern.oss.invoicegenerator</groupId>
 	<artifactId>invoice-generator</artifactId>
-	<version>6.0.0</version>
+	<version>6.0.1</version>
 	<packaging>jar</packaging>
 
 	<name>DV Bern Invoice Generator Library</name>
@@ -166,9 +166,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>net.codecrete.qrbill</groupId>
-			<artifactId>qrbill-generator</artifactId>
-			<version>2.2.3</version>
-		</dependency>
+            <groupId>net.codecrete.qrbill</groupId>
+            <artifactId>qrbill-generator</artifactId>
+            <version>2.3.3</version>
+        </dependency>
 	</dependencies>
 </project>

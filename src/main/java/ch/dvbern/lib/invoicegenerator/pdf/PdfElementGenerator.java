@@ -108,7 +108,7 @@ public class PdfElementGenerator {
 		final boolean rightAlign,
 		final float multipliedLeading) {
 
-		final Phrase phrase = new Phrase(string, configuration.getFonts().getFontTitle());
+		final Phrase phrase = new Phrase(string, configuration.getFonts().getFontBold());
 		PdfPCell cell = new PdfPCell(phrase);
 		cell.setBorder(Rectangle.BOTTOM);
 		cell.setBorderColor(Color.GRAY);

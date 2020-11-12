@@ -156,7 +156,9 @@
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
             <version>2.0.19</version>
-            <scope>test</scope>
+            <!-- nicht mehr scope test, da qrbill-generator dies auch referenziert und
+             sonst u.U. eine (neuere) SNAPSHOT version nimmt -->
+<!--            <scope>test</scope>-->
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
@@ -168,7 +170,7 @@
         <dependency>
             <groupId>net.codecrete.qrbill</groupId>
             <artifactId>qrbill-generator</artifactId>
-            <version>2.3.3</version>
+            <version>2.5.0</version>
         </dependency>
     </dependencies>
 </project>

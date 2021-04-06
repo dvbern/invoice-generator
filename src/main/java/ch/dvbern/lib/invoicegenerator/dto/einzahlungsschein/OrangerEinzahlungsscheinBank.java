@@ -18,12 +18,13 @@ package ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.StringJoiner;
 
 import javax.annotation.Nonnull;
 
 import ch.dvbern.lib.invoicegenerator.errors.IllegalKontoException;
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Preconditions;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Aus den Daten des OrangerEinzahlungsscheinBank erstellt der InvoiceGenerator den ESR. Dies ist die Implementierung
@@ -59,7 +60,7 @@ public class OrangerEinzahlungsscheinBank extends OrangerEinzahlungsschein {
 		@Nonnull List<String> einbezahltVon) throws IllegalKontoException {
 		super(einzahlungFuer, referenzNrOhnePruefziffer, betrag, konto, einbezahltVon);
 
-		Preconditions.checkNotNull(zugunstenVon);
+		requireNonNull(zugunstenVon);
 		if (einzahlungFuer.size() > 2) {
 			throw new IllegalKontoException("EinzahlungFuer cannot have more than 2 lines");
 		}
@@ -68,9 +69,10 @@ public class OrangerEinzahlungsscheinBank extends OrangerEinzahlungsschein {
 	}
 
 	@Override
+	@Nonnull
 	public String toString() {
-		return MoreObjects.toStringHelper(this)
-			.add("zugunstenVon", zugunstenVon)
+		return new StringJoiner(", ", OrangerEinzahlungsscheinBank.class.getSimpleName() + '[', "]")
+			.add("zugunstenVon=" + zugunstenVon)
 			.toString();
 	}
 

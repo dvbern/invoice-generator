@@ -18,6 +18,7 @@ package ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.StringJoiner;
 
 import javax.annotation.Nonnull;
 
@@ -26,11 +27,10 @@ import ch.dvbern.lib.invoicegenerator.dto.component.ComponentRenderer;
 import ch.dvbern.lib.invoicegenerator.dto.component.OrangerEinzahlungsscheinComponent;
 import ch.dvbern.lib.invoicegenerator.dto.component.SimpleConfiguration;
 import ch.dvbern.lib.invoicegenerator.errors.IllegalKontoException;
-import com.google.common.base.MoreObjects;
 
 import static ch.dvbern.lib.invoicegenerator.OrangerEinzahlungsscheinConstants.KONTO_PARTS;
 import static ch.dvbern.lib.invoicegenerator.OrangerEinzahlungsscheinConstants.MAX_LENGTH_OF_ORDNUNGSNUMMER;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Aus den Daten des OrangerEinzahlungsscheins erstellt der InvoiceGenerator den ESR. Dies ist die Implementierung
@@ -86,8 +86,8 @@ public class OrangerEinzahlungsschein extends Einzahlungsschein {
 		@Nonnull List<String> einbezahltVon) throws IllegalKontoException {
 		super(EinzahlungType.ORANGE_EINZAHLUNGSCHEIN, referenzNrMitPruefziffer, betrag, konto);
 
-		checkNotNull(einzahlungFuer);
-		checkNotNull(einbezahltVon);
+		requireNonNull(einzahlungFuer);
+		requireNonNull(einbezahltVon);
 
 		this.kontoForKodierzeile = parseKontoForKodierzeile(konto);
 		this.einzahlungFuer = einzahlungFuer;
@@ -192,11 +192,12 @@ public class OrangerEinzahlungsschein extends Einzahlungsschein {
 	}
 
 	@Override
+	@Nonnull
 	public String toString() {
-		return MoreObjects.toStringHelper(this)
-			.add("einzahlungFuer", einzahlungFuer)
-			.add("kontoForKodierzeile", kontoForKodierzeile)
-			.add("einbezahltVon", einbezahltVon)
+		return new StringJoiner(", ", OrangerEinzahlungsschein.class.getSimpleName() + '[', "]")
+			.add("einzahlungFuer=" + einzahlungFuer)
+			.add("kontoForKodierzeile='" + kontoForKodierzeile + '\'')
+			.add("einbezahltVon=" + einbezahltVon)
 			.toString();
 	}
 }

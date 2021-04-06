@@ -52,9 +52,9 @@ import static ch.dvbern.lib.invoicegenerator.OrangerEinzahlungsscheinConstants.R
 import static ch.dvbern.lib.invoicegenerator.OrangerEinzahlungsscheinConstants.REFERENZNUMMER_EMPFANGSSCHEIN_FONT_SIZE;
 import static ch.dvbern.lib.invoicegenerator.OrangerEinzahlungsscheinConstants.REFERENZNUMMER_EMPFANGSSCHEIN_X;
 import static ch.dvbern.lib.invoicegenerator.OrangerEinzahlungsscheinConstants.REFERENZNUMMER_EMPFANGSSCHEIN_Y;
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.lowagie.text.pdf.PdfContentByte.ALIGN_LEFT;
 import static com.lowagie.text.pdf.PdfContentByte.ALIGN_RIGHT;
+import static java.util.Objects.requireNonNull;
 
 public class OrangerEinzahlungsscheinComponent
 	extends ComponentRenderer<SimpleConfiguration, OrangerEinzahlungsschein> {
@@ -85,7 +85,7 @@ public class OrangerEinzahlungsscheinComponent
 		if (config.isAddEsrBackgroundImage()) {
 			Image image = einzahlungFuerStrategy.getEsrBackgroundImage();
 			image.setAbsolutePosition(xOffset, yOffset);
-			pdfElementGenerator.addBackgroundImage(directContent, checkNotNull(image));
+			pdfElementGenerator.addBackgroundImage(directContent, requireNonNull(image));
 		}
 
 		pdfElementGenerator.writeSingleLine(

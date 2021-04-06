@@ -17,6 +17,7 @@ package ch.dvbern.lib.invoicegenerator.dto;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringJoiner;
 
 import javax.annotation.Nonnull;
 
@@ -29,7 +30,6 @@ import ch.dvbern.lib.invoicegenerator.strategy.position.H1Strategy;
 import ch.dvbern.lib.invoicegenerator.strategy.position.H2Strategy;
 import ch.dvbern.lib.invoicegenerator.strategy.position.PositionStrategy;
 import ch.dvbern.lib.invoicegenerator.strategy.position.RechnungsPositionStrategy;
-import com.google.common.base.MoreObjects;
 import com.lowagie.text.Font;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Rectangle;
@@ -196,12 +196,12 @@ public class PageConfiguration {
 	@Override
 	@Nonnull
 	public String toString() {
-		return MoreObjects.toStringHelper(this)
-			.add("leftPageMarginInMm", leftPageMarginInPoints)
-			.add("rightPageMarginInMm", rightPageMarginInPoints)
-			.add("topMarginInMm", topMarginInPoints)
-			.add("bottomMarginInMm", bottomMarginInPoints)
-			.add("positionStrategyMap", positionStrategyMap)
+		return new StringJoiner(", ", PageConfiguration.class.getSimpleName() + '[', "]")
+			.add("leftPageMarginInPoints=" + leftPageMarginInPoints)
+			.add("rightPageMarginInPoints=" + rightPageMarginInPoints)
+			.add("topMarginInPoints=" + topMarginInPoints)
+			.add("bottomMarginInPoints=" + bottomMarginInPoints)
+			.add("positionStrategyMap=" + positionStrategyMap)
 			.toString();
 	}
 

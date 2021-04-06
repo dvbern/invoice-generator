@@ -20,16 +20,15 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.StringJoiner;
 
 import javax.annotation.Nonnull;
 
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
 import ch.dvbern.lib.invoicegenerator.dto.component.ComponentRenderer;
 import ch.dvbern.lib.invoicegenerator.dto.component.SimpleConfiguration;
-import com.google.common.base.MoreObjects;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 public abstract class Einzahlungsschein {
 	@Nonnull
@@ -46,11 +45,13 @@ public abstract class Einzahlungsschein {
 		@Nonnull BigInteger referenzNr,
 		@Nonnull BigDecimal betrag,
 		@Nonnull String konto) {
-		checkNotNull(betrag);
-		checkNotNull(konto);
-		checkNotNull(referenzNr);
-		checkArgument(betrag.scale() == 2,
-			"betrag.scale() was %s but expected 2", betrag.scale());
+		requireNonNull(betrag);
+		requireNonNull(konto);
+		requireNonNull(referenzNr);
+		if (betrag.scale() != 2) {
+			throw new IllegalArgumentException("betrag.scale() was " + betrag.scale() + " but expected 2");
+
+		}
 		this.dtype = dtype;
 
 		this.referenzNr = referenzNr;
@@ -94,11 +95,13 @@ public abstract class Einzahlungsschein {
 	}
 
 	@Override
+	@Nonnull
 	public String toString() {
-		return MoreObjects.toStringHelper(this)
-			.add("referenzNr", referenzNr)
-			.add("betrag", betrag)
-			.add("konto", konto)
+		return new StringJoiner(", ", Einzahlungsschein.class.getSimpleName() + '[', "]")
+			.add("referenzNr=" + referenzNr)
+			.add("betrag=" + betrag)
+			.add("konto='" + konto + '\'')
+			.add("dtype=" + dtype)
 			.toString();
 	}
 }

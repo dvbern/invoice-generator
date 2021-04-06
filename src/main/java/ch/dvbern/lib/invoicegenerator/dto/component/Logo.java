@@ -27,8 +27,8 @@ import com.lowagie.text.Image;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.pdf.PdfContentByte;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.lowagie.text.Utilities.millimetersToPoints;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Ein Logo, welches auf einer Rechnung absolut positioniert werden kann.
@@ -85,7 +85,7 @@ public class Logo extends ComponentRenderer<SimpleConfiguration, Image> {
 		throws DocumentException {
 
 		float absoluteY = PageSize.A4.getHeight() - yOffset;
-		checkNotNull(getPayload()).setAbsolutePosition(absoluteX, absoluteY);
+		requireNonNull(getPayload()).setAbsolutePosition(absoluteX, absoluteY);
 
 		directContent.addImage(getPayload());
 	}

@@ -15,9 +15,9 @@
  */
 package ch.dvbern.lib.invoicegenerator.dto;
 
-import javax.annotation.Nonnull;
+import java.util.StringJoiner;
 
-import com.google.common.base.MoreObjects;
+import javax.annotation.Nonnull;
 
 /**
  * Eine Invoice hat eine Summary-Liste sowie eine Total-Liste. Beide Listen beinhalten SummaryEntries.
@@ -54,12 +54,13 @@ public class SummaryEntry {
 	}
 
 	@Override
+	@Nonnull
 	public String toString() {
-		return MoreObjects.toStringHelper(this)
-			.add("label", label)
-			.add("value", value)
-			.add("bold", bold)
-			.add("underlined", underlined)
+		return new StringJoiner(", ", SummaryEntry.class.getSimpleName() + '[', "]")
+			.add("label='" + label + '\'')
+			.add("value='" + value + '\'')
+			.add("bold=" + bold)
+			.add("underlined=" + underlined)
 			.toString();
 	}
 

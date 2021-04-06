@@ -15,10 +15,11 @@
  */
 package ch.dvbern.lib.invoicegenerator.dto.component;
 
+import java.util.StringJoiner;
+
 import javax.annotation.Nonnull;
 
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
-import com.google.common.base.MoreObjects;
 
 /**
  * Eine abstrakte Text-Komponente, welches absolut positioniert werden kann.
@@ -62,12 +63,12 @@ public abstract class TextComponent implements ComponentConfiguration {
 	@Override
 	@Nonnull
 	public String toString() {
-		return MoreObjects.toStringHelper(this)
-			.add("leftInMm", leftInMm)
-			.add("topInMm", topInMm)
-			.add("widthInMm", widthInMm)
-			.add("heightInMm", heightInMm)
-			.add("onPage", onPage)
+		return new StringJoiner(", ", TextComponent.class.getSimpleName() + '[', "]")
+			.add("leftInMm=" + leftInMm)
+			.add("topInMm=" + topInMm)
+			.add("widthInMm=" + widthInMm)
+			.add("heightInMm=" + heightInMm)
+			.add("onPage=" + onPage)
 			.toString();
 	}
 

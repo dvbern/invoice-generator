@@ -15,9 +15,9 @@
  */
 package ch.dvbern.lib.invoicegenerator.dto.position;
 
-import javax.annotation.Nonnull;
+import java.util.StringJoiner;
 
-import com.google.common.base.MoreObjects;
+import javax.annotation.Nonnull;
 
 /**
  * H2 Implementierung einer Position.
@@ -46,9 +46,10 @@ public class H2Position implements Position {
 	}
 
 	@Override
+	@Nonnull
 	public String toString() {
-		return MoreObjects.toStringHelper(this)
-			.add("beschrieb", beschrieb)
+		return new StringJoiner(", ", H2Position.class.getSimpleName() + '[', "]")
+			.add("beschrieb='" + beschrieb + '\'')
 			.toString();
 	}
 }

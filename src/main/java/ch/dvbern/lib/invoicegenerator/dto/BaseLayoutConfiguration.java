@@ -19,6 +19,7 @@ package ch.dvbern.lib.invoicegenerator.dto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,7 +31,6 @@ import ch.dvbern.lib.invoicegenerator.dto.component.ComponentConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.component.ComponentRenderer;
 import ch.dvbern.lib.invoicegenerator.dto.component.Logo;
 import ch.dvbern.lib.invoicegenerator.dto.component.PhraseRenderer;
-import com.google.common.base.MoreObjects;
 
 public class BaseLayoutConfiguration extends PageConfiguration {
 
@@ -85,11 +85,11 @@ public class BaseLayoutConfiguration extends PageConfiguration {
 	@Override
 	@Nonnull
 	public String toString() {
-		return MoreObjects.toStringHelper(this)
-			.add("empfaengerAdresse", empfaengerAdresse)
-			.add("logo", logo)
-			.add("header", header)
-			.add("footer", footer)
+		return new StringJoiner(", ", BaseLayoutConfiguration.class.getSimpleName() + '[', "]")
+			.add("empfaengerAdresse=" + empfaengerAdresse)
+			.add("logo=" + logo)
+			.add("header=" + header)
+			.add("footer=" + footer)
 			.toString();
 	}
 

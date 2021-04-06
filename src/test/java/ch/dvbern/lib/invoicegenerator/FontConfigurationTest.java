@@ -100,7 +100,8 @@ public class FontConfigurationTest {
 				equalTo("Times-Roman"),
 				equalTo("Times-BoldItalic"),
 				equalTo("Times-Italic"),
-				equalTo("Times-Bold"))
+				equalTo("Times-Bold"),
+				endsWith("LiberationSans")) // always added by OpenPdf since version 1.3.18
 		));
 	}
 }

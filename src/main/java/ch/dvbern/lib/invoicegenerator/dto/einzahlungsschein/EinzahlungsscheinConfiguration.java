@@ -16,12 +16,13 @@
 
 package ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein;
 
+import java.util.StringJoiner;
+
 import javax.annotation.Nonnull;
 
 import ch.dvbern.lib.invoicegenerator.strategy.einzahlungfuer.EinzahlungFuerBankStrategy;
 import ch.dvbern.lib.invoicegenerator.strategy.einzahlungfuer.EinzahlungFuerPostStrategy;
 import ch.dvbern.lib.invoicegenerator.strategy.einzahlungfuer.EinzahlungFuerStrategy;
-import com.google.common.base.MoreObjects;
 import com.lowagie.text.Utilities;
 
 public class EinzahlungsscheinConfiguration {
@@ -71,12 +72,13 @@ public class EinzahlungsscheinConfiguration {
 	}
 
 	@Override
+	@Nonnull
 	public String toString() {
-		return MoreObjects.toStringHelper(this)
-			.add("xOffset", xOffset)
-			.add("yOffset", yOffset)
-			.add("addEsrBackgroundImage", addEsrBackgroundImage)
-			.add("einzahlungsscheinNotOnPageOne", einzahlungsscheinNotOnPageOne)
+		return new StringJoiner(", ", EinzahlungsscheinConfiguration.class.getSimpleName() + '[', "]")
+			.add("xOffset=" + xOffset)
+			.add("yOffset=" + yOffset)
+			.add("addEsrBackgroundImage=" + addEsrBackgroundImage)
+			.add("einzahlungsscheinNotOnPageOne=" + einzahlungsscheinNotOnPageOne)
 			.toString();
 	}
 }

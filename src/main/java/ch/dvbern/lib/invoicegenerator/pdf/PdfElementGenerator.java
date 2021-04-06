@@ -31,8 +31,6 @@ import ch.dvbern.lib.invoicegenerator.dto.fonts.FontModifier;
 import ch.dvbern.lib.invoicegenerator.dto.position.Position;
 import ch.dvbern.lib.invoicegenerator.dto.position.RechnungsPositionColumnTitle;
 import ch.dvbern.lib.invoicegenerator.strategy.position.PositionStrategy;
-import com.google.common.collect.ImmutableList;
-import com.google.common.primitives.Ints;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
@@ -55,14 +53,14 @@ public class PdfElementGenerator {
 	public static final int SUMMARY_COLUMNS = 3;
 	public static final int FULL_WIDTH = 100;
 	private static final int MAIN_COLUMN_WIDTH = 60;
-	public static final List<Integer> POSITIONEN_COLUMN_WIDTHS = ImmutableList.of(MAIN_COLUMN_WIDTH, 10, 15, 15);
+	private static final int[] POSITIONEN_COLUMN_WIDTHS = { MAIN_COLUMN_WIDTH, 10, 15, 15 };
 	private static final int SUMMARY_TABLE_LABEL_WIDTH = 21;
 	private static final int SUMMARY_TABLE_VALUE_WIDTH = 19;
-	public static final List<Integer> SUMMARY_COLUMN_WIDTHS_RIGHT = ImmutableList.of(
-		MAIN_COLUMN_WIDTH, SUMMARY_TABLE_LABEL_WIDTH, SUMMARY_TABLE_VALUE_WIDTH);
+	private static final int[] SUMMARY_COLUMN_WIDTHS_RIGHT =
+		{ MAIN_COLUMN_WIDTH, SUMMARY_TABLE_LABEL_WIDTH, SUMMARY_TABLE_VALUE_WIDTH };
 	// reversed array hardcoded for performance gain
-	public static final List<Integer> SUMMARY_COLUMN_WIDTHS_LEFT = ImmutableList.of(
-		SUMMARY_TABLE_LABEL_WIDTH, SUMMARY_TABLE_VALUE_WIDTH, MAIN_COLUMN_WIDTH);
+	private static final int[] SUMMARY_COLUMN_WIDTHS_LEFT = {
+		SUMMARY_TABLE_LABEL_WIDTH, SUMMARY_TABLE_VALUE_WIDTH, MAIN_COLUMN_WIDTH };
 	@Nonnull
 	private final PageConfiguration configuration;
 
@@ -130,7 +128,7 @@ public class PdfElementGenerator {
 
 		PdfPTable table = new PdfPTable(POSITIONEN_COLUMNS);
 		table.setSpacingBefore(configuration.getSpaceBefore());
-		table.setWidths(Ints.toArray(POSITIONEN_COLUMN_WIDTHS));
+		table.setWidths(POSITIONEN_COLUMN_WIDTHS);
 		table.setWidthPercentage(FULL_WIDTH);
 		float defaultLeading = configuration.getMultipliedLeadingDefault();
 		table.addCell(createTitleCell(rechnungsPositionColumnTitle.getLeistung(), false, defaultLeading));
@@ -159,9 +157,9 @@ public class PdfElementGenerator {
 		float multipliedLeadingDefault = configuration.getMultipliedLeadingDefault();
 		PdfPTable table = new PdfPTable(SUMMARY_COLUMNS);
 		table.setKeepTogether(true);
-		int[] relativeWidths = Ints.toArray(Alignment.LEFT == tableAlignment ?
+		int[] relativeWidths = Alignment.LEFT == tableAlignment ?
 			SUMMARY_COLUMN_WIDTHS_LEFT :
-			SUMMARY_COLUMN_WIDTHS_RIGHT);
+			SUMMARY_COLUMN_WIDTHS_RIGHT;
 		table.setWidths(relativeWidths);
 		table.setWidthPercentage(FULL_WIDTH);
 		PdfPCell descriptionCell = new PdfPCell(descriptionContent);

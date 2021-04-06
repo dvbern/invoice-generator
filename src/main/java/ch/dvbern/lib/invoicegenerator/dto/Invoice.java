@@ -137,7 +137,9 @@ public class Invoice {
 	 *
 	 * @param einzahlungFuer Einzahlung für welche Bank
 	 * @param zugunstenVon Einzahlung zugunsten von wem
-	 * @param konto Das Konto
+	 * @param konto account information
+	 * @return an Invoice DTO - can be used with InvoiceGenerator to generate a PDF file
+	 * @throws IllegalKontoException when invalid account number given
 	 */
 	public static Invoice createDemoInvoiceForBank(
 		@Nonnull List<String> einzahlungFuer,
@@ -159,6 +161,8 @@ public class Invoice {
 	 *
 	 * @param einzahlungFuer Einzahlung für
 	 * @param konto Das Konto
+	 * @return an Invoice DTO - can be used with InvoiceGenerator to generate a PDF file
+	 * @throws IllegalKontoException when invalid account number given
 	 */
 	@Nonnull
 	public static Invoice createDemoInvoice(@Nonnull List<String> einzahlungFuer, @Nonnull String konto)

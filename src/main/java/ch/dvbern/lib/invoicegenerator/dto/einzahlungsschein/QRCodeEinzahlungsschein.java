@@ -53,7 +53,9 @@ public class QRCodeEinzahlungsschein extends Einzahlungsschein {
 	 * @param konto Das Konto im Format QR-IBAN (ISO 13616). Das Zahlverfahren mit
 	 * Referenz wird über eine spezielle Identifikation des Finanzinstituts (QR-IID) erkannt.
 	 * Für die QR-IID sind exklusiv Werte im Bereich 30000 – 31999 reserviert.
-	 * @param einbezahltVon Das Feld "Einbezahlt von" auf dem ESR
+	 * @param einbezahltVon Das Feld "Einbezahlt von" auf dem Einzahlungsschein
+	 * @param additionalText Das Feld "Zusätzliche Informationen"
+	 * @param language optionale QR Rechnung Sprache - Default ist "DE"
 	 */
 	public QRCodeEinzahlungsschein(
 		@Nonnull Address einzahlungFuer,

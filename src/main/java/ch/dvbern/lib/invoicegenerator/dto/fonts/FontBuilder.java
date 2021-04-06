@@ -43,6 +43,9 @@ public final class FontBuilder {
 	/**
 	 * Adds a modifier. Keep in mind that not all combinations are supported by the underlying library. E.g. there
 	 * is no FontStyle for BOLD and UNDERLINE.
+	 *
+	 * @param modifier the font modified
+	 * @return this builder
 	 */
 	@Nonnull
 	@CanIgnoreReturnValue
@@ -51,7 +54,7 @@ public final class FontBuilder {
 		return this;
 	}
 
-	/**
+	/*
 	 * Convenience method to only apply the provied modifiers
 	 */
 	@SuppressWarnings("ParameterHidesMemberVariable")

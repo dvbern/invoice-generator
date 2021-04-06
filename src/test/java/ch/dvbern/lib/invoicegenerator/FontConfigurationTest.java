@@ -38,15 +38,16 @@ import static ch.dvbern.lib.invoicegenerator.dto.fonts.FontModifier.size;
 import static ch.dvbern.lib.invoicegenerator.dto.fonts.FontModifier.underline;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.io.FileMatchers.anExistingFile;
 
 public class FontConfigurationTest {
 
 	@Test
 	public void testFontFactory() throws Exception {
-		FontFactory.register("/font/arial.ttf", FontConfiguration.FONT_FACE_OCRB);
+		FontFactory.register("/font/liberation-mono/LiberationMono-Regular.ttf", FontConfiguration.FONT_FACE_OCRB);
 		Font base = FontFactory.getFont(FontConfiguration.FONT_FACE_OCRB);
 
 		FontConfiguration fontConfiguration = new FontConfiguration(base);
@@ -62,8 +63,8 @@ public class FontConfigurationTest {
 		assertThat(file, allOf(
 			anExistingFile(),
 			containsFonts(
-				containsString("ArialMT"),
-				containsString("ArialMT"))
+				is("LiberationMono"),
+				endsWith("LiberationMono"))
 		));
 	}
 

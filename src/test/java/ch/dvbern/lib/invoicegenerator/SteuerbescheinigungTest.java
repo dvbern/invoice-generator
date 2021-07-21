@@ -16,6 +16,8 @@
 
 package ch.dvbern.lib.invoicegenerator;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,12 +33,13 @@ import ch.dvbern.lib.invoicegenerator.dto.position.Position;
 import ch.dvbern.lib.invoicegenerator.dto.position.RechnungsPosition;
 import ch.dvbern.lib.invoicegenerator.dto.position.RechnungsPositionColumnTitle;
 import ch.dvbern.lib.invoicegenerator.errors.InvoiceGeneratorException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static ch.dvbern.lib.invoicegenerator.TestUtil.createFile;
 import static ch.dvbern.lib.invoicegenerator.dto.component.AddressComponent.RECHTE_ADRESSE_LEFT_MARGIN_MM;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 
 public class SteuerbescheinigungTest {
 
@@ -49,7 +52,7 @@ public class SteuerbescheinigungTest {
 	);
 
 	private final List<String> empfaengerAdresse = Arrays.asList(
-		"Lord Byron",
+		"Lord Milenković",
 		"Nussbaumstrasse 2",
 		"3006 Bern"
 	);
@@ -104,6 +107,10 @@ public class SteuerbescheinigungTest {
 		final Invoice invoice = new Invoice(columnTitle, TITLE, summary, einleitung, empfaengerAdresse,
 			null, positionen, total, null);
 
-		Assertions.assertTrue(createFile(invoiceGenerator, invoice, "target/Steuerbescheinigung.pdf").isFile());
+		File file = createFile(invoiceGenerator, invoice, "target/Steuerbescheinigung.pdf");
+
+		String text = TestUtil.getText(new FileInputStream(file));
+
+		assertThat(text, containsString("Milenković"));
 	}
 }

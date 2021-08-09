@@ -16,12 +16,13 @@
 
 package ch.dvbern.lib.invoicegenerator.dto.component;
 
+import java.util.StringJoiner;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import ch.dvbern.lib.invoicegenerator.dto.Alignment;
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
-import com.google.common.base.MoreObjects;
 import com.lowagie.text.Utilities;
 
 import static ch.dvbern.lib.invoicegenerator.dto.Alignment.LEFT;
@@ -39,7 +40,8 @@ public class AddressComponent extends TextComponent {
 	/**
 	 * PP-Frankierungs Text
 	 *
-	 * @see <a href="https://www.post.ch/de/geschaeftlich/themen-a-z/sendungen-frankieren/briefe-frankieren-inland/pp-frankierung">Post Referenz</a>
+	 * @see
+	 * <a href="https://www.post.ch/de/geschaeftlich/themen-a-z/sendungen-frankieren/briefe-frankieren-inland/pp-frankierung">Post Referenz</a>
 	 */
 	@Nullable
 	private String pp;
@@ -73,9 +75,9 @@ public class AddressComponent extends TextComponent {
 	@Override
 	@Nonnull
 	public String toString() {
-		return MoreObjects.toStringHelper(this)
-			.add("pp", pp)
-			.addValue(super.toString())
+		return new StringJoiner(", ", AddressComponent.class.getSimpleName() + '[', "]")
+			.add("pp='" + pp + '\'')
+			.add(super.toString())
 			.toString();
 	}
 

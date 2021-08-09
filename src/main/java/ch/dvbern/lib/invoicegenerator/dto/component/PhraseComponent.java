@@ -17,13 +17,13 @@
 package ch.dvbern.lib.invoicegenerator.dto.component;
 
 import java.util.Optional;
+import java.util.StringJoiner;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import ch.dvbern.lib.invoicegenerator.dto.Alignment;
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
-import com.google.common.base.MoreObjects;
 import com.lowagie.text.Font;
 
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.DEFAULT_MULTIPLIED_LEADING;
@@ -119,11 +119,11 @@ public class PhraseComponent extends TextComponent {
 	@Override
 	@Nonnull
 	public String toString() {
-		return MoreObjects.toStringHelper(this)
-			.add("alignment", alignment)
-			.add("font", font)
-			.add("multipliedLeading", multipliedLeading)
-			.addValue(super.toString())
+		return new StringJoiner(", ", PhraseComponent.class.getSimpleName() + '[', "]")
+			.add("alignment=" + alignment)
+			.add("font=" + Optional.ofNullable(font).map(Font::getFamilyname).orElse(null))
+			.add("multipliedLeading=" + multipliedLeading)
+			.add(super.toString())
 			.toString();
 	}
 

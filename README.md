@@ -28,8 +28,3 @@ Font ocrbFont = FontFactory.getFont(FontConfiguration.FONT_FACE_OCRB);
 
 The `FontConfiguration` can be used as a container for the default fonts of the generator. You can define your own
 `FontConfiguration` and set it in `PageConfiguration`.
-
-## Where can I get the artifact?
-Sorry, we don't have any artifacts on a public repository. You will have to build this project and https://github.com/dvbern/oss-maven-parent-pom yourself.
-
-

@@ -15,9 +15,9 @@
  */
 package ch.dvbern.lib.invoicegenerator.dto.position;
 
-import javax.annotation.Nonnull;
+import java.util.StringJoiner;
 
-import com.google.common.base.MoreObjects;
+import javax.annotation.Nonnull;
 
 /**
  * Definiert die Spalten-Titel der Rechnungstabelle.
@@ -59,12 +59,13 @@ public class RechnungsPositionColumnTitle {
 	}
 
 	@Override
+	@Nonnull
 	public String toString() {
-		return MoreObjects.toStringHelper(this)
-			.add("leistung", leistung)
-			.add("menge", menge)
-			.add("preis", preis)
-			.add("total", total)
+		return new StringJoiner(", ", RechnungsPositionColumnTitle.class.getSimpleName() + '[', "]")
+			.add("leistung='" + leistung + '\'')
+			.add("menge='" + menge + '\'')
+			.add("preis='" + preis + '\'')
+			.add("total='" + total + '\'')
 			.toString();
 	}
 

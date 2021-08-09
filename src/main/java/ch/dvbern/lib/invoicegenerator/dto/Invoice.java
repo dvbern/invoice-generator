@@ -35,7 +35,7 @@ import ch.dvbern.lib.invoicegenerator.dto.position.RechnungsPosition;
 import ch.dvbern.lib.invoicegenerator.dto.position.RechnungsPositionColumnTitle;
 import ch.dvbern.lib.invoicegenerator.errors.IllegalKontoException;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Der InvoiceGenerator erstellt aus den Daten eines Invoice-Objekts eine Rechnung.
@@ -114,12 +114,12 @@ public class Invoice {
 		@Nonnull List<Position> positionen,
 		@Nonnull List<SummaryEntry> total,
 		@Nullable List<String> konditionen) {
-		checkNotNull(rechnungsPositionColumnTitle);
-		checkNotNull(title);
-		checkNotNull(summary);
-		checkNotNull(adresse);
-		checkNotNull(positionen);
-		checkNotNull(total);
+		requireNonNull(rechnungsPositionColumnTitle);
+		requireNonNull(title);
+		requireNonNull(summary);
+		requireNonNull(adresse);
+		requireNonNull(positionen);
+		requireNonNull(total);
 
 		this.rechnungsPositionColumnTitle = rechnungsPositionColumnTitle;
 		this.title = title;
@@ -137,15 +137,17 @@ public class Invoice {
 	 *
 	 * @param einzahlungFuer Einzahlung für welche Bank
 	 * @param zugunstenVon Einzahlung zugunsten von wem
-	 * @param konto Das Konto
+	 * @param konto account information
+	 * @return an Invoice DTO - can be used with InvoiceGenerator to generate a PDF file
+	 * @throws IllegalKontoException when invalid account number given
 	 */
 	public static Invoice createDemoInvoiceForBank(
 		@Nonnull List<String> einzahlungFuer,
 		@Nonnull List<String> zugunstenVon,
 		@Nonnull String konto) throws IllegalKontoException {
-		checkNotNull(einzahlungFuer);
-		checkNotNull(zugunstenVon);
-		checkNotNull(konto);
+		requireNonNull(einzahlungFuer);
+		requireNonNull(zugunstenVon);
+		requireNonNull(konto);
 
 		List<String> adresse = Arrays.asList("Sandra Muster", "Thomas Muster", "Musterstrasse 21", "3000 Bern");
 		OrangerEinzahlungsscheinBank orangerEinzahlungsscheinBank = new OrangerEinzahlungsscheinBank(einzahlungFuer,
@@ -159,12 +161,14 @@ public class Invoice {
 	 *
 	 * @param einzahlungFuer Einzahlung für
 	 * @param konto Das Konto
+	 * @return an Invoice DTO - can be used with InvoiceGenerator to generate a PDF file
+	 * @throws IllegalKontoException when invalid account number given
 	 */
 	@Nonnull
 	public static Invoice createDemoInvoice(@Nonnull List<String> einzahlungFuer, @Nonnull String konto)
 		throws IllegalKontoException {
-		checkNotNull(einzahlungFuer);
-		checkNotNull(konto);
+		requireNonNull(einzahlungFuer);
+		requireNonNull(konto);
 
 		List<String> adresse = Arrays.asList("Sandra Muster", "Thomas Muster", "Musterstrasse 21", "3000 Bern");
 		Einzahlungsschein einzahlungsschein = new OrangerEinzahlungsschein(einzahlungFuer,
@@ -175,7 +179,7 @@ public class Invoice {
 
 	@Nonnull
 	public static Invoice createDemoInvoice(@Nonnull Einzahlungsschein einzahlungsschein) {
-		checkNotNull(einzahlungsschein);
+		requireNonNull(einzahlungsschein);
 
 		RechnungsPositionColumnTitle rechnungsPositionColumnTitle = new RechnungsPositionColumnTitle(
 			"Dienstleistung", "Menge", "Preis", "Total");

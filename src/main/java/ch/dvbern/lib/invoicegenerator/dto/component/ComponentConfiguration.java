@@ -23,7 +23,7 @@ import ch.dvbern.lib.invoicegenerator.dto.OnPage;
 public interface ComponentConfiguration {
 
 	/**
-	 * Spezifiziert auf welchen Typen von Seiten diese Component gerendert wird.
+	 * @return Spezifiziert auf welchen Typen von Seiten diese Component gerendert wird.
 	 */
 	@Nonnull
 	OnPage getOnPage();

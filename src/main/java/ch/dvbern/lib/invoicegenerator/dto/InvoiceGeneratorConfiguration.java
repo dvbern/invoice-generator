@@ -16,6 +16,7 @@
 package ch.dvbern.lib.invoicegenerator.dto;
 
 import java.util.List;
+import java.util.StringJoiner;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -24,7 +25,6 @@ import ch.dvbern.lib.invoicegenerator.dto.component.AddressComponent;
 import ch.dvbern.lib.invoicegenerator.dto.component.OrangerEinzahlungsscheinComponent;
 import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.DummyEinzahlungsschein;
 import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.EinzahlungsscheinConfiguration;
-import com.google.common.base.MoreObjects;
 
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.ESR_HEIGHT_WITH_MARGIN;
 
@@ -94,11 +94,11 @@ public class InvoiceGeneratorConfiguration extends BaseLayoutConfiguration {
 	@Override
 	@Nonnull
 	public String toString() {
-		return MoreObjects.toStringHelper(this)
-			.add("summaryTablePosition", summaryTablePosition)
-			.add("zahlungsKonditionen", zahlungsKonditionen)
-			.add("einzahlungsscheinConfiguration", einzahlungsscheinConfiguration)
-			.addValue(super.toString())
+		return new StringJoiner(", ", InvoiceGeneratorConfiguration.class.getSimpleName() + '[', "]")
+			.add("summaryTablePosition=" + summaryTablePosition)
+			.add("zahlungsKonditionen=" + zahlungsKonditionen)
+			.add("einzahlungsscheinConfiguration=" + einzahlungsscheinConfiguration)
+			.add(super.toString())
 			.toString();
 	}
 

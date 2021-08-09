@@ -31,6 +31,8 @@
     <packaging>jar</packaging>
 
     <name>DV Bern Invoice Generator Library</name>
+    <description>This Java library can be used to generate PDF documents like letters and invoices.</description>
+    <url>https://github.com/dvbern/invoice-generator</url>
 
     <properties>
         <spotbugs-maven-plugin.version>4.2.3</spotbugs-maven-plugin.version>
@@ -121,7 +123,7 @@
         <dependency>
             <groupId>com.google.errorprone</groupId>
             <artifactId>error_prone_annotations</artifactId>
-            <version>2.7.1</version>
+            <version>2.8.1</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -177,4 +179,19 @@
             <version>2.5.3</version>
         </dependency>
     </dependencies>
+
+    <developers>
+        <developer>
+            <name>DV Bern AG developers</name>
+            <email>hallo@dvbern.ch</email>
+            <organization>DV Bern AG</organization>
+            <organizationUrl>https://www.dvbern.ch</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/dvbern/invoice-generator.git</connection>
+        <developerConnection>scm:git:ssh://github.com:dvbern/invoice-generator.git</developerConnection>
+        <url>https://github.com/dvbern/invoice-generator</url>
+    </scm>
 </project>

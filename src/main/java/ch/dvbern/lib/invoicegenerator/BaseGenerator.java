@@ -90,7 +90,9 @@ public class BaseGenerator<T extends BaseLayoutConfiguration> {
 			// ist not written to the actual PDF and therefore the OnPageHandler does not get called with the proper
 			// lastPage flag. By making sure that blank pages are written to the PDF, we get the events for all pages
 			// and the component renderers are handled correctly (e.g. considering LAST_PAGE)
-			pdfGenerator.printEmptyPage();
+			if (onPageHandler.hasComponents()) {
+				pdfGenerator.printEmptyPage();
+			}
 
 		} catch (DocumentException exception) {
 			throw new InvoiceGeneratorException("Could not generate invoice", exception);

@@ -96,4 +96,8 @@ public class OnPageHandler extends PdfPageEventHelper {
 	public void setLastPage() {
 		this.lastPage = true;
 	}
+
+	public boolean hasComponents() {
+		return !components.entrySet().isEmpty();
+	}
 }

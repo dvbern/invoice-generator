@@ -27,7 +27,7 @@
 
     <groupId>ch.dvbern.oss.invoicegenerator</groupId>
     <artifactId>invoice-generator</artifactId>
-    <version>6.0.5-SNAPSHOT</version>
+    <version>6.0.5</version>
     <packaging>jar</packaging>
 
     <name>DV Bern Invoice Generator Library</name>

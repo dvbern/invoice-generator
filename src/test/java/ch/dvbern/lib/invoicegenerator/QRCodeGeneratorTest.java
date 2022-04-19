@@ -92,7 +92,7 @@ public class QRCodeGeneratorTest {
 					pojo(ValidationMessage.class)
 						.where(ValidationMessage::getType, equalTo(Type.ERROR))
 						.where(ValidationMessage::getField, equalTo("reference"))
-						.where(ValidationMessage::getMessageKey, equalTo("valid_iso11649_creditor_ref"))
+						.where(ValidationMessage::getMessageKey, equalTo("qr_ref_invalid_use_for_non_qr_iban"))
 				))
 			));
 	}

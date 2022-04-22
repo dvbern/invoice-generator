@@ -104,11 +104,6 @@
                 <artifactId>hamcrest</artifactId>
                 <version>2.2</version>
             </dependency>
-            <dependency>
-                <groupId>io.nayuki</groupId>
-                <artifactId>qrcodegen</artifactId>
-                <version>1.7.0</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -181,7 +176,7 @@
         <dependency>
             <groupId>net.codecrete.qrbill</groupId>
             <artifactId>qrbill-generator</artifactId>
-            <version>3.0.2</version>
+            <version>3.0.3</version>
         </dependency>
     </dependencies>
 

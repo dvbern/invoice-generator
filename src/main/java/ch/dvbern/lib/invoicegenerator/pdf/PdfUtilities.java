@@ -32,6 +32,7 @@ public final class PdfUtilities {
 	public static final float DEFAULT_MULTIPLIED_TITLE_LEADING = 2.4f;
 	public static final float DEFAULT_MULTIPLIED_H1_LEADING = 1.8f;
 	public static final float DEFAULT_MULTIPLIED_H2_LEADING = 1.8f;
+	public static final float DEFAULT_MULTIPLIED_ADDRESS_LEADING = 1.0f;
 
 	public static final int PADDING_BOTTOM = 6;
 

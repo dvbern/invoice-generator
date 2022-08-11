@@ -456,6 +456,7 @@ public class InvoiceGeneratorTest {
 		config.setMultipliedLeadingH2(4);
 		config.setMultipliedTitleLeading(3);
 		config.setMultipliedLeadingDefault(2);
+		config.setMultipliedLeadingAddress(3);
 		config.getPositionStrategyMap().get(RechnungsPosition.class)
 			.setMultipliedLeading(1.0f);
 

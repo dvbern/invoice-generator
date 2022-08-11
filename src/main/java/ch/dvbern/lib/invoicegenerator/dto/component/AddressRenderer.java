@@ -52,7 +52,7 @@ public class AddressRenderer extends TextComponentRenderer<AddressComponent, Lis
 		}
 
 		Paragraph address = new Paragraph(joinListToString(payload), pageConfiguration.getFonts().getFont());
-		address.setMultipliedLeading(1);
+		address.setMultipliedLeading(pageConfiguration.getMultipliedLeadingAddress());
 		columnText.addElement(address);
 	}
 }

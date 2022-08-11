@@ -34,6 +34,7 @@ import com.lowagie.text.Font;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Rectangle;
 
+import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.DEFAULT_MULTIPLIED_ADDRESS_LEADING;
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.DEFAULT_MULTIPLIED_H1_LEADING;
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.DEFAULT_MULTIPLIED_H2_LEADING;
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.DEFAULT_MULTIPLIED_LEADING;
@@ -63,6 +64,7 @@ public class PageConfiguration {
 	private float multipliedTitleLeading = DEFAULT_MULTIPLIED_TITLE_LEADING;
 	private float multipliedLeadingH1 = DEFAULT_MULTIPLIED_H1_LEADING;
 	private float multipliedLeadingH2 = DEFAULT_MULTIPLIED_H2_LEADING;
+	private float multipliedLeadingAddress = DEFAULT_MULTIPLIED_ADDRESS_LEADING;
 
 	@Nonnull
 	private FontConfiguration fonts = new FontConfiguration(Font.TIMES_ROMAN);
@@ -182,6 +184,14 @@ public class PageConfiguration {
 
 	public void setMultipliedLeadingH2(float multipliedLeadingH2) {
 		this.multipliedLeadingH2 = multipliedLeadingH2;
+	}
+
+	public float getMultipliedLeadingAddress() {
+		return multipliedLeadingAddress;
+	}
+
+	public void setMultipliedLeadingAddress(float multipliedLeadingAddress) {
+		this.multipliedLeadingAddress = multipliedLeadingAddress;
 	}
 
 	@Nonnull

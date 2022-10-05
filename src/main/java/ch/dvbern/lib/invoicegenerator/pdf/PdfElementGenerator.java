@@ -167,7 +167,7 @@ public class PdfElementGenerator {
 		descriptionCell.setVerticalAlignment(Element.ALIGN_TOP);
 
 		descriptionCell.setLeading(0, multipliedLeadingDefault);
-		descriptionCell.setRowspan(summaryEntries.size() + 1);
+		descriptionCell.setRowspan(summaryEntries.size());
 
 		// am Beginn hinzufügen wenn rechts
 		if (tableAlignment == Alignment.RIGHT) {
@@ -184,9 +184,6 @@ public class PdfElementGenerator {
 				table.addCell(descriptionCell);
 			}
 		});
-
-		addEmptyCell(table);
-		addEmptyCell(table);
 
 		return table;
 	}
@@ -219,12 +216,6 @@ public class PdfElementGenerator {
 
 		table.addCell(labelCell);
 		table.addCell(valueCell);
-	}
-
-	public void addEmptyCell(@Nonnull PdfPTable table) {
-		PdfPCell cell = new PdfPCell();
-		cell.setBorder(Rectangle.NO_BORDER);
-		table.addCell(cell);
 	}
 
 	public void writeSingleLine(

@@ -36,6 +36,7 @@
 
     <properties>
         <spotbugs-maven-plugin.version>4.2.3</spotbugs-maven-plugin.version>
+        <maven-javadoc-plugin.version>3.4.1</maven-javadoc-plugin.version>
     </properties>
 
     <build>

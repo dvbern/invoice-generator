@@ -27,7 +27,7 @@
 
     <groupId>ch.dvbern.oss.invoicegenerator</groupId>
     <artifactId>invoice-generator</artifactId>
-    <version>6.1.1</version>
+    <version>6.1.2</version>
     <packaging>jar</packaging>
 
     <name>DV Bern Invoice Generator Library</name>
@@ -36,6 +36,7 @@
 
     <properties>
         <spotbugs-maven-plugin.version>4.2.3</spotbugs-maven-plugin.version>
+        <maven-javadoc-plugin.version>3.4.1</maven-javadoc-plugin.version>
     </properties>
 
     <build>

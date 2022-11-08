@@ -19,8 +19,9 @@ import javax.annotation.Nonnull;
 
 /**
  * Exception, die geworfen wird, falls das Konto nicht dem Format {@code VV-XXX-P} entspricht:
- *
- * <table summary="Legende">
+ * <br>
+ * <table>
+ * <caption>Legende</caption>
  * <tr><td style="width:50px">{@code VV}</td><td>ESR-Code</td></tr>
  * <tr><td>{@code XXX}</td><td>Ordnungsnummer</td></tr>
  * <tr><td>{@code P}</td><td>Prüfziffer</td></tr>

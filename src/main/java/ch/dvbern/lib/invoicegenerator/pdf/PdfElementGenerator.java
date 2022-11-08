@@ -54,8 +54,8 @@ public class PdfElementGenerator {
 	public static final int FULL_WIDTH = 100;
 	private static final int MAIN_COLUMN_WIDTH = 60;
 	private static final int[] POSITIONEN_COLUMN_WIDTHS = { MAIN_COLUMN_WIDTH, 10, 15, 15 };
-	private static final int SUMMARY_TABLE_LABEL_WIDTH = 21;
-	private static final int SUMMARY_TABLE_VALUE_WIDTH = 19;
+	private static final int SUMMARY_TABLE_LABEL_WIDTH = 24;
+	private static final int SUMMARY_TABLE_VALUE_WIDTH = 16;
 	private static final int[] SUMMARY_COLUMN_WIDTHS_RIGHT =
 		{ MAIN_COLUMN_WIDTH, SUMMARY_TABLE_LABEL_WIDTH, SUMMARY_TABLE_VALUE_WIDTH };
 	// reversed array hardcoded for performance gain

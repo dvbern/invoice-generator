@@ -64,6 +64,7 @@ public class RechnungsTabelleWidths {
 		});
 	}
 
+	//CSOFF: MagicNumberCheck
 	public RechnungsTabelleWidths() {
 		this(
 			60,

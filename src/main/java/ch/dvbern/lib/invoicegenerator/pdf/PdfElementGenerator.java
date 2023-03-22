@@ -52,15 +52,6 @@ public class PdfElementGenerator {
 	public static final int POSITIONEN_COLUMNS = 4;
 	public static final int SUMMARY_COLUMNS = 3;
 	public static final int FULL_WIDTH = 100;
-	private static final int MAIN_COLUMN_WIDTH = 60;
-	private static final int[] POSITIONEN_COLUMN_WIDTHS = { MAIN_COLUMN_WIDTH, 10, 15, 15 };
-	private static final int SUMMARY_TABLE_LABEL_WIDTH = 24;
-	private static final int SUMMARY_TABLE_VALUE_WIDTH = 16;
-	private static final int[] SUMMARY_COLUMN_WIDTHS_RIGHT =
-		{ MAIN_COLUMN_WIDTH, SUMMARY_TABLE_LABEL_WIDTH, SUMMARY_TABLE_VALUE_WIDTH };
-	// reversed array hardcoded for performance gain
-	private static final int[] SUMMARY_COLUMN_WIDTHS_LEFT = {
-		SUMMARY_TABLE_LABEL_WIDTH, SUMMARY_TABLE_VALUE_WIDTH, MAIN_COLUMN_WIDTH };
 	@Nonnull
 	private final PageConfiguration configuration;
 
@@ -128,7 +119,7 @@ public class PdfElementGenerator {
 
 		PdfPTable table = new PdfPTable(POSITIONEN_COLUMNS);
 		table.setSpacingBefore(configuration.getSpaceBefore());
-		table.setWidths(POSITIONEN_COLUMN_WIDTHS);
+		table.setWidths(configuration.getRechnungsTabelleWidths().getPositionenColumnWidths());
 		table.setWidthPercentage(FULL_WIDTH);
 		float defaultLeading = configuration.getMultipliedLeadingDefault();
 		table.addCell(createTitleCell(rechnungsPositionColumnTitle.getLeistung(), false, defaultLeading));
@@ -157,9 +148,7 @@ public class PdfElementGenerator {
 		float multipliedLeadingDefault = configuration.getMultipliedLeadingDefault();
 		PdfPTable table = new PdfPTable(SUMMARY_COLUMNS);
 		table.setKeepTogether(true);
-		int[] relativeWidths = Alignment.LEFT == tableAlignment ?
-			SUMMARY_COLUMN_WIDTHS_LEFT :
-			SUMMARY_COLUMN_WIDTHS_RIGHT;
+		float[] relativeWidths = configuration.getRechnungsTabelleWidths().getSummaryColumnWidths(tableAlignment);
 		table.setWidths(relativeWidths);
 		table.setWidthPercentage(FULL_WIDTH);
 		PdfPCell descriptionCell = new PdfPCell(descriptionContent);

@@ -22,6 +22,7 @@ import java.util.StringJoiner;
 import javax.annotation.Nonnull;
 
 import ch.dvbern.lib.invoicegenerator.dto.fonts.FontConfiguration;
+import ch.dvbern.lib.invoicegenerator.dto.layout.RechnungsTabelleWidths;
 import ch.dvbern.lib.invoicegenerator.dto.position.H1Position;
 import ch.dvbern.lib.invoicegenerator.dto.position.H2Position;
 import ch.dvbern.lib.invoicegenerator.dto.position.Position;
@@ -65,6 +66,9 @@ public class PageConfiguration {
 	private float multipliedLeadingH1 = DEFAULT_MULTIPLIED_H1_LEADING;
 	private float multipliedLeadingH2 = DEFAULT_MULTIPLIED_H2_LEADING;
 	private float multipliedLeadingAddress = DEFAULT_MULTIPLIED_ADDRESS_LEADING;
+
+	@Nonnull
+	private RechnungsTabelleWidths rechnungsTabelleWidths = new RechnungsTabelleWidths();
 
 	@Nonnull
 	private FontConfiguration fonts = new FontConfiguration(Font.TIMES_ROMAN);
@@ -192,6 +196,15 @@ public class PageConfiguration {
 
 	public void setMultipliedLeadingAddress(float multipliedLeadingAddress) {
 		this.multipliedLeadingAddress = multipliedLeadingAddress;
+	}
+
+	@Nonnull
+	public RechnungsTabelleWidths getRechnungsTabelleWidths() {
+		return rechnungsTabelleWidths;
+	}
+
+	public void setRechnungsTabelleWidths(@Nonnull RechnungsTabelleWidths rechnungsTabelleWidths) {
+		this.rechnungsTabelleWidths = rechnungsTabelleWidths;
 	}
 
 	@Nonnull

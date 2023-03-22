@@ -55,37 +55,6 @@
                 <artifactId>spotbugs-maven-plugin</artifactId>
             </plugin>
         </plugins>
-
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-enforcer-plugin</artifactId>
-                    <executions>
-                        <execution>
-                            <id>check-maven-setup</id>
-                            <goals>
-                                <goal>enforce</goal>
-                            </goals>
-                            <configuration>
-                                <fail>true</fail>
-                                <failFast>true</failFast>
-                                <rules>
-                                    <dependencyConvergence/>
-                                    <requireJavaVersion>
-                                        <!-- Bei aelteren Versionen aendern die Unit-Test-Ergebnisse bei Berechnungen mit BigDecimal -->
-                                        <version>[1.8.0-40,)</version>
-                                    </requireJavaVersion>
-                                    <requireMavenVersion>
-                                        <version>3.3</version>
-                                    </requireMavenVersion>
-                                </rules>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
     </build>
 
     <dependencyManagement>

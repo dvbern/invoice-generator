@@ -17,9 +17,10 @@
 package ch.dvbern.lib.invoicegenerator;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.annotation.Nonnull;
 
@@ -55,12 +56,10 @@ public class QRCodeGeneratorTest {
 
 		ByteArrayOutputStream outputStream = create(TestDataUtil.QR_CODE_EINZAHLUNGSSCHEIN);
 
-		String path = "target/QRCode.pdf";
-		FileOutputStream fileOutputStream = new FileOutputStream(path);
-		outputStream.writeTo(fileOutputStream);
+		Path path = Paths.get("target/QRCode.pdf");
+		outputStream.writeTo(Files.newOutputStream(path));
 
-		FileInputStream fileInputStream = new FileInputStream(path);
-		String text = TestUtil.getText(fileInputStream);
+		String text = TestUtil.getText(Files.newInputStream(path));
 
 		assertThat(text, allOf(
 			containsString(TestDataUtil.QR_IBAN),
@@ -81,7 +80,6 @@ public class QRCodeGeneratorTest {
 			null,
 			null);
 
-		//noinspection ResultOfMethodCallIgnored
 		InvoiceGeneratorRuntimeException ex =
 			assertThrows(InvoiceGeneratorRuntimeException.class, () -> create(einzahlungsschein));
 

@@ -17,13 +17,12 @@
 package ch.dvbern.lib.invoicegenerator;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -55,9 +54,9 @@ public final class TestUtil {
 	public static File createFile(
 		@Nonnull InvoiceGenerator invoiceGenerator,
 		@Nonnull Invoice invoice,
-		@Nonnull String filename) throws InvoiceGeneratorException, FileNotFoundException {
+		@Nonnull String filename) throws InvoiceGeneratorException, IOException {
 
-		invoiceGenerator.generateInvoice(new FileOutputStream(filename), invoice);
+		invoiceGenerator.generateInvoice(Files.newOutputStream(Paths.get(filename)), invoice);
 
 		return new File(filename);
 	}
@@ -75,7 +74,7 @@ public final class TestUtil {
 	}
 
 	public static int getNumberOfPages(@Nonnull File file) throws IOException {
-		PdfReader reader = new PdfReader(new FileInputStream(file));
+		PdfReader reader = new PdfReader(Files.newInputStream(file.toPath()));
 		int numberOfPages = reader.getNumberOfPages();
 		reader.close();
 

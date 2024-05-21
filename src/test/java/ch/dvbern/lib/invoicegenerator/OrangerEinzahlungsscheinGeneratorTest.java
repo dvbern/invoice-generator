@@ -16,11 +16,11 @@
 package ch.dvbern.lib.invoicegenerator;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -156,9 +156,9 @@ public class OrangerEinzahlungsscheinGeneratorTest {
 	private void create(
 		@Nonnull String path,
 		@Nonnull OrangerEinzahlungsschein einzahlungsschein,
-		@Nonnull EinzahlungsscheinConfiguration config) throws FileNotFoundException {
+		@Nonnull EinzahlungsscheinConfiguration config) throws IOException {
 
-		PdfGenerator generator = new PdfGenerator(new FileOutputStream(path), configuration);
+		PdfGenerator generator = new PdfGenerator(Files.newOutputStream(Paths.get(path)), configuration);
 
 		PdfContentByte content = generator.getDirectContent();
 		createEinzahlungsschein(content, pdfElementGenerator, config, einzahlungsschein);

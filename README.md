@@ -13,7 +13,7 @@ This library can be used to create PDF invoices with or without a payment slip.
 private final InvoiceGeneratorConfiguration configuration = new InvoiceGeneratorConfiguration(Alignment.LEFT);
 InvoiceGenerator invoiceGenerator = new InvoiceGenerator(configuration);
 final Invoice invoice = new Invoice(columnTitle, titel, summary, einleitung, adresse, einzahlungsschein, positionen, total);
-invoiceGenerator.generateInvoice(new FileOutputStream("target/Invoice.pdf"), invoice);
+invoiceGenerator.generateInvoice(Files.newOutputStream(Paths.get("target/Invoice.pdf")), invoice);
 
 ```
 

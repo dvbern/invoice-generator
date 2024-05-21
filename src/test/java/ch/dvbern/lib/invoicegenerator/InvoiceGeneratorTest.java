@@ -18,10 +18,10 @@ package ch.dvbern.lib.invoicegenerator;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -363,8 +363,7 @@ public class InvoiceGeneratorTest {
 		ByteArrayOutputStream outputStream = invoiceGenerator.generateInvoice(invoice);
 
 		String path = "target/StreamedInvoice.pdf";
-		FileOutputStream fileOutputStream = new FileOutputStream(path);
-		outputStream.writeTo(fileOutputStream);
+		outputStream.writeTo(Files.newOutputStream(Paths.get(path)));
 
 		assertThat(new File(path), anExistingFile());
 	}
@@ -442,7 +441,7 @@ public class InvoiceGeneratorTest {
 		Invoice invoice = Invoice.createDemoInvoice(orangerEinzahlungsschein);
 
 		File file = createFile(invoiceGenerator, invoice, "target/InvoiceWithFooter.pdf");
-		String text = TestUtil.getText(new FileInputStream(file));
+		String text = TestUtil.getText(Files.newInputStream(file.toPath()));
 
 		assertThat(text, containsString(expected));
 	}

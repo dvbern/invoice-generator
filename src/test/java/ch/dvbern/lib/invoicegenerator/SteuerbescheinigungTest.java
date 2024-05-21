@@ -43,7 +43,7 @@ import static org.hamcrest.Matchers.containsString;
 
 public class SteuerbescheinigungTest {
 
-	private final InvoiceGeneratorConfiguration configuration = new InvoiceGeneratorConfiguration(Alignment.RIGHT);
+	private final InvoiceGeneratorConfiguration configuration = new InvoiceGeneratorConfiguration("DVB", Alignment.RIGHT);
 
 	private final List<String> absenderAdresse = Arrays.asList(
 		"Kita Kinderland",

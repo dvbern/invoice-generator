@@ -105,7 +105,7 @@ public class InvoiceGeneratorTest {
 	private final List<String> headerLines = Arrays.asList(
 		"DV Bern AG", "Nussbaumstrasse 21", "3006 Bern", "hello@kitadmin.ch");
 	private final PhraseRenderer header = new PhraseRenderer(headerLines, RECHTE_ADRESSE_LEFT_MARGIN_MM, 11, 80, 30);
-	private final InvoiceGeneratorConfiguration configuration = new InvoiceGeneratorConfiguration(Alignment.LEFT);
+	private final InvoiceGeneratorConfiguration configuration = new InvoiceGeneratorConfiguration("DVB", Alignment.LEFT);
 	private final List<String> adresse = TestDataUtil.toLines(TestDataUtil.DEBTOR);
 
 	private final List<Position> positionen = Arrays.asList(
@@ -270,7 +270,7 @@ public class InvoiceGeneratorTest {
 	@Test
 	public void testTheCreationOfASampleInvoiceWithRightAddress()
 		throws InvoiceGeneratorException, IOException {
-		final InvoiceGeneratorConfiguration configurationRight = new InvoiceGeneratorConfiguration(Alignment.RIGHT);
+		final InvoiceGeneratorConfiguration configurationRight = new InvoiceGeneratorConfiguration("DVB", Alignment.RIGHT);
 		configurationRight.setPp(PP_ADRESS_ZUSATZ);
 		InvoiceGenerator invoiceGenerator = new InvoiceGenerator(configurationRight);
 		final Invoice invoice = new Invoice(columnTitle, TITEL, summary, einleitung, adresse, orangerEinzahlungsschein,
@@ -371,7 +371,7 @@ public class InvoiceGeneratorTest {
 
 	@Test
 	public void testDummyESROnAllPages() throws Exception {
-		InvoiceGeneratorConfiguration config = new InvoiceGeneratorConfiguration(Alignment.RIGHT);
+		InvoiceGeneratorConfiguration config = new InvoiceGeneratorConfiguration("DVB", Alignment.RIGHT);
 		initConfiguration(config);
 		config.addDummyESR();
 		InvoiceGenerator invoiceGenerator = new InvoiceGenerator(config);
@@ -421,7 +421,7 @@ public class InvoiceGeneratorTest {
 
 	@Test
 	public void testFooter() throws Exception {
-		InvoiceGeneratorConfiguration config = new InvoiceGeneratorConfiguration(Alignment.LEFT);
+		InvoiceGeneratorConfiguration config = new InvoiceGeneratorConfiguration("DVB", Alignment.LEFT);
 		initConfiguration(config);
 
 		String expected = "XXX-Footer-XXX";
@@ -449,7 +449,7 @@ public class InvoiceGeneratorTest {
 
 	@Test
 	public void testMultipliedLeading() throws Exception {
-		InvoiceGeneratorConfiguration config = new InvoiceGeneratorConfiguration(Alignment.LEFT);
+		InvoiceGeneratorConfiguration config = new InvoiceGeneratorConfiguration("DVB", Alignment.LEFT);
 		initConfiguration(config);
 
 		config.setMultipliedLeadingH1(5);

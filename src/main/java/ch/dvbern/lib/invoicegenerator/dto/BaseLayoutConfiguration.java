@@ -34,6 +34,11 @@ import ch.dvbern.lib.invoicegenerator.dto.component.PhraseRenderer;
 
 public class BaseLayoutConfiguration extends PageConfiguration {
 
+	/**
+	 * A text which is added to PDF metadata - replacing the auto-generated OpenPDF entry
+	 */
+	@Nonnull
+	private final String producer;
 	@Nonnull
 	private final AddressComponent empfaengerAdresse;
 	@Nullable
@@ -47,7 +52,8 @@ public class BaseLayoutConfiguration extends PageConfiguration {
 	@Nullable
 	private List<ComponentRenderer<? extends ComponentConfiguration, ?>> staticComponents = null;
 
-	public BaseLayoutConfiguration(@Nonnull AddressComponent empfaengerAdresse) {
+	public BaseLayoutConfiguration(@Nonnull String producer, @Nonnull AddressComponent empfaengerAdresse) {
+		this.producer = producer;
 		this.empfaengerAdresse = empfaengerAdresse;
 	}
 
@@ -91,6 +97,11 @@ public class BaseLayoutConfiguration extends PageConfiguration {
 			.add("header=" + header)
 			.add("footer=" + footer)
 			.toString();
+	}
+
+	@Nonnull
+	public String getProducer() {
+		return producer;
 	}
 
 	@Nullable

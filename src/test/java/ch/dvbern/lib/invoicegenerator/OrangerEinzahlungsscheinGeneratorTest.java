@@ -65,7 +65,7 @@ public class OrangerEinzahlungsscheinGeneratorTest {
 
 	private final List<String> einzahlungFuerBankLong = LONG_TEXT;
 	private final List<String> zugunstenVonLong = LONG_TEXT;
-	private final InvoiceGeneratorConfiguration configuration = new InvoiceGeneratorConfiguration(Alignment.LEFT);
+	private final InvoiceGeneratorConfiguration configuration = new InvoiceGeneratorConfiguration("DVB", Alignment.LEFT);
 	private final PdfElementGenerator pdfElementGenerator = new PdfElementGenerator(configuration);
 	private final EinzahlungsscheinConfiguration defaultConfig = createConfig();
 

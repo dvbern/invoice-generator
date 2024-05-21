@@ -48,18 +48,20 @@ public class InvoiceGeneratorConfiguration extends BaseLayoutConfiguration {
 	 * Erstellt eine neue InvoiceGeneratorConfiguration mit default Werten. Sämtliche Parameter können über
 	 * Setter-Methoden überschrieben werden.
 	 *
+	 * @param producer PDF Metadata-Producer
 	 * @param summaryTablePosition Falls Alignment.LEFT, wird die Zusammenfassung links und die Adresse rechts
 	 * angezeigt. Falls Alignment.RIGHT, wird die Zusammenfassung rechts und die Adresse links angezeigt.
 	 */
-	public InvoiceGeneratorConfiguration(@Nonnull Alignment summaryTablePosition) {
-		super(new AddressComponent(summaryTablePosition));
+	public InvoiceGeneratorConfiguration(@Nonnull String producer, @Nonnull Alignment summaryTablePosition) {
+		super(producer, new AddressComponent(summaryTablePosition));
 		this.summaryTablePosition = summaryTablePosition;
 	}
 
 	public InvoiceGeneratorConfiguration(
+		@Nonnull String producer,
 		@Nonnull AddressComponent addressComponent,
 		@Nonnull Alignment summaryTablePosition) {
-		super(addressComponent);
+		super(producer, addressComponent);
 		this.summaryTablePosition = summaryTablePosition;
 	}
 

@@ -52,7 +52,7 @@ public class FontConfigurationTest {
 
 		FontConfiguration fontConfiguration = new FontConfiguration(base);
 
-		InvoiceGeneratorConfiguration config = new InvoiceGeneratorConfiguration(Alignment.LEFT);
+		InvoiceGeneratorConfiguration config = new InvoiceGeneratorConfiguration("DVB", Alignment.LEFT);
 		config.setFonts(fontConfiguration);
 
 		InvoiceGenerator invoiceGenerator = new InvoiceGenerator(config);
@@ -83,7 +83,7 @@ public class FontConfigurationTest {
 
 		fontConfiguration.setFontOcrb(new Font(Font.COURIER, FontConfiguration.FONT_SIZE_OCRB));
 
-		InvoiceGeneratorConfiguration config = new InvoiceGeneratorConfiguration(Alignment.LEFT);
+		InvoiceGeneratorConfiguration config = new InvoiceGeneratorConfiguration("DVB", Alignment.LEFT);
 		config.setFonts(fontConfiguration);
 
 		config.getPositionStrategyMap().get(RechnungsPosition.class)

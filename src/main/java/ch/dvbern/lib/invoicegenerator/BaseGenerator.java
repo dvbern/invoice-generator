@@ -46,7 +46,7 @@ public class BaseGenerator<T extends BaseLayoutConfiguration> {
 	 */
 	public BaseGenerator() {
 		//noinspection unchecked
-		this((T) new BaseLayoutConfiguration(new AddressComponent(Alignment.RIGHT)));
+		this((T) new BaseLayoutConfiguration("DV Bern", new AddressComponent(Alignment.RIGHT)));
 	}
 
 	/**
@@ -78,6 +78,7 @@ public class BaseGenerator<T extends BaseLayoutConfiguration> {
 		PdfGenerator pdfGenerator = null;
 		try {
 			pdfGenerator = new PdfGenerator(outputStream, configuration);
+			pdfGenerator.getDocument().addProducer(configuration.getProducer());
 
 			pdfGenerator.setPageEvent(onPageHandler);
 

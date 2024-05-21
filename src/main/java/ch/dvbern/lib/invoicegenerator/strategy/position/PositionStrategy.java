@@ -17,9 +17,6 @@ package ch.dvbern.lib.invoicegenerator.strategy.position;
 
 import java.util.Optional;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import ch.dvbern.lib.invoicegenerator.dto.PageConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.fonts.FontConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.position.Position;
@@ -30,6 +27,8 @@ import com.lowagie.text.Phrase;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public abstract class PositionStrategy {
 
@@ -40,20 +39,20 @@ public abstract class PositionStrategy {
 	private Float multipliedLeading = null;
 
 	public abstract void addPositionToTable(
-		@Nonnull PageConfiguration configuration,
-		@Nonnull PdfPTable table,
-		@Nonnull Position position,
+		@NonNull PageConfiguration configuration,
+		@NonNull PdfPTable table,
+		@NonNull Position position,
 		boolean lastPosition);
 
-	@Nonnull
-	protected abstract Font getFont(@Nonnull FontConfiguration configuration);
+	@NonNull
+	protected abstract Font getFont(@NonNull FontConfiguration configuration);
 
-	protected abstract float getMultipliedLeading(@Nonnull PageConfiguration configuration);
+	protected abstract float getMultipliedLeading(@NonNull PageConfiguration configuration);
 
-	@Nonnull
+	@NonNull
 	public PdfPCell createHeaderCell(
-		@Nonnull PageConfiguration configuration,
-		@Nonnull String text,
+		@NonNull PageConfiguration configuration,
+		@NonNull String text,
 		boolean underlined) {
 
 		Phrase phrase = new Phrase(text, getFont(configuration.getFonts()));
@@ -69,7 +68,7 @@ public abstract class PositionStrategy {
 		return cell;
 	}
 
-	@Nonnull
+	@NonNull
 	public Optional<Font> getFont() {
 		return Optional.ofNullable(font);
 	}
@@ -78,7 +77,7 @@ public abstract class PositionStrategy {
 		this.font = font;
 	}
 
-	@Nonnull
+	@NonNull
 	public Optional<Float> getMultipliedLeading() {
 		return Optional.ofNullable(multipliedLeading);
 	}

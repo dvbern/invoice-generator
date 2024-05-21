@@ -20,8 +20,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.dto.Alignment;
 import ch.dvbern.lib.invoicegenerator.dto.Invoice;
 import ch.dvbern.lib.invoicegenerator.dto.InvoiceGeneratorConfiguration;
@@ -32,6 +30,7 @@ import ch.dvbern.lib.invoicegenerator.dto.fonts.FontBuilder;
 import ch.dvbern.lib.invoicegenerator.dto.fonts.FontModifier;
 import ch.dvbern.lib.invoicegenerator.dto.position.RechnungsPosition;
 import ch.dvbern.lib.invoicegenerator.errors.InvoiceGeneratorException;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 
 import static ch.dvbern.lib.invoicegenerator.TestUtil.createFile;
@@ -129,7 +128,7 @@ public class CustomerInvoicesTest {
 			anExistingFile());
 	}
 
-	private void replacePositionenWith30SimplePositionen(@Nonnull Invoice invoice) {
+	private void replacePositionenWith30SimplePositionen(@NonNull Invoice invoice) {
 		invoice.getPositionen().clear();
 
 		IntStream.range(0, 30)

@@ -19,8 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringJoiner;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.dto.fonts.FontConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.layout.RechnungsTabelleWidths;
 import ch.dvbern.lib.invoicegenerator.dto.position.H1Position;
@@ -34,6 +32,7 @@ import ch.dvbern.lib.invoicegenerator.strategy.position.RechnungsPositionStrateg
 import com.lowagie.text.Font;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Rectangle;
+import org.jspecify.annotations.NonNull;
 
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.DEFAULT_MULTIPLIED_ADDRESS_LEADING;
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.DEFAULT_MULTIPLIED_H1_LEADING;
@@ -67,16 +66,16 @@ public class PageConfiguration {
 	private float multipliedLeadingH2 = DEFAULT_MULTIPLIED_H2_LEADING;
 	private float multipliedLeadingAddress = DEFAULT_MULTIPLIED_ADDRESS_LEADING;
 
-	@Nonnull
+	@NonNull
 	private RechnungsTabelleWidths rechnungsTabelleWidths = new RechnungsTabelleWidths();
 
-	@Nonnull
+	@NonNull
 	private FontConfiguration fonts = new FontConfiguration(Font.TIMES_ROMAN);
 
-	@Nonnull
+	@NonNull
 	private Rectangle pageSize = PageSize.A4;
 
-	@Nonnull
+	@NonNull
 	private final Map<Class<? extends Position>, PositionStrategy> positionStrategyMap = new HashMap<>();
 
 	/**
@@ -133,12 +132,12 @@ public class PageConfiguration {
 		this.bottomMarginInPoints = bottomMarginInPoints;
 	}
 
-	@Nonnull
+	@NonNull
 	public Rectangle getPageSize() {
 		return pageSize;
 	}
 
-	public void setPageSize(@Nonnull Rectangle pageSize) {
+	public void setPageSize(@NonNull Rectangle pageSize) {
 		this.pageSize = pageSize;
 	}
 
@@ -198,26 +197,26 @@ public class PageConfiguration {
 		this.multipliedLeadingAddress = multipliedLeadingAddress;
 	}
 
-	@Nonnull
+	@NonNull
 	public RechnungsTabelleWidths getRechnungsTabelleWidths() {
 		return rechnungsTabelleWidths;
 	}
 
-	public void setRechnungsTabelleWidths(@Nonnull RechnungsTabelleWidths rechnungsTabelleWidths) {
+	public void setRechnungsTabelleWidths(@NonNull RechnungsTabelleWidths rechnungsTabelleWidths) {
 		this.rechnungsTabelleWidths = rechnungsTabelleWidths;
 	}
 
-	@Nonnull
+	@NonNull
 	public FontConfiguration getFonts() {
 		return fonts;
 	}
 
-	public void setFonts(@Nonnull FontConfiguration fonts) {
+	public void setFonts(@NonNull FontConfiguration fonts) {
 		this.fonts = fonts;
 	}
 
 	@Override
-	@Nonnull
+	@NonNull
 	public String toString() {
 		return new StringJoiner(", ", PageConfiguration.class.getSimpleName() + '[', "]")
 			.add("leftPageMarginInPoints=" + leftPageMarginInPoints)
@@ -228,7 +227,7 @@ public class PageConfiguration {
 			.toString();
 	}
 
-	@Nonnull
+	@NonNull
 	public Map<Class<? extends Position>, PositionStrategy> getPositionStrategyMap() {
 		return positionStrategyMap;
 	}

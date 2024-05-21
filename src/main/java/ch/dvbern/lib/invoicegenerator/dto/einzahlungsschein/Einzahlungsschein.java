@@ -22,29 +22,28 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.StringJoiner;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
 import ch.dvbern.lib.invoicegenerator.dto.component.ComponentRenderer;
 import ch.dvbern.lib.invoicegenerator.dto.component.SimpleConfiguration;
+import org.jspecify.annotations.NonNull;
 
 import static java.util.Objects.requireNonNull;
 
 public abstract class Einzahlungsschein {
-	@Nonnull
+	@NonNull
 	private final BigInteger referenzNr;
-	@Nonnull
+	@NonNull
 	private final BigDecimal betrag;
-	@Nonnull
+	@NonNull
 	private final String konto;
-	@Nonnull
+	@NonNull
 	private final EinzahlungType dtype;
 
 	protected Einzahlungsschein(
-		@Nonnull EinzahlungType dtype,
-		@Nonnull BigInteger referenzNr,
-		@Nonnull BigDecimal betrag,
-		@Nonnull String konto) {
+		@NonNull EinzahlungType dtype,
+		@NonNull BigInteger referenzNr,
+		@NonNull BigDecimal betrag,
+		@NonNull String konto) {
 		requireNonNull(betrag);
 		requireNonNull(konto);
 		requireNonNull(referenzNr);
@@ -59,7 +58,7 @@ public abstract class Einzahlungsschein {
 		this.konto = konto;
 	}
 
-	@Nonnull
+	@NonNull
 	public String getReferenzNrAsText() {
 		DecimalFormat decimalFormat = new DecimalFormat("#,#####");
 		DecimalFormatSymbols formatSymbols = decimalFormat.getDecimalFormatSymbols();
@@ -69,33 +68,33 @@ public abstract class Einzahlungsschein {
 		return decimalFormat.format(this.referenzNr);
 	}
 
-	@Nonnull
+	@NonNull
 	public abstract ComponentRenderer<SimpleConfiguration, ? extends Einzahlungsschein> componentRenderer(
-		@Nonnull EinzahlungsscheinConfiguration configuration,
-		@Nonnull OnPage onPage);
+		@NonNull EinzahlungsscheinConfiguration configuration,
+		@NonNull OnPage onPage);
 
-	@Nonnull
+	@NonNull
 	public BigInteger getReferenzNr() {
 		return referenzNr;
 	}
 
-	@Nonnull
+	@NonNull
 	public BigDecimal getBetrag() {
 		return betrag;
 	}
 
-	@Nonnull
+	@NonNull
 	public String getKonto() {
 		return konto;
 	}
 
-	@Nonnull
+	@NonNull
 	public EinzahlungType getDtype() {
 		return dtype;
 	}
 
 	@Override
-	@Nonnull
+	@NonNull
 	public String toString() {
 		return new StringJoiner(", ", Einzahlungsschein.class.getSimpleName() + '[', "]")
 			.add("referenzNr=" + referenzNr)

@@ -17,8 +17,6 @@ package ch.dvbern.lib.invoicegenerator.dto.component;
 
 import java.io.IOException;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
 import ch.dvbern.lib.invoicegenerator.errors.InvoiceGeneratorRuntimeException;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfElementGenerator;
@@ -26,6 +24,7 @@ import com.lowagie.text.DocumentException;
 import com.lowagie.text.Image;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.pdf.PdfContentByte;
+import org.jspecify.annotations.NonNull;
 
 import static com.lowagie.text.Utilities.millimetersToPoints;
 import static java.util.Objects.requireNonNull;
@@ -50,7 +49,7 @@ public class Logo extends ComponentRenderer<SimpleConfiguration, Image> {
 	 * @param topInMm Abstand in mm zum oberen Seitenrand
 	 * @param widthInMm Die breite auf welche das Bild skaliert wird. Die Höhe wird im selben Verhältnis skaliert.
 	 */
-	public Logo(@Nonnull byte[] image, float leftInMm, float topInMm, float widthInMm)
+	public Logo(@NonNull byte[] image, float leftInMm, float topInMm, float widthInMm)
 		throws InvoiceGeneratorRuntimeException {
 		this(image, leftInMm, topInMm, widthInMm, OnPage.ALL);
 	}
@@ -64,7 +63,7 @@ public class Logo extends ComponentRenderer<SimpleConfiguration, Image> {
 	 * @param widthInMm Die breite auf welche das Bild skaliert wird. Die Höhe wird im selben Verhältnis skaliert.
 	 * @param onPage Konfiguriert, auf welcher Seite das Bild ausgegeben werden soll.
 	 */
-	public Logo(@Nonnull byte[] imgData, float leftInMm, float topInMm, float widthInMm, @Nonnull OnPage onPage)
+	public Logo(@NonNull byte[] imgData, float leftInMm, float topInMm, float widthInMm, @NonNull OnPage onPage)
 		throws InvoiceGeneratorRuntimeException {
 		super(new SimpleConfiguration(onPage));
 		try {
@@ -81,7 +80,7 @@ public class Logo extends ComponentRenderer<SimpleConfiguration, Image> {
 	}
 
 	@Override
-	public void render(@Nonnull PdfContentByte directContent, @Nonnull PdfElementGenerator pdfElementGenerator)
+	public void render(@NonNull PdfContentByte directContent, @NonNull PdfElementGenerator pdfElementGenerator)
 		throws DocumentException {
 
 		float absoluteY = PageSize.A4.getHeight() - yOffset;

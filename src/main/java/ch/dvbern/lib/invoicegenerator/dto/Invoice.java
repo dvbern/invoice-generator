@@ -22,9 +22,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.Einzahlungsschein;
 import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.OrangerEinzahlungsschein;
 import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.OrangerEinzahlungsscheinBank;
@@ -34,6 +31,8 @@ import ch.dvbern.lib.invoicegenerator.dto.position.Position;
 import ch.dvbern.lib.invoicegenerator.dto.position.RechnungsPosition;
 import ch.dvbern.lib.invoicegenerator.dto.position.RechnungsPositionColumnTitle;
 import ch.dvbern.lib.invoicegenerator.errors.IllegalKontoException;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import static java.util.Objects.requireNonNull;
 
@@ -44,21 +43,21 @@ import static java.util.Objects.requireNonNull;
  */
 public class Invoice {
 
-	@Nonnull
+	@NonNull
 	private final RechnungsPositionColumnTitle rechnungsPositionColumnTitle;
-	@Nonnull
+	@NonNull
 	private final String title;
-	@Nonnull
+	@NonNull
 	private final List<SummaryEntry> summary;
 	@Nullable
 	private final List<String> einleitung;
-	@Nonnull
+	@NonNull
 	private final List<String> adresse;
 	@Nullable
 	private final Einzahlungsschein einzahlungsschein;
-	@Nonnull
+	@NonNull
 	private final List<Position> positionen;
-	@Nonnull
+	@NonNull
 	private final List<SummaryEntry> total;
 	@Nullable
 	private final List<String> konditionen;
@@ -77,14 +76,14 @@ public class Invoice {
 	 * @param total Eine Liste von SummaryEntrys als Total
 	 */
 	public Invoice(
-		@Nonnull RechnungsPositionColumnTitle rechnungsPositionColumnTitle,
-		@Nonnull String title,
-		@Nonnull List<SummaryEntry> summary,
+		@NonNull RechnungsPositionColumnTitle rechnungsPositionColumnTitle,
+		@NonNull String title,
+		@NonNull List<SummaryEntry> summary,
 		@Nullable List<String> einleitung,
-		@Nonnull List<String> adresse,
+		@NonNull List<String> adresse,
 		@Nullable Einzahlungsschein einzahlungsschein,
-		@Nonnull List<Position> positionen,
-		@Nonnull List<SummaryEntry> total) {
+		@NonNull List<Position> positionen,
+		@NonNull List<SummaryEntry> total) {
 
 		this(rechnungsPositionColumnTitle, title, summary, einleitung, adresse, einzahlungsschein, positionen,
 			total, null);
@@ -105,14 +104,14 @@ public class Invoice {
 	 * @param konditionen Nach dem Total können Konditionen angezeigt werden
 	 */
 	public Invoice(
-		@Nonnull RechnungsPositionColumnTitle rechnungsPositionColumnTitle,
-		@Nonnull String title,
-		@Nonnull List<SummaryEntry> summary,
+		@NonNull RechnungsPositionColumnTitle rechnungsPositionColumnTitle,
+		@NonNull String title,
+		@NonNull List<SummaryEntry> summary,
 		@Nullable List<String> einleitung,
-		@Nonnull List<String> adresse,
+		@NonNull List<String> adresse,
 		@Nullable Einzahlungsschein einzahlungsschein,
-		@Nonnull List<Position> positionen,
-		@Nonnull List<SummaryEntry> total,
+		@NonNull List<Position> positionen,
+		@NonNull List<SummaryEntry> total,
 		@Nullable List<String> konditionen) {
 		requireNonNull(rechnungsPositionColumnTitle);
 		requireNonNull(title);
@@ -142,9 +141,9 @@ public class Invoice {
 	 * @throws IllegalKontoException when invalid account number given
 	 */
 	public static Invoice createDemoInvoiceForBank(
-		@Nonnull List<String> einzahlungFuer,
-		@Nonnull List<String> zugunstenVon,
-		@Nonnull String konto) throws IllegalKontoException {
+		@NonNull List<String> einzahlungFuer,
+		@NonNull List<String> zugunstenVon,
+		@NonNull String konto) throws IllegalKontoException {
 		requireNonNull(einzahlungFuer);
 		requireNonNull(zugunstenVon);
 		requireNonNull(konto);
@@ -164,8 +163,8 @@ public class Invoice {
 	 * @return an Invoice DTO - can be used with InvoiceGenerator to generate a PDF file
 	 * @throws IllegalKontoException when invalid account number given
 	 */
-	@Nonnull
-	public static Invoice createDemoInvoice(@Nonnull List<String> einzahlungFuer, @Nonnull String konto)
+	@NonNull
+	public static Invoice createDemoInvoice(@NonNull List<String> einzahlungFuer, @NonNull String konto)
 		throws IllegalKontoException {
 		requireNonNull(einzahlungFuer);
 		requireNonNull(konto);
@@ -177,8 +176,8 @@ public class Invoice {
 		return createDemoInvoice(einzahlungsschein);
 	}
 
-	@Nonnull
-	public static Invoice createDemoInvoice(@Nonnull Einzahlungsschein einzahlungsschein) {
+	@NonNull
+	public static Invoice createDemoInvoice(@NonNull Einzahlungsschein einzahlungsschein) {
 		requireNonNull(einzahlungsschein);
 
 		RechnungsPositionColumnTitle rechnungsPositionColumnTitle = new RechnungsPositionColumnTitle(
@@ -220,12 +219,12 @@ public class Invoice {
 			einzahlungsschein, positionen, total, konditionen);
 	}
 
-	@Nonnull
+	@NonNull
 	public RechnungsPositionColumnTitle getRechnungsPositionColumnTitle() {
 		return rechnungsPositionColumnTitle;
 	}
 
-	@Nonnull
+	@NonNull
 	public List<String> getAdresse() {
 		return adresse;
 	}
@@ -240,22 +239,22 @@ public class Invoice {
 		return einzahlungsschein;
 	}
 
-	@Nonnull
+	@NonNull
 	public String getTitle() {
 		return title;
 	}
 
-	@Nonnull
+	@NonNull
 	public List<Position> getPositionen() {
 		return positionen;
 	}
 
-	@Nonnull
+	@NonNull
 	public List<SummaryEntry> getTotal() {
 		return total;
 	}
 
-	@Nonnull
+	@NonNull
 	public List<SummaryEntry> getSummary() {
 		return summary;
 	}

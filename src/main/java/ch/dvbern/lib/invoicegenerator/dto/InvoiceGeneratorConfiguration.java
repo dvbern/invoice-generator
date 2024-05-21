@@ -18,13 +18,12 @@ package ch.dvbern.lib.invoicegenerator.dto;
 import java.util.List;
 import java.util.StringJoiner;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import ch.dvbern.lib.invoicegenerator.dto.component.AddressComponent;
 import ch.dvbern.lib.invoicegenerator.dto.component.OrangerEinzahlungsscheinComponent;
 import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.DummyEinzahlungsschein;
 import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.EinzahlungsscheinConfiguration;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.ESR_HEIGHT_WITH_MARGIN;
 
@@ -36,12 +35,12 @@ import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.ESR_HEIGHT_WITH_MA
  */
 public class InvoiceGeneratorConfiguration extends BaseLayoutConfiguration {
 
-	@Nonnull
+	@NonNull
 	private final Alignment summaryTablePosition;
 	@Nullable
 	private List<String> zahlungsKonditionen = null;
 
-	@Nonnull
+	@NonNull
 	private final EinzahlungsscheinConfiguration einzahlungsscheinConfiguration = new EinzahlungsscheinConfiguration();
 
 	/**
@@ -52,15 +51,15 @@ public class InvoiceGeneratorConfiguration extends BaseLayoutConfiguration {
 	 * @param summaryTablePosition Falls Alignment.LEFT, wird die Zusammenfassung links und die Adresse rechts
 	 * angezeigt. Falls Alignment.RIGHT, wird die Zusammenfassung rechts und die Adresse links angezeigt.
 	 */
-	public InvoiceGeneratorConfiguration(@Nonnull String producer, @Nonnull Alignment summaryTablePosition) {
+	public InvoiceGeneratorConfiguration(@NonNull String producer, @NonNull Alignment summaryTablePosition) {
 		super(producer, new AddressComponent(summaryTablePosition));
 		this.summaryTablePosition = summaryTablePosition;
 	}
 
 	public InvoiceGeneratorConfiguration(
-		@Nonnull String producer,
-		@Nonnull AddressComponent addressComponent,
-		@Nonnull Alignment summaryTablePosition) {
+		@NonNull String producer,
+		@NonNull AddressComponent addressComponent,
+		@NonNull Alignment summaryTablePosition) {
 		super(producer, addressComponent);
 		this.summaryTablePosition = summaryTablePosition;
 	}
@@ -69,7 +68,7 @@ public class InvoiceGeneratorConfiguration extends BaseLayoutConfiguration {
 		addDummyESR(OnPage.NOT_LAST);
 	}
 
-	public void addDummyESR(@Nonnull OnPage onPage) {
+	public void addDummyESR(@NonNull OnPage onPage) {
 		DummyEinzahlungsschein einzahlungsschein = new DummyEinzahlungsschein();
 		getCustomComponents().add(new OrangerEinzahlungsscheinComponent(
 			einzahlungsscheinConfiguration,
@@ -88,13 +87,13 @@ public class InvoiceGeneratorConfiguration extends BaseLayoutConfiguration {
 		this.zahlungsKonditionen = zahlungsKonditionen;
 	}
 
-	@Nonnull
+	@NonNull
 	public Alignment getSummaryTablePosition() {
 		return summaryTablePosition;
 	}
 
 	@Override
-	@Nonnull
+	@NonNull
 	public String toString() {
 		return new StringJoiner(", ", InvoiceGeneratorConfiguration.class.getSimpleName() + '[', "]")
 			.add("summaryTablePosition=" + summaryTablePosition)
@@ -120,7 +119,7 @@ public class InvoiceGeneratorConfiguration extends BaseLayoutConfiguration {
 		this.einzahlungsscheinConfiguration.setAddEsrBackgroundImage(addEsrBackgroundImage);
 	}
 
-	@Nonnull
+	@NonNull
 	public EinzahlungsscheinConfiguration getEinzahlungsscheinConfiguration() {
 		return einzahlungsscheinConfiguration;
 	}

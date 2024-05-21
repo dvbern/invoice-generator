@@ -22,8 +22,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
 import ch.dvbern.lib.invoicegenerator.dto.PageConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.component.QRCodeComponent;
@@ -38,6 +36,7 @@ import net.codecrete.qrbill.generator.QRBillValidationError;
 import net.codecrete.qrbill.generator.ValidationMessage;
 import net.codecrete.qrbill.generator.ValidationMessage.Type;
 import net.codecrete.qrbill.generator.ValidationResult;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 
 import static com.spotify.hamcrest.pojo.IsPojo.pojo;
@@ -95,8 +94,8 @@ public class QRCodeGeneratorTest {
 			));
 	}
 
-	@Nonnull
-	private ByteArrayOutputStream create(@Nonnull QRCodeEinzahlungsschein einzahlungsschein)
+	@NonNull
+	private ByteArrayOutputStream create(@NonNull QRCodeEinzahlungsschein einzahlungsschein)
 		throws QRBillValidationError {
 
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

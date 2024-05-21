@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 public class DummyEinzahlungsschein extends OrangerEinzahlungsschein {
 
@@ -37,37 +37,37 @@ public class DummyEinzahlungsschein extends OrangerEinzahlungsschein {
 		);
 	}
 
-	@Nonnull
+	@NonNull
 	@Override
 	public String getBetragInCHFAsText() {
 		return "";
 	}
 
-	@Nonnull
+	@NonNull
 	@Override
 	public String getBetragInRpAsText() {
 		return "";
 	}
 
-	@Nonnull
+	@NonNull
 	@Override
 	public String getReferenzNrAsText() {
 		return DUMMY_ESR_PLACEHOLDER;
 	}
 
-	@Nonnull
+	@NonNull
 	@Override
 	public String getReferenzNrAsTextFuerEmpfangsschein() {
 		return DUMMY_ESR_PLACEHOLDER;
 	}
 
-	@Nonnull
+	@NonNull
 	@Override
 	public String getReferenzNrForPruefzifferAsText() {
 		return DUMMY_ESR_PLACEHOLDER;
 	}
 
-	@Nonnull
+	@NonNull
 	@Override
 	public String getKodierzeile() {
 		return DUMMY_ESR_PLACEHOLDER;

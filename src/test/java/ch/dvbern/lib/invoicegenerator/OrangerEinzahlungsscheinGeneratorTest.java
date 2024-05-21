@@ -25,8 +25,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.dto.Alignment;
 import ch.dvbern.lib.invoicegenerator.dto.InvoiceGeneratorConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.EinzahlungsscheinConfiguration;
@@ -37,6 +35,7 @@ import ch.dvbern.lib.invoicegenerator.pdf.PdfElementGenerator;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfGenerator;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfContentByte;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -154,9 +153,9 @@ public class OrangerEinzahlungsscheinGeneratorTest {
 	}
 
 	private void create(
-		@Nonnull String path,
-		@Nonnull OrangerEinzahlungsschein einzahlungsschein,
-		@Nonnull EinzahlungsscheinConfiguration config) throws IOException {
+		@NonNull String path,
+		@NonNull OrangerEinzahlungsschein einzahlungsschein,
+		@NonNull EinzahlungsscheinConfiguration config) throws IOException {
 
 		PdfGenerator generator = new PdfGenerator(Files.newOutputStream(Paths.get(path)), configuration);
 
@@ -167,7 +166,7 @@ public class OrangerEinzahlungsscheinGeneratorTest {
 		Assertions.assertTrue(new File(path).isFile());
 	}
 
-	@Nonnull
+	@NonNull
 	private EinzahlungsscheinConfiguration createConfig() {
 		EinzahlungsscheinConfiguration config = new EinzahlungsscheinConfiguration();
 		config.setAddEsrBackgroundImage(true);

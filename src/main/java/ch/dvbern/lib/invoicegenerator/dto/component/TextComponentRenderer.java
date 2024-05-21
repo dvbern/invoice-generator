@@ -16,35 +16,34 @@
 
 package ch.dvbern.lib.invoicegenerator.dto.component;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.dto.PageConfiguration;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfElementGenerator;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.ColumnText;
 import com.lowagie.text.pdf.PdfContentByte;
+import org.jspecify.annotations.NonNull;
 
 import static com.lowagie.text.Utilities.millimetersToPoints;
 
 public abstract class TextComponentRenderer<T extends TextComponent, Payload> extends ComponentRenderer<T, Payload> {
 
-	protected TextComponentRenderer(@Nonnull T componentConfiguration) {
+	protected TextComponentRenderer(@NonNull T componentConfiguration) {
 		super(componentConfiguration);
 	}
 
-	protected TextComponentRenderer(@Nonnull T componentConfiguration, @Nonnull Payload payload) {
+	protected TextComponentRenderer(@NonNull T componentConfiguration, @NonNull Payload payload) {
 		super(componentConfiguration, payload);
 	}
 
 	protected abstract void render(
-		@Nonnull ColumnText columnText,
-		@Nonnull Payload payload,
-		@Nonnull PageConfiguration pageConfiguration);
+		@NonNull ColumnText columnText,
+		@NonNull Payload payload,
+		@NonNull PageConfiguration pageConfiguration);
 
 	@Override
 	public void render(
-		@Nonnull PdfContentByte directContent,
-		@Nonnull PdfElementGenerator pdfElementGenerator) throws DocumentException {
+		@NonNull PdfContentByte directContent,
+		@NonNull PdfElementGenerator pdfElementGenerator) throws DocumentException {
 
 		Payload payload = getPayload();
 		if (payload == null) {

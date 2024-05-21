@@ -23,8 +23,6 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
 import ch.dvbern.lib.invoicegenerator.dto.component.ComponentConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.component.ComponentRenderer;
@@ -35,6 +33,7 @@ import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPageEventHelper;
 import com.lowagie.text.pdf.PdfWriter;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Wendet {@link ComponentRenderer} auf eine Seite an, wenn die per OnPage konfigurierte Seite erreicht wird.
@@ -44,28 +43,28 @@ public class OnPageHandler extends PdfPageEventHelper {
 	public static final Consumer<PdfContentByte> NOOP = whatever -> {
 	};
 
-	@Nonnull
+	@NonNull
 	private final PdfElementGenerator pdfElementGenerator;
 
-	@Nonnull
+	@NonNull
 	private final Consumer<PdfContentByte> directContentConsumer;
 
-	@Nonnull
+	@NonNull
 	private final Map<OnPage, List<ComponentRenderer<? extends ComponentConfiguration, ?>>> components;
 
 	private boolean lastPage = false;
 
 	public OnPageHandler(
-		@Nonnull PdfElementGenerator pdfElementGenerator,
-		@Nonnull List<ComponentRenderer<? extends ComponentConfiguration, ?>> components) {
+		@NonNull PdfElementGenerator pdfElementGenerator,
+		@NonNull List<ComponentRenderer<? extends ComponentConfiguration, ?>> components) {
 
 		this(pdfElementGenerator, components, NOOP);
 	}
 
 	public OnPageHandler(
-		@Nonnull PdfElementGenerator pdfElementGenerator,
-		@Nonnull List<ComponentRenderer<? extends ComponentConfiguration, ?>> components,
-		@Nonnull Consumer<PdfContentByte> directContentConsumer) {
+		@NonNull PdfElementGenerator pdfElementGenerator,
+		@NonNull List<ComponentRenderer<? extends ComponentConfiguration, ?>> components,
+		@NonNull Consumer<PdfContentByte> directContentConsumer) {
 
 		this.pdfElementGenerator = pdfElementGenerator;
 		this.components = components.stream()
@@ -74,7 +73,7 @@ public class OnPageHandler extends PdfPageEventHelper {
 	}
 
 	@Override
-	public void onEndPage(@Nonnull PdfWriter pdfWriter, @Nonnull Document document) {
+	public void onEndPage(@NonNull PdfWriter pdfWriter, @NonNull Document document) {
 		PdfContentByte directContent = pdfWriter.getDirectContent();
 
 		components.entrySet().stream()

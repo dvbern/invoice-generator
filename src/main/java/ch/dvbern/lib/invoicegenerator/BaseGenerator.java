@@ -20,8 +20,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.dto.Alignment;
 import ch.dvbern.lib.invoicegenerator.dto.BaseLayoutConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.component.AddressComponent;
@@ -33,12 +31,13 @@ import ch.dvbern.lib.invoicegenerator.errors.InvoiceGeneratorRuntimeException;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfElementGenerator;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfGenerator;
 import com.lowagie.text.DocumentException;
+import org.jspecify.annotations.NonNull;
 
 public class BaseGenerator<T extends BaseLayoutConfiguration> {
 
-	@Nonnull
+	@NonNull
 	private final T configuration;
-	@Nonnull
+	@NonNull
 	private PdfElementGenerator pdfElementGenerator;
 
 	/**
@@ -55,7 +54,7 @@ public class BaseGenerator<T extends BaseLayoutConfiguration> {
 	 * @param configuration Die Konfiguration beinhaltet das Layout des Dokuments (Abstände, Seitengrösse)
 	 * sowie statische Elemente, die bei sämtlichen Rechnungen gleich bleiben (Header, Footer, Logo, ...)
 	 */
-	public BaseGenerator(@Nonnull final T configuration) throws InvoiceGeneratorRuntimeException {
+	public BaseGenerator(@NonNull final T configuration) throws InvoiceGeneratorRuntimeException {
 		this.configuration = configuration;
 		this.pdfElementGenerator = new PdfElementGenerator(configuration);
 	}
@@ -70,9 +69,9 @@ public class BaseGenerator<T extends BaseLayoutConfiguration> {
 	 *                                   geladen werden kann
 	 */
 	public void generate(
-		@Nonnull OutputStream outputStream,
-		@Nonnull OnPageHandler onPageHandler,
-		@Nonnull CustomGenerator generator)
+		@NonNull OutputStream outputStream,
+		@NonNull OnPageHandler onPageHandler,
+		@NonNull CustomGenerator generator)
 		throws InvoiceGeneratorException {
 
 		PdfGenerator pdfGenerator = null;
@@ -104,17 +103,17 @@ public class BaseGenerator<T extends BaseLayoutConfiguration> {
 		}
 	}
 
-	@Nonnull
-	public OnPageHandler getOnPageHandler(@Nonnull List<String> empfaengerAdresse) {
+	@NonNull
+	public OnPageHandler getOnPageHandler(@NonNull List<String> empfaengerAdresse) {
 		List<ComponentRenderer<? extends ComponentConfiguration, ?>> components =
 			getComponentRenderers(empfaengerAdresse);
 
 		return new OnPageHandler(pdfElementGenerator, components);
 	}
 
-	@Nonnull
+	@NonNull
 	public List<ComponentRenderer<? extends ComponentConfiguration, ?>> getComponentRenderers(
-		@Nonnull List<String> empfaengerAdresse) {
+		@NonNull List<String> empfaengerAdresse) {
 
 		List<ComponentRenderer<? extends ComponentConfiguration, ?>> staticComponents =
 			configuration.getStaticComponents();
@@ -131,7 +130,7 @@ public class BaseGenerator<T extends BaseLayoutConfiguration> {
 	 * @return Erstellt einen simplen OnPageHandler, welcher nur die staticComponents rendert.
 	 * @see BaseLayoutConfiguration#getStaticComponents()
 	 */
-	@Nonnull
+	@NonNull
 	public OnPageHandler createDefaultOnPageHandler() {
 		List<ComponentRenderer<? extends ComponentConfiguration, ?>> staticComponents =
 			configuration.getStaticComponents();
@@ -139,17 +138,17 @@ public class BaseGenerator<T extends BaseLayoutConfiguration> {
 		return new OnPageHandler(pdfElementGenerator, staticComponents);
 	}
 
-	@Nonnull
+	@NonNull
 	public T getConfiguration() {
 		return configuration;
 	}
 
-	@Nonnull
+	@NonNull
 	public PdfElementGenerator getPdfElementGenerator() {
 		return pdfElementGenerator;
 	}
 
-	public void setPdfElementGenerator(@Nonnull PdfElementGenerator pdfElementGenerator) {
+	public void setPdfElementGenerator(@NonNull PdfElementGenerator pdfElementGenerator) {
 		this.pdfElementGenerator = pdfElementGenerator;
 	}
 }

@@ -15,7 +15,7 @@
  */
 package ch.dvbern.lib.invoicegenerator.errors;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Runtime-Exception, die bei technischen Problemen geworfen wird
@@ -31,7 +31,7 @@ public class InvoiceGeneratorRuntimeException extends RuntimeException {
 	 *
 	 * @param message die Message
 	 */
-	public InvoiceGeneratorRuntimeException(@Nonnull String message) {
+	public InvoiceGeneratorRuntimeException(@NonNull String message) {
 		super(message);
 	}
 
@@ -41,7 +41,7 @@ public class InvoiceGeneratorRuntimeException extends RuntimeException {
 	 * @param message die Message
 	 * @param cause die Cause
 	 */
-	public InvoiceGeneratorRuntimeException(@Nonnull String message, @Nonnull Throwable cause) {
+	public InvoiceGeneratorRuntimeException(@NonNull String message, @NonNull Throwable cause) {
 		super(message, cause);
 	}
 }

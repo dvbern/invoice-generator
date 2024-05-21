@@ -16,12 +16,11 @@
 
 package ch.dvbern.lib.invoicegenerator;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.pdf.PdfGenerator;
 import com.lowagie.text.DocumentException;
+import org.jspecify.annotations.NonNull;
 
 @FunctionalInterface
 public interface CustomGenerator {
-	void accept(@Nonnull PdfGenerator pdfGenerator) throws DocumentException;
+	void accept(@NonNull PdfGenerator pdfGenerator) throws DocumentException;
 }

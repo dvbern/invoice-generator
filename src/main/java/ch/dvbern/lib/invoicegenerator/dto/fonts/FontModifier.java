@@ -18,45 +18,44 @@ package ch.dvbern.lib.invoicegenerator.dto.fonts;
 
 import java.awt.Color;
 
-import javax.annotation.Nonnull;
-
 import com.lowagie.text.Font;
+import org.jspecify.annotations.NonNull;
 
 @FunctionalInterface
 public interface FontModifier {
-	void accept(@Nonnull Font font);
+	void accept(@NonNull Font font);
 
-	@Nonnull
+	@NonNull
 	static FontModifier size(float size) {
 		return font -> font.setSize(size);
 	}
 
-	@Nonnull
-	static FontModifier color(@Nonnull Color color) {
+	@NonNull
+	static FontModifier color(@NonNull Color color) {
 		return font -> font.setColor(color);
 	}
 
-	@Nonnull
+	@NonNull
 	static FontModifier style(int style) {
 		return font -> font.setStyle(style);
 	}
 
-	@Nonnull
+	@NonNull
 	static FontModifier bold() {
 		return style(Font.BOLD);
 	}
 
-	@Nonnull
+	@NonNull
 	static FontModifier italic() {
 		return style(Font.ITALIC);
 	}
 
-	@Nonnull
+	@NonNull
 	static FontModifier boldItalic() {
 		return style(Font.BOLDITALIC);
 	}
 
-	@Nonnull
+	@NonNull
 	static FontModifier underline() {
 		return style(Font.UNDERLINE);
 	}

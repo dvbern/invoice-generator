@@ -19,12 +19,11 @@ package ch.dvbern.lib.invoicegenerator.dto.component;
 import java.util.Optional;
 import java.util.StringJoiner;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import ch.dvbern.lib.invoicegenerator.dto.Alignment;
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
 import com.lowagie.text.Font;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.DEFAULT_MULTIPLIED_LEADING;
 
@@ -36,7 +35,7 @@ public class PhraseComponent extends TextComponent {
 
 	@Nullable
 	private final Font font;
-	@Nonnull
+	@NonNull
 	private final Alignment alignment;
 
 	private final float multipliedLeading;
@@ -58,9 +57,9 @@ public class PhraseComponent extends TextComponent {
 		float topInMm,
 		float widthInMm,
 		float heightInMm,
-		@Nonnull OnPage onPage,
+		@NonNull OnPage onPage,
 		@Nullable Font font,
-		@Nonnull Alignment alignment,
+		@NonNull Alignment alignment,
 		float multipliedLeading) {
 
 		super(leftInMm, topInMm, widthInMm, heightInMm, onPage);
@@ -110,14 +109,14 @@ public class PhraseComponent extends TextComponent {
 		float widthInMm,
 		float heightInMm,
 		@Nullable Font font,
-		@Nonnull Alignment alignment,
+		@NonNull Alignment alignment,
 		float multipliedLeading) {
 
 		this(leftInMm, topInMm, widthInMm, heightInMm, OnPage.ALL, font, alignment, multipliedLeading);
 	}
 
 	@Override
-	@Nonnull
+	@NonNull
 	public String toString() {
 		return new StringJoiner(", ", PhraseComponent.class.getSimpleName() + '[', "]")
 			.add("alignment=" + alignment)
@@ -127,12 +126,12 @@ public class PhraseComponent extends TextComponent {
 			.toString();
 	}
 
-	@Nonnull
+	@NonNull
 	public Optional<Font> getFont() {
 		return Optional.ofNullable(font);
 	}
 
-	@Nonnull
+	@NonNull
 	public Alignment getAlignment() {
 		return alignment;
 	}

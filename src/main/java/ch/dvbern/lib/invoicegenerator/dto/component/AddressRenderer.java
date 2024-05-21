@@ -18,27 +18,26 @@ package ch.dvbern.lib.invoicegenerator.dto.component;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.dto.PageConfiguration;
 import com.lowagie.text.Font;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.pdf.ColumnText;
+import org.jspecify.annotations.NonNull;
 
 import static ch.dvbern.lib.invoicegenerator.dto.component.AddressComponent.PP_PADDING_BOTTOM;
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.joinListToString;
 
 public class AddressRenderer extends TextComponentRenderer<AddressComponent, List<String>> {
 
-	public AddressRenderer(@Nonnull AddressComponent componentConfiguration, @Nonnull List<String> payload) {
+	public AddressRenderer(@NonNull AddressComponent componentConfiguration, @NonNull List<String> payload) {
 		super(componentConfiguration, payload);
 	}
 
 	@Override
 	protected void render(
-		@Nonnull ColumnText columnText,
-		@Nonnull List<String> payload,
-		@Nonnull PageConfiguration pageConfiguration) {
+		@NonNull ColumnText columnText,
+		@NonNull List<String> payload,
+		@NonNull PageConfiguration pageConfiguration) {
 
 		AddressComponent componentConfiguration = getComponentConfiguration();
 

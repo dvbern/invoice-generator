@@ -29,8 +29,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.dto.Invoice;
 import ch.dvbern.lib.invoicegenerator.errors.InvoiceGeneratorException;
 import com.lowagie.text.pdf.PdfReader;
@@ -44,25 +42,26 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
+import org.jspecify.annotations.NonNull;
 
 public final class TestUtil {
 
 	private TestUtil() {
 	}
 
-	@Nonnull
+	@NonNull
 	public static File createFile(
-		@Nonnull InvoiceGenerator invoiceGenerator,
-		@Nonnull Invoice invoice,
-		@Nonnull String filename) throws InvoiceGeneratorException, IOException {
+		@NonNull InvoiceGenerator invoiceGenerator,
+		@NonNull Invoice invoice,
+		@NonNull String filename) throws InvoiceGeneratorException, IOException {
 
 		invoiceGenerator.generateInvoice(Files.newOutputStream(Paths.get(filename)), invoice);
 
 		return new File(filename);
 	}
 
-	@Nonnull
-	public static byte[] readURL(@Nonnull URL url) {
+	@NonNull
+	public static byte[] readURL(@NonNull URL url) {
 		try {
 			URLConnection con = url.openConnection();
 			try (InputStream is = con.getInputStream()) {
@@ -73,7 +72,7 @@ public final class TestUtil {
 		}
 	}
 
-	public static int getNumberOfPages(@Nonnull File file) throws IOException {
+	public static int getNumberOfPages(@NonNull File file) throws IOException {
 		PdfReader reader = new PdfReader(Files.newInputStream(file.toPath()));
 		int numberOfPages = reader.getNumberOfPages();
 		reader.close();
@@ -81,21 +80,21 @@ public final class TestUtil {
 		return numberOfPages;
 	}
 
-	@Nonnull
-	public static String getText(@Nonnull InputStream pdfStream) {
+	@NonNull
+	public static String getText(@NonNull InputStream pdfStream) {
 		try (PDDocument document = PDDocument.load(pdfStream)) {
 			PDFTextStripper pdfStripper = new PDFTextStripper();
 			return pdfStripper.getText(document);
-		} catch (@Nonnull IOException ex) {
+		} catch (@NonNull IOException ex) {
 			throw new IllegalStateException("Could not extract text", ex);
 		}
 	}
 
-	@Nonnull
+	@NonNull
 	public static Matcher<File> withPages(int numberOfPages) {
 		return new TypeSafeDiagnosingMatcher<File>() {
 			@Override
-			public boolean matchesSafely(@Nonnull File actual, @Nonnull Description mismatchDescription) {
+			public boolean matchesSafely(@NonNull File actual, @NonNull Description mismatchDescription) {
 				try {
 					int actualNumberOfPages = getNumberOfPages(actual);
 
@@ -116,7 +115,7 @@ public final class TestUtil {
 			}
 
 			@Override
-			public void describeTo(@Nonnull Description description) {
+			public void describeTo(@NonNull Description description) {
 				description.appendText("A file with  ")
 					.appendValue(numberOfPages)
 					.appendText(" pages");
@@ -125,13 +124,13 @@ public final class TestUtil {
 	}
 
 	@SafeVarargs
-	@Nonnull
-	public static Matcher<File> containsFonts(@Nonnull Matcher<String>... fontNames) {
+	@NonNull
+	public static Matcher<File> containsFonts(@NonNull Matcher<String>... fontNames) {
 		Matcher<Iterable<? extends String>> iterableMatcher = Matchers.containsInAnyOrder(fontNames);
 
 		return new TypeSafeDiagnosingMatcher<File>() {
 			@Override
-			protected boolean matchesSafely(@Nonnull File actual, @Nonnull Description mismatchDescription) {
+			protected boolean matchesSafely(@NonNull File actual, @NonNull Description mismatchDescription) {
 				Set<String> fonts = getFonts(actual).stream()
 					.map(PDFontLike::getName)
 					.collect(Collectors.toSet());
@@ -146,14 +145,14 @@ public final class TestUtil {
 			}
 
 			@Override
-			public void describeTo(@Nonnull Description description) {
+			public void describeTo(@NonNull Description description) {
 				iterableMatcher.describeTo(description);
 			}
 		};
 	}
 
-	@Nonnull
-	public static Set<PDFont> getFonts(@Nonnull File file) {
+	@NonNull
+	public static Set<PDFont> getFonts(@NonNull File file) {
 		try (PDDocument document = PDDocument.load(file)) {
 			Set<PDFont> fonts = stream(document.getPages().iterator())
 				.map(PDPage::getResources)
@@ -173,13 +172,13 @@ public final class TestUtil {
 		}
 	}
 
-	@Nonnull
-	private static <T> Stream<T> stream(@Nonnull final Iterator<T> iterator) {
+	@NonNull
+	private static <T> Stream<T> stream(@NonNull final Iterator<T> iterator) {
 		return stream(() -> iterator);
 	}
 
-	@Nonnull
-	private static <T> Stream<T> stream(@Nonnull Iterable<T> iterable) {
+	@NonNull
+	private static <T> Stream<T> stream(@NonNull Iterable<T> iterable) {
 		return StreamSupport.stream(iterable.spliterator(), false);
 	}
 }

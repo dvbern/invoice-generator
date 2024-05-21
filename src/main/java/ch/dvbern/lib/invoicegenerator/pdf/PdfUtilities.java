@@ -17,9 +17,8 @@ package ch.dvbern.lib.invoicegenerator.pdf;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import com.lowagie.text.Utilities;
+import org.jspecify.annotations.NonNull;
 
 @SuppressWarnings("PMD.ClassNamingConventions")
 public final class PdfUtilities {
@@ -41,8 +40,8 @@ public final class PdfUtilities {
 	private PdfUtilities() {
 	}
 
-	@Nonnull
-	public static String joinListToString(@Nonnull List<String> list) {
+	@NonNull
+	public static String joinListToString(@NonNull List<String> list) {
 		return String.join(NEWLINE, list);
 	}
 }

@@ -15,7 +15,7 @@
  */
 package ch.dvbern.lib.invoicegenerator.errors;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Exception, die geworfen wird, falls das Konto nicht dem Format {@code VV-XXX-P} entspricht:
@@ -38,7 +38,7 @@ public class IllegalKontoException extends InvoiceGeneratorException {
 	 *
 	 * @param message die Message
 	 */
-	public IllegalKontoException(@Nonnull String message) {
+	public IllegalKontoException(@NonNull String message) {
 		super(message);
 	}
 
@@ -48,7 +48,7 @@ public class IllegalKontoException extends InvoiceGeneratorException {
 	 * @param message die Message
 	 * @param cause die Cause
 	 */
-	public IllegalKontoException(@Nonnull String message, @Nonnull Throwable cause) {
+	public IllegalKontoException(@NonNull String message, @NonNull Throwable cause) {
 		super(message, cause);
 	}
 

@@ -15,12 +15,11 @@
  */
 package ch.dvbern.lib.invoicegenerator.strategy.einzahlungfuer;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.OrangerEinzahlungsschein;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfElementGenerator;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfContentByte;
+import org.jspecify.annotations.NonNull;
 
 import static ch.dvbern.lib.invoicegenerator.OrangerEinzahlungsscheinConstants.EINZAHLUNG_FUER_1_HEIGHT;
 import static ch.dvbern.lib.invoicegenerator.OrangerEinzahlungsscheinConstants.EINZAHLUNG_FUER_1_WIDTH;
@@ -33,7 +32,7 @@ import static ch.dvbern.lib.invoicegenerator.OrangerEinzahlungsscheinConstants.E
 
 public class EinzahlungFuerPostStrategy extends EinzahlungFuerStrategy {
 
-	@Nonnull
+	@NonNull
 	private static final String ESR_IMG = "einzahlungsschein-a4-esr.jpg";
 
 	private final float xOffset;
@@ -44,7 +43,7 @@ public class EinzahlungFuerPostStrategy extends EinzahlungFuerStrategy {
 		this.yOffset = yOffset;
 	}
 
-	@Nonnull
+	@NonNull
 	@Override
 	public String getEsrBackgroundImageName() {
 		return EinzahlungFuerPostStrategy.ESR_IMG;
@@ -52,9 +51,9 @@ public class EinzahlungFuerPostStrategy extends EinzahlungFuerStrategy {
 
 	@Override
 	public void writeEinzahlungFuer(
-		@Nonnull PdfContentByte directContent,
-		@Nonnull PdfElementGenerator pdfElementGenerator,
-		@Nonnull OrangerEinzahlungsschein orangerEinzahlungsschein)
+		@NonNull PdfContentByte directContent,
+		@NonNull PdfElementGenerator pdfElementGenerator,
+		@NonNull OrangerEinzahlungsschein orangerEinzahlungsschein)
 		throws DocumentException {
 
 		pdfElementGenerator.writeMultiLine(

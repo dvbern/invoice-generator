@@ -20,9 +20,6 @@ import java.awt.Color;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import ch.dvbern.lib.invoicegenerator.dto.Alignment;
 import ch.dvbern.lib.invoicegenerator.dto.PageConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.SummaryEntry;
@@ -43,6 +40,8 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.PADDING_BOTTOM;
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.joinListToString;
@@ -52,10 +51,10 @@ public class PdfElementGenerator {
 	public static final int POSITIONEN_COLUMNS = 4;
 	public static final int SUMMARY_COLUMNS = 3;
 	public static final int FULL_WIDTH = 100;
-	@Nonnull
+	@NonNull
 	private final PageConfiguration configuration;
 
-	public PdfElementGenerator(@Nonnull PageConfiguration configuration) {
+	public PdfElementGenerator(@NonNull PageConfiguration configuration) {
 		this.configuration = configuration;
 	}
 
@@ -69,21 +68,21 @@ public class PdfElementGenerator {
 		return createParagraph(joinListToString(list));
 	}
 
-	@Nonnull
-	public Paragraph createParagraph(@Nonnull String string) {
+	@NonNull
+	public Paragraph createParagraph(@NonNull String string) {
 		Paragraph paragraph = new Paragraph(string, configuration.getFonts().getFont());
 		paragraph.setLeading(0, configuration.getMultipliedLeadingDefault());
 
 		return paragraph;
 	}
 
-	@Nonnull
-	public Paragraph createTitle(@Nonnull String title) {
+	@NonNull
+	public Paragraph createTitle(@NonNull String title) {
 		return createTitle(title, configuration.getMultipliedTitleLeading());
 	}
 
-	@Nonnull
-	public Paragraph createTitle(@Nonnull String title, float leading) {
+	@NonNull
+	public Paragraph createTitle(@NonNull String title, float leading) {
 		Paragraph paragraph = new Paragraph(title, configuration.getFonts().getFontTitle());
 		paragraph.setLeading(0, leading);
 		paragraph.setSpacingAfter(PADDING_BOTTOM);
@@ -91,9 +90,9 @@ public class PdfElementGenerator {
 		return paragraph;
 	}
 
-	@Nonnull
+	@NonNull
 	public PdfPCell createTitleCell(
-		@Nonnull final String string,
+		@NonNull final String string,
 		final boolean rightAlign,
 		final float multipliedLeading) {
 
@@ -111,10 +110,10 @@ public class PdfElementGenerator {
 		return cell;
 	}
 
-	@Nonnull
+	@NonNull
 	public PdfPTable createRechnungspositionsTabelle(
-		@Nonnull RechnungsPositionColumnTitle rechnungsPositionColumnTitle,
-		@Nonnull List<Position> positionen)
+		@NonNull RechnungsPositionColumnTitle rechnungsPositionColumnTitle,
+		@NonNull List<Position> positionen)
 		throws DocumentException {
 
 		PdfPTable table = new PdfPTable(POSITIONEN_COLUMNS);
@@ -138,10 +137,10 @@ public class PdfElementGenerator {
 		return table;
 	}
 
-	@Nonnull
+	@NonNull
 	public PdfPTable createSummaryTable(
-		@Nonnull List<SummaryEntry> summaryEntries,
-		@Nonnull Alignment tableAlignment,
+		@NonNull List<SummaryEntry> summaryEntries,
+		@NonNull Alignment tableAlignment,
 		@Nullable Paragraph descriptionContent,
 		int valueHorizontalAllign) throws DocumentException {
 
@@ -178,8 +177,8 @@ public class PdfElementGenerator {
 	}
 
 	private void createSummaryEntryCell(
-		@Nonnull PdfPTable table,
-		@Nonnull SummaryEntry summaryEntry,
+		@NonNull PdfPTable table,
+		@NonNull SummaryEntry summaryEntry,
 		int valueHorizontalAllign,
 		final float leading) {
 
@@ -208,8 +207,8 @@ public class PdfElementGenerator {
 	}
 
 	public void writeSingleLine(
-		@Nonnull PdfContentByte directContent,
-		@Nonnull String text,
+		@NonNull PdfContentByte directContent,
+		@NonNull String text,
 		float lowerLeftXPosition,
 		float lowerLeftYPosition,
 		int alignment) {
@@ -223,18 +222,18 @@ public class PdfElementGenerator {
 	}
 
 	private void writeSingleLine(
-		@Nonnull PdfContentByte directContent,
+		@NonNull PdfContentByte directContent,
 		float lowerLeftXPosition,
 		float lowerLeftYPosition,
 		int alignment,
-		@Nonnull Phrase phrase) {
+		@NonNull Phrase phrase) {
 
 		ColumnText.showTextAligned(directContent, alignment, phrase, lowerLeftXPosition, lowerLeftYPosition, 0);
 	}
 
 	public void writeSingleOcrbLine(
-		@Nonnull PdfContentByte directContent,
-		@Nonnull String text,
+		@NonNull PdfContentByte directContent,
+		@NonNull String text,
 		float lowerLeftXPosition,
 		float lowerLeftYPosition,
 		int alignment) {
@@ -244,8 +243,8 @@ public class PdfElementGenerator {
 	}
 
 	public void writeSingleLine(
-		@Nonnull PdfContentByte directContent,
-		@Nonnull String text,
+		@NonNull PdfContentByte directContent,
+		@NonNull String text,
 		float lowerLeftXPosition,
 		float lowerLeftYPosition,
 		int alignment,
@@ -257,8 +256,8 @@ public class PdfElementGenerator {
 	}
 
 	public void writeMultiLine(
-		@Nonnull PdfContentByte directContent,
-		@Nonnull List<String> text,
+		@NonNull PdfContentByte directContent,
+		@NonNull List<String> text,
 		float lowerLeftXPosition,
 		float lowerLeftYPosition,
 		float width,
@@ -275,15 +274,15 @@ public class PdfElementGenerator {
 	}
 
 	public void addBackgroundImage(
-		@Nonnull PdfContentByte directContent,
-		@Nonnull Image image)
+		@NonNull PdfContentByte directContent,
+		@NonNull Image image)
 		throws DocumentException {
 
 		PdfContentByte canvas = directContent.getPdfWriter().getDirectContentUnder();
 		canvas.addImage(image);
 	}
 
-	@Nonnull
+	@NonNull
 	public PageConfiguration getConfiguration() {
 		return configuration;
 	}

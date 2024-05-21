@@ -17,7 +17,7 @@ package ch.dvbern.lib.invoicegenerator.dto.position;
 
 import java.util.StringJoiner;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Definiert die Spalten-Titel der Rechnungstabelle.
@@ -29,13 +29,13 @@ import javax.annotation.Nonnull;
  */
 public class RechnungsPositionColumnTitle {
 
-	@Nonnull
+	@NonNull
 	private final String leistung;
-	@Nonnull
+	@NonNull
 	private final String menge;
-	@Nonnull
+	@NonNull
 	private final String preis;
-	@Nonnull
+	@NonNull
 	private final String total;
 
 	/**
@@ -47,10 +47,10 @@ public class RechnungsPositionColumnTitle {
 	 * @param total Der Titel der Spalte "Total"
 	 */
 	public RechnungsPositionColumnTitle(
-		@Nonnull String leistung,
-		@Nonnull String menge,
-		@Nonnull String preis,
-		@Nonnull String total) {
+		@NonNull String leistung,
+		@NonNull String menge,
+		@NonNull String preis,
+		@NonNull String total) {
 		this.leistung = leistung;
 
 		this.menge = menge;
@@ -59,7 +59,7 @@ public class RechnungsPositionColumnTitle {
 	}
 
 	@Override
-	@Nonnull
+	@NonNull
 	public String toString() {
 		return new StringJoiner(", ", RechnungsPositionColumnTitle.class.getSimpleName() + '[', "]")
 			.add("leistung='" + leistung + '\'')
@@ -69,22 +69,22 @@ public class RechnungsPositionColumnTitle {
 			.toString();
 	}
 
-	@Nonnull
+	@NonNull
 	public String getLeistung() {
 		return leistung;
 	}
 
-	@Nonnull
+	@NonNull
 	public String getMenge() {
 		return menge;
 	}
 
-	@Nonnull
+	@NonNull
 	public String getPreis() {
 		return preis;
 	}
 
-	@Nonnull
+	@NonNull
 	public String getTotal() {
 		return total;
 	}

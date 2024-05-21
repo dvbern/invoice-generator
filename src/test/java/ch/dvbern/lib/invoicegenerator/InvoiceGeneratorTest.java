@@ -27,8 +27,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.dto.Alignment;
 import ch.dvbern.lib.invoicegenerator.dto.Invoice;
 import ch.dvbern.lib.invoicegenerator.dto.InvoiceGeneratorConfiguration;
@@ -47,6 +45,7 @@ import ch.dvbern.lib.invoicegenerator.dto.position.RechnungsPositionColumnTitle;
 import ch.dvbern.lib.invoicegenerator.errors.InvoiceGeneratorException;
 import org.apache.pdfbox.io.MemoryUsageSetting;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -128,7 +127,7 @@ public class InvoiceGeneratorTest {
 		initConfiguration(configuration);
 	}
 
-	private void initConfiguration(@Nonnull InvoiceGeneratorConfiguration config) {
+	private void initConfiguration(@NonNull InvoiceGeneratorConfiguration config) {
 		config.setZahlungsKonditionen(zahlungskonto);
 		config.setPp(PP_ADRESS_ZUSATZ);
 		config.setLogo(logo);
@@ -209,8 +208,8 @@ public class InvoiceGeneratorTest {
 		));
 	}
 
-	@Nonnull
-	private Invoice invoiceFittingOnePage(@Nonnull Einzahlungsschein einzahlungsschein) {
+	@NonNull
+	private Invoice invoiceFittingOnePage(@NonNull Einzahlungsschein einzahlungsschein) {
 		List<SummaryEntry> totalEntires = Arrays.asList(
 			new SummaryEntry("Subtotal", "CHF 3'488.00", false, true),
 			new SummaryEntry("Total", "CHF 3'488.00", true, true)

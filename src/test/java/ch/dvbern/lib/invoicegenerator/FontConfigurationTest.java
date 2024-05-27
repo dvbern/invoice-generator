@@ -16,6 +16,7 @@
 
 package ch.dvbern.lib.invoicegenerator;
 
+import java.awt.Color;
 import java.io.File;
 
 import ch.dvbern.lib.invoicegenerator.dto.Alignment;
@@ -52,7 +53,7 @@ public class FontConfigurationTest {
 
 		FontConfiguration fontConfiguration = new FontConfiguration(base);
 
-		InvoiceGeneratorConfiguration config = new InvoiceGeneratorConfiguration(Alignment.LEFT);
+		InvoiceGeneratorConfiguration config = new InvoiceGeneratorConfiguration("DVB", Alignment.LEFT);
 		config.setFonts(fontConfiguration);
 
 		InvoiceGenerator invoiceGenerator = new InvoiceGenerator(config);
@@ -77,13 +78,13 @@ public class FontConfigurationTest {
 			fontBuilder.reset().build(),
 			fontBuilder.use(boldItalic()).build(),
 			fontBuilder.use(underline(), size(12)).build(),
-			fontBuilder.use(size(12), color(java.awt.Color.GREEN)).build(),
+			fontBuilder.use(size(12), color(Color.GREEN)).build(),
 			fontBuilder.use(bold(), size(12)).build()
 		);
 
 		fontConfiguration.setFontOcrb(new Font(Font.COURIER, FontConfiguration.FONT_SIZE_OCRB));
 
-		InvoiceGeneratorConfiguration config = new InvoiceGeneratorConfiguration(Alignment.LEFT);
+		InvoiceGeneratorConfiguration config = new InvoiceGeneratorConfiguration("DVB", Alignment.LEFT);
 		config.setFonts(fontConfiguration);
 
 		config.getPositionStrategyMap().get(RechnungsPosition.class)
@@ -101,8 +102,7 @@ public class FontConfigurationTest {
 				equalTo("Times-Roman"),
 				equalTo("Times-BoldItalic"),
 				equalTo("Times-Italic"),
-				equalTo("Times-Bold"),
-				endsWith("LiberationSans")) // always added by OpenPdf since version 1.3.18
+				equalTo("Times-Bold"))
 		));
 	}
 }

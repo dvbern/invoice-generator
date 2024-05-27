@@ -16,17 +16,16 @@
 
 package ch.dvbern.lib.invoicegenerator.dto.component;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
+import org.jspecify.annotations.NonNull;
 
 public interface ComponentConfiguration {
 
 	/**
 	 * @return Spezifiziert auf welchen Typen von Seiten diese Component gerendert wird.
 	 */
-	@Nonnull
+	@NonNull
 	OnPage getOnPage();
 
-	void setOnPage(@Nonnull OnPage onPage);
+	void setOnPage(@NonNull OnPage onPage);
 }

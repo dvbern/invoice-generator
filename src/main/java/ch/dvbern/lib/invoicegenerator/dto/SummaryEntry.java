@@ -17,7 +17,7 @@ package ch.dvbern.lib.invoicegenerator.dto;
 
 import java.util.StringJoiner;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Eine Invoice hat eine Summary-Liste sowie eine Total-Liste. Beide Listen beinhalten SummaryEntries.
@@ -27,9 +27,9 @@ import javax.annotation.Nonnull;
 
 public class SummaryEntry {
 
-	@Nonnull
+	@NonNull
 	private final String label;
-	@Nonnull
+	@NonNull
 	private final String value;
 	private final boolean bold;
 	private final boolean underlined;
@@ -42,19 +42,19 @@ public class SummaryEntry {
 	 * @param bold true, falls die Zeile fett dargestellt werden soll, ansonsten false
 	 * @param underlined true, falls die Zeile unterstrichen dargestellt werden soll, ansonsten false.
 	 */
-	public SummaryEntry(@Nonnull String label, @Nonnull String value, boolean bold, boolean underlined) {
+	public SummaryEntry(@NonNull String label, @NonNull String value, boolean bold, boolean underlined) {
 		this.label = label;
 		this.value = value;
 		this.bold = bold;
 		this.underlined = underlined;
 	}
 
-	public SummaryEntry(@Nonnull String label, @Nonnull String value) {
+	public SummaryEntry(@NonNull String label, @NonNull String value) {
 		this(label, value, false, false);
 	}
 
 	@Override
-	@Nonnull
+	@NonNull
 	public String toString() {
 		return new StringJoiner(", ", SummaryEntry.class.getSimpleName() + '[', "]")
 			.add("label='" + label + '\'')
@@ -64,12 +64,12 @@ public class SummaryEntry {
 			.toString();
 	}
 
-	@Nonnull
+	@NonNull
 	public String getLabel() {
 		return label;
 	}
 
-	@Nonnull
+	@NonNull
 	public String getValue() {
 		return value;
 	}

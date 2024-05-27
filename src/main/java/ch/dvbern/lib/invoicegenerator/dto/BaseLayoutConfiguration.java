@@ -23,18 +23,22 @@ import java.util.StringJoiner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import ch.dvbern.lib.invoicegenerator.dto.component.AddressComponent;
 import ch.dvbern.lib.invoicegenerator.dto.component.ComponentConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.component.ComponentRenderer;
 import ch.dvbern.lib.invoicegenerator.dto.component.Logo;
 import ch.dvbern.lib.invoicegenerator.dto.component.PhraseRenderer;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public class BaseLayoutConfiguration extends PageConfiguration {
 
-	@Nonnull
+	/**
+	 * A text which is added to PDF metadata - replacing the auto-generated OpenPDF entry
+	 */
+	@NonNull
+	private final String producer;
+	@NonNull
 	private final AddressComponent empfaengerAdresse;
 	@Nullable
 	private Logo logo = null;
@@ -42,12 +46,13 @@ public class BaseLayoutConfiguration extends PageConfiguration {
 	private PhraseRenderer header = null;
 	@Nullable
 	private PhraseRenderer footer = null;
-	@Nonnull
+	@NonNull
 	private final List<ComponentRenderer<? extends ComponentConfiguration, ?>> customComponents = new ArrayList<>();
 	@Nullable
 	private List<ComponentRenderer<? extends ComponentConfiguration, ?>> staticComponents = null;
 
-	public BaseLayoutConfiguration(@Nonnull AddressComponent empfaengerAdresse) {
+	public BaseLayoutConfiguration(@NonNull String producer, @NonNull AddressComponent empfaengerAdresse) {
+		this.producer = producer;
 		this.empfaengerAdresse = empfaengerAdresse;
 	}
 
@@ -62,7 +67,7 @@ public class BaseLayoutConfiguration extends PageConfiguration {
 		this.staticComponents = null;
 	}
 
-	@Nonnull
+	@NonNull
 	public List<ComponentRenderer<? extends ComponentConfiguration, ?>> getStaticComponents() {
 		if (staticComponents == null) {
 			// populate the cache
@@ -77,13 +82,13 @@ public class BaseLayoutConfiguration extends PageConfiguration {
 		return staticComponents;
 	}
 
-	@Nonnull
+	@NonNull
 	public List<ComponentRenderer<? extends ComponentConfiguration, ?>> getCustomComponents() {
 		return customComponents;
 	}
 
 	@Override
-	@Nonnull
+	@NonNull
 	public String toString() {
 		return new StringJoiner(", ", BaseLayoutConfiguration.class.getSimpleName() + '[', "]")
 			.add("empfaengerAdresse=" + empfaengerAdresse)
@@ -91,6 +96,11 @@ public class BaseLayoutConfiguration extends PageConfiguration {
 			.add("header=" + header)
 			.add("footer=" + footer)
 			.toString();
+	}
+
+	@NonNull
+	public String getProducer() {
+		return producer;
 	}
 
 	@Nullable
@@ -119,7 +129,7 @@ public class BaseLayoutConfiguration extends PageConfiguration {
 		this.staticComponents = null;
 	}
 
-	@Nonnull
+	@NonNull
 	public AddressComponent getEmpfaengerAdresse() {
 		return empfaengerAdresse;
 	}

@@ -16,11 +16,10 @@
 
 package ch.dvbern.lib.invoicegenerator.dto.fonts;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.lowagie.text.Font;
 import com.lowagie.text.FontFactory;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import static ch.dvbern.lib.invoicegenerator.dto.fonts.FontModifier.bold;
 import static ch.dvbern.lib.invoicegenerator.dto.fonts.FontModifier.size;
@@ -39,18 +38,18 @@ public class FontConfiguration {
 
 	@Nullable
 	private Font fontOcrb;
-	@Nonnull
+	@NonNull
 	private Font font;
-	@Nonnull
+	@NonNull
 	private Font fontBold;
-	@Nonnull
+	@NonNull
 	private Font fontTitle;
-	@Nonnull
+	@NonNull
 	private Font fontH1;
-	@Nonnull
+	@NonNull
 	private Font fontH2;
 
-	public FontConfiguration(@Nonnull Font base) {
+	public FontConfiguration(@NonNull Font base) {
 		FontBuilder builder = FontBuilder.of(base);
 		this.font = builder.build();
 		this.fontBold = builder.with(bold()).build();
@@ -68,11 +67,11 @@ public class FontConfiguration {
 	}
 
 	public FontConfiguration(
-		@Nonnull Font font,
-		@Nonnull Font fontBold,
-		@Nonnull Font fontTitle,
-		@Nonnull Font fontH1,
-		@Nonnull Font fontH2) {
+		@NonNull Font font,
+		@NonNull Font fontBold,
+		@NonNull Font fontTitle,
+		@NonNull Font fontH1,
+		@NonNull Font fontH2) {
 		this.font = font;
 		this.fontBold = fontBold;
 		this.fontTitle = fontTitle;
@@ -80,7 +79,7 @@ public class FontConfiguration {
 		this.fontH2 = fontH2;
 	}
 
-	@Nonnull
+	@NonNull
 	public Font getFontOcrb() {
 		if (fontOcrb == null) {
 			fontOcrb = FontFactory.getFont(FONT_FACE_OCRB, WINANSI, EMBEDDED, FONT_SIZE_OCRB);
@@ -93,48 +92,48 @@ public class FontConfiguration {
 		this.fontOcrb = fontOcrb;
 	}
 
-	@Nonnull
+	@NonNull
 	public Font getFont() {
 		return font;
 	}
 
-	public void setFont(@Nonnull Font font) {
+	public void setFont(@NonNull Font font) {
 		this.font = font;
 	}
 
-	@Nonnull
+	@NonNull
 	public Font getFontBold() {
 		return fontBold;
 	}
 
-	public void setFontBold(@Nonnull Font fontBold) {
+	public void setFontBold(@NonNull Font fontBold) {
 		this.fontBold = fontBold;
 	}
 
-	@Nonnull
+	@NonNull
 	public Font getFontTitle() {
 		return fontTitle;
 	}
 
-	public void setFontTitle(@Nonnull Font fontTitle) {
+	public void setFontTitle(@NonNull Font fontTitle) {
 		this.fontTitle = fontTitle;
 	}
 
-	@Nonnull
+	@NonNull
 	public Font getFontH1() {
 		return fontH1;
 	}
 
-	public void setFontH1(@Nonnull Font fontH1) {
+	public void setFontH1(@NonNull Font fontH1) {
 		this.fontH1 = fontH1;
 	}
 
-	@Nonnull
+	@NonNull
 	public Font getFontH2() {
 		return fontH2;
 	}
 
-	public void setFontH2(@Nonnull Font fontH2) {
+	public void setFontH2(@NonNull Font fontH2) {
 		this.fontH2 = fontH2;
 	}
 }

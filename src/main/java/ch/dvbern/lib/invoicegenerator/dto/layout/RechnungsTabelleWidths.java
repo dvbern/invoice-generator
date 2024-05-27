@@ -19,10 +19,9 @@ package ch.dvbern.lib.invoicegenerator.dto.layout;
 import java.util.EnumMap;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.dto.Alignment;
 import com.lowagie.text.pdf.PdfPTable;
+import org.jspecify.annotations.NonNull;
 
 public class RechnungsTabelleWidths {
 
@@ -81,7 +80,7 @@ public class RechnungsTabelleWidths {
 		return positionenColumnWidths;
 	}
 
-	public float[] getSummaryColumnWidths(@Nonnull Alignment alignment) {
+	public float[] getSummaryColumnWidths(@NonNull Alignment alignment) {
 		return this.summaryColumnWidths.get(alignment);
 	}
 }

@@ -17,8 +17,6 @@ package ch.dvbern.lib.invoicegenerator.strategy.einzahlungfuer;
 
 import java.io.IOException;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.OrangerEinzahlungsschein;
 import ch.dvbern.lib.invoicegenerator.errors.InvoiceGeneratorRuntimeException;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfElementGenerator;
@@ -26,10 +24,11 @@ import com.lowagie.text.DocumentException;
 import com.lowagie.text.Image;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.pdf.PdfContentByte;
+import org.jspecify.annotations.NonNull;
 
 public abstract class EinzahlungFuerStrategy {
 
-	@Nonnull
+	@NonNull
 	private final Image esrImage;
 
 	protected EinzahlungFuerStrategy() {
@@ -42,7 +41,7 @@ public abstract class EinzahlungFuerStrategy {
 		}
 	}
 
-	@Nonnull
+	@NonNull
 	public Image getEsrBackgroundImage() {
 		return this.esrImage;
 	}
@@ -50,8 +49,8 @@ public abstract class EinzahlungFuerStrategy {
 	abstract String getEsrBackgroundImageName();
 
 	public abstract void writeEinzahlungFuer(
-		@Nonnull PdfContentByte directContent,
-		@Nonnull PdfElementGenerator pdfElementGenerator,
-		@Nonnull OrangerEinzahlungsschein orangerEinzahlungsschein)
+		@NonNull PdfContentByte directContent,
+		@NonNull PdfElementGenerator pdfElementGenerator,
+		@NonNull OrangerEinzahlungsschein orangerEinzahlungsschein)
 		throws DocumentException;
 }

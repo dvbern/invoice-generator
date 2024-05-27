@@ -20,9 +20,8 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.StringJoiner;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.errors.IllegalKontoException;
+import org.jspecify.annotations.NonNull;
 
 import static java.util.Objects.requireNonNull;
 
@@ -36,7 +35,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class OrangerEinzahlungsscheinBank extends OrangerEinzahlungsschein {
 
-	@Nonnull
+	@NonNull
 	private final List<String> zugunstenVon;
 
 	/**
@@ -52,12 +51,12 @@ public class OrangerEinzahlungsscheinBank extends OrangerEinzahlungsschein {
 	 *                               P = Prüfziffer) entspricht
 	 */
 	public OrangerEinzahlungsscheinBank(
-		@Nonnull List<String> einzahlungFuer,
-		@Nonnull List<String> zugunstenVon,
-		@Nonnull BigInteger referenzNrOhnePruefziffer,
-		@Nonnull BigDecimal betrag,
-		@Nonnull String konto,
-		@Nonnull List<String> einbezahltVon) throws IllegalKontoException {
+		@NonNull List<String> einzahlungFuer,
+		@NonNull List<String> zugunstenVon,
+		@NonNull BigInteger referenzNrOhnePruefziffer,
+		@NonNull BigDecimal betrag,
+		@NonNull String konto,
+		@NonNull List<String> einbezahltVon) throws IllegalKontoException {
 		super(einzahlungFuer, referenzNrOhnePruefziffer, betrag, konto, einbezahltVon);
 
 		requireNonNull(zugunstenVon);
@@ -69,14 +68,14 @@ public class OrangerEinzahlungsscheinBank extends OrangerEinzahlungsschein {
 	}
 
 	@Override
-	@Nonnull
+	@NonNull
 	public String toString() {
 		return new StringJoiner(", ", OrangerEinzahlungsscheinBank.class.getSimpleName() + '[', "]")
 			.add("zugunstenVon=" + zugunstenVon)
 			.toString();
 	}
 
-	@Nonnull
+	@NonNull
 	public List<String> getZugunstenVon() {
 		return zugunstenVon;
 	}

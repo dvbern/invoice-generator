@@ -18,12 +18,11 @@ package ch.dvbern.lib.invoicegenerator.dto.component;
 
 import java.util.StringJoiner;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import ch.dvbern.lib.invoicegenerator.dto.Alignment;
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
 import com.lowagie.text.Utilities;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import static ch.dvbern.lib.invoicegenerator.dto.Alignment.LEFT;
 import static ch.dvbern.lib.invoicegenerator.dto.PageConfiguration.LEFT_PAGE_DEFAULT_MARGIN_MM;
@@ -50,7 +49,7 @@ public class AddressComponent extends TextComponent {
 	 * @param summaryTablePosition Falls Alignment.LEFT, wird die Adresse rechts angezeigt.
 	 * Falls Alignment.RIGHT, wird die Adresse links angezeigt.
 	 */
-	public AddressComponent(@Nonnull Alignment summaryTablePosition) {
+	public AddressComponent(@NonNull Alignment summaryTablePosition) {
 		this(
 			null,
 			summaryTablePosition == LEFT ? RECHTE_ADRESSE_LEFT_MARGIN_MM : LEFT_PAGE_DEFAULT_MARGIN_MM,
@@ -66,14 +65,14 @@ public class AddressComponent extends TextComponent {
 		float topInMm,
 		float widthInMm,
 		float heightInMm,
-		@Nonnull OnPage onPage) {
+		@NonNull OnPage onPage) {
 
 		super(leftInMm, topInMm, widthInMm, heightInMm, onPage);
 		this.pp = pp;
 	}
 
 	@Override
-	@Nonnull
+	@NonNull
 	public String toString() {
 		return new StringJoiner(", ", AddressComponent.class.getSimpleName() + '[', "]")
 			.add("pp='" + pp + '\'')

@@ -17,8 +17,8 @@
 package ch.dvbern.lib.invoicegenerator;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -43,7 +43,7 @@ import static org.hamcrest.Matchers.containsString;
 
 public class SteuerbescheinigungTest {
 
-	private final InvoiceGeneratorConfiguration configuration = new InvoiceGeneratorConfiguration(Alignment.RIGHT);
+	private final InvoiceGeneratorConfiguration configuration = new InvoiceGeneratorConfiguration("DVB", Alignment.RIGHT);
 
 	private final List<String> absenderAdresse = Arrays.asList(
 		"Kita Kinderland",
@@ -102,14 +102,14 @@ public class SteuerbescheinigungTest {
 	}
 
 	@Test
-	public void testCreation() throws FileNotFoundException, InvoiceGeneratorException {
+	public void testCreation() throws IOException, InvoiceGeneratorException {
 		InvoiceGenerator invoiceGenerator = new InvoiceGenerator(configuration);
 		final Invoice invoice = new Invoice(columnTitle, TITLE, summary, einleitung, empfaengerAdresse,
 			null, positionen, total, null);
 
 		File file = createFile(invoiceGenerator, invoice, "target/Steuerbescheinigung.pdf");
 
-		String text = TestUtil.getText(new FileInputStream(file));
+		String text = TestUtil.getText(Files.newInputStream(file.toPath()));
 
 		assertThat(text, containsString("Milenković"));
 	}

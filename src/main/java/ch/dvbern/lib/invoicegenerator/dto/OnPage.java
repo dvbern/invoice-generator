@@ -19,7 +19,7 @@ package ch.dvbern.lib.invoicegenerator.dto;
 import java.io.Serializable;
 import java.util.function.BiFunction;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Definiert auf welchen Seiten eine Komponente dargestellt wird.
@@ -32,7 +32,7 @@ public enum OnPage {
 
 	private final CheckPrint<Integer, Boolean, Boolean> printable;
 
-	OnPage(@Nonnull CheckPrint<Integer, Boolean, Boolean> printable) {
+	OnPage(@NonNull CheckPrint<Integer, Boolean, Boolean> printable) {
 		this.printable = printable;
 	}
 

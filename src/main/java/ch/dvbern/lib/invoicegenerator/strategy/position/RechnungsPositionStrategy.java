@@ -17,8 +17,6 @@ package ch.dvbern.lib.invoicegenerator.strategy.position;
 
 import java.awt.Color;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.dto.PageConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.fonts.FontConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.position.Position;
@@ -30,14 +28,15 @@ import com.lowagie.text.Phrase;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
+import org.jspecify.annotations.NonNull;
 
 public class RechnungsPositionStrategy extends PositionStrategy {
 
 	@Override
 	public void addPositionToTable(
-		@Nonnull PageConfiguration configuration,
-		@Nonnull PdfPTable table,
-		@Nonnull Position position,
+		@NonNull PageConfiguration configuration,
+		@NonNull PdfPTable table,
+		@NonNull Position position,
 		boolean lastPosition) {
 
 		if (position instanceof RechnungsPosition) {
@@ -49,10 +48,10 @@ public class RechnungsPositionStrategy extends PositionStrategy {
 		}
 	}
 
-	@Nonnull
+	@NonNull
 	private PdfPCell createCell(
-		@Nonnull PageConfiguration configuration,
-		@Nonnull final String string,
+		@NonNull PageConfiguration configuration,
+		@NonNull final String string,
 		boolean rigthAllign,
 		boolean lastPosition) {
 
@@ -74,15 +73,15 @@ public class RechnungsPositionStrategy extends PositionStrategy {
 		return cell;
 	}
 
-	@Nonnull
+	@NonNull
 	@Override
-	protected Font getFont(@Nonnull FontConfiguration configuration) {
+	protected Font getFont(@NonNull FontConfiguration configuration) {
 		return getFont()
 			.orElseGet(configuration::getFont);
 	}
 
 	@Override
-	protected float getMultipliedLeading(@Nonnull PageConfiguration configuration) {
+	protected float getMultipliedLeading(@NonNull PageConfiguration configuration) {
 		return getMultipliedLeading()
 			.orElseGet(configuration::getMultipliedLeadingDefault);
 	}

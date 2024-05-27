@@ -20,23 +20,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.lowagie.text.Font;
+import org.jspecify.annotations.NonNull;
 
 public final class FontBuilder {
 
-	@Nonnull
+	@NonNull
 	private final Font baseFont;
-	@Nonnull
+	@NonNull
 	private final List<FontModifier> modifiers = new ArrayList<>();
 
-	private FontBuilder(@Nonnull Font baseFont) {
+	private FontBuilder(@NonNull Font baseFont) {
 		this.baseFont = baseFont;
 	}
 
-	public static FontBuilder of(@Nonnull Font baseFont) {
+	public static FontBuilder of(@NonNull Font baseFont) {
 		return new FontBuilder(baseFont);
 	}
 
@@ -47,9 +46,9 @@ public final class FontBuilder {
 	 * @param modifier the font modified
 	 * @return this builder
 	 */
-	@Nonnull
+	@NonNull
 	@CanIgnoreReturnValue
-	public FontBuilder with(@Nonnull FontModifier modifier) {
+	public FontBuilder with(@NonNull FontModifier modifier) {
 		this.modifiers.add(modifier);
 		return this;
 	}
@@ -58,9 +57,9 @@ public final class FontBuilder {
 	 * Convenience method to only apply the provied modifiers
 	 */
 	@SuppressWarnings("ParameterHidesMemberVariable")
-	@Nonnull
+	@NonNull
 	@CanIgnoreReturnValue
-	public FontBuilder use(@Nonnull FontModifier... modifiers) {
+	public FontBuilder use(@NonNull FontModifier... modifiers) {
 		reset();
 		this.modifiers.addAll(Arrays.asList(modifiers));
 		return this;
@@ -72,7 +71,7 @@ public final class FontBuilder {
 		return this;
 	}
 
-	@Nonnull
+	@NonNull
 	public Font build() {
 		Font font = new Font(baseFont);
 		modifiers.forEach(m -> m.accept(font));

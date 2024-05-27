@@ -17,7 +17,7 @@ package ch.dvbern.lib.invoicegenerator.dto.position;
 
 import java.util.StringJoiner;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * RechnungsPosition-Implementierung einer Position.
@@ -28,13 +28,13 @@ import javax.annotation.Nonnull;
  */
 public class RechnungsPosition implements Position {
 
-	@Nonnull
+	@NonNull
 	private final String leistung;
-	@Nonnull
+	@NonNull
 	private final String menge;
-	@Nonnull
+	@NonNull
 	private final String preis;
-	@Nonnull
+	@NonNull
 	private final String total;
 
 	/**
@@ -49,10 +49,10 @@ public class RechnungsPosition implements Position {
 	 * Formatieren von Zahlen nicht übernehmen will
 	 */
 	public RechnungsPosition(
-		@Nonnull String leistung,
-		@Nonnull String menge,
-		@Nonnull String preis,
-		@Nonnull String total) {
+		@NonNull String leistung,
+		@NonNull String menge,
+		@NonNull String preis,
+		@NonNull String total) {
 
 		this.leistung = leistung;
 		this.menge = menge;
@@ -61,7 +61,7 @@ public class RechnungsPosition implements Position {
 	}
 
 	@Override
-	@Nonnull
+	@NonNull
 	public String toString() {
 		return new StringJoiner(", ", RechnungsPosition.class.getSimpleName() + '[', "]")
 			.add("leistung='" + leistung + '\'')
@@ -71,22 +71,22 @@ public class RechnungsPosition implements Position {
 			.toString();
 	}
 
-	@Nonnull
+	@NonNull
 	public String getLeistung() {
 		return leistung;
 	}
 
-	@Nonnull
+	@NonNull
 	public String getMenge() {
 		return menge;
 	}
 
-	@Nonnull
+	@NonNull
 	public String getPreis() {
 		return preis;
 	}
 
-	@Nonnull
+	@NonNull
 	public String getTotal() {
 		return total;
 	}

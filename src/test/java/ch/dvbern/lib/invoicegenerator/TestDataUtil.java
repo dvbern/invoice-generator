@@ -32,6 +32,7 @@ import net.codecrete.qrbill.generator.Language;
 import org.jspecify.annotations.NonNull;
 
 import static ch.dvbern.lib.invoicegenerator.dto.PageConfiguration.LEFT_PAGE_DEFAULT_MARGIN_MM;
+import static java.util.Objects.requireNonNull;
 
 public final class TestDataUtil {
 
@@ -59,7 +60,7 @@ public final class TestDataUtil {
 
 	@NonNull
 	public static Logo defaultLogo() {
-		byte[] image = TestUtil.readURL(InvoiceGeneratorTest.class.getResource("dvbern.png"));
+		byte[] image = TestUtil.readURL(requireNonNull(InvoiceGeneratorTest.class.getResource("dvbern.png")));
 
 		return new Logo(image, LEFT_PAGE_DEFAULT_MARGIN_MM, 10, 30);
 	}

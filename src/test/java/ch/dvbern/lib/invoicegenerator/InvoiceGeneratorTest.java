@@ -18,16 +18,14 @@ package ch.dvbern.lib.invoicegenerator;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import javax.annotation.Nonnull;
 
 import ch.dvbern.lib.invoicegenerator.dto.Alignment;
 import ch.dvbern.lib.invoicegenerator.dto.Invoice;
@@ -47,6 +45,7 @@ import ch.dvbern.lib.invoicegenerator.dto.position.RechnungsPositionColumnTitle;
 import ch.dvbern.lib.invoicegenerator.errors.InvoiceGeneratorException;
 import org.apache.pdfbox.io.MemoryUsageSetting;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -105,7 +104,7 @@ public class InvoiceGeneratorTest {
 	private final List<String> headerLines = Arrays.asList(
 		"DV Bern AG", "Nussbaumstrasse 21", "3006 Bern", "hello@kitadmin.ch");
 	private final PhraseRenderer header = new PhraseRenderer(headerLines, RECHTE_ADRESSE_LEFT_MARGIN_MM, 11, 80, 30);
-	private final InvoiceGeneratorConfiguration configuration = new InvoiceGeneratorConfiguration(Alignment.LEFT);
+	private final InvoiceGeneratorConfiguration configuration = new InvoiceGeneratorConfiguration("DVB", Alignment.LEFT);
 	private final List<String> adresse = TestDataUtil.toLines(TestDataUtil.DEBTOR);
 
 	private final List<Position> positionen = Arrays.asList(
@@ -128,7 +127,7 @@ public class InvoiceGeneratorTest {
 		initConfiguration(configuration);
 	}
 
-	private void initConfiguration(@Nonnull InvoiceGeneratorConfiguration config) {
+	private void initConfiguration(@NonNull InvoiceGeneratorConfiguration config) {
 		config.setZahlungsKonditionen(zahlungskonto);
 		config.setPp(PP_ADRESS_ZUSATZ);
 		config.setLogo(logo);
@@ -209,8 +208,8 @@ public class InvoiceGeneratorTest {
 		));
 	}
 
-	@Nonnull
-	private Invoice invoiceFittingOnePage(@Nonnull Einzahlungsschein einzahlungsschein) {
+	@NonNull
+	private Invoice invoiceFittingOnePage(@NonNull Einzahlungsschein einzahlungsschein) {
 		List<SummaryEntry> totalEntires = Arrays.asList(
 			new SummaryEntry("Subtotal", "CHF 3'488.00", false, true),
 			new SummaryEntry("Total", "CHF 3'488.00", true, true)
@@ -270,7 +269,7 @@ public class InvoiceGeneratorTest {
 	@Test
 	public void testTheCreationOfASampleInvoiceWithRightAddress()
 		throws InvoiceGeneratorException, IOException {
-		final InvoiceGeneratorConfiguration configurationRight = new InvoiceGeneratorConfiguration(Alignment.RIGHT);
+		final InvoiceGeneratorConfiguration configurationRight = new InvoiceGeneratorConfiguration("DVB", Alignment.RIGHT);
 		configurationRight.setPp(PP_ADRESS_ZUSATZ);
 		InvoiceGenerator invoiceGenerator = new InvoiceGenerator(configurationRight);
 		final Invoice invoice = new Invoice(columnTitle, TITEL, summary, einleitung, adresse, orangerEinzahlungsschein,
@@ -363,15 +362,14 @@ public class InvoiceGeneratorTest {
 		ByteArrayOutputStream outputStream = invoiceGenerator.generateInvoice(invoice);
 
 		String path = "target/StreamedInvoice.pdf";
-		FileOutputStream fileOutputStream = new FileOutputStream(path);
-		outputStream.writeTo(fileOutputStream);
+		outputStream.writeTo(Files.newOutputStream(Paths.get(path)));
 
 		assertThat(new File(path), anExistingFile());
 	}
 
 	@Test
 	public void testDummyESROnAllPages() throws Exception {
-		InvoiceGeneratorConfiguration config = new InvoiceGeneratorConfiguration(Alignment.RIGHT);
+		InvoiceGeneratorConfiguration config = new InvoiceGeneratorConfiguration("DVB", Alignment.RIGHT);
 		initConfiguration(config);
 		config.addDummyESR();
 		InvoiceGenerator invoiceGenerator = new InvoiceGenerator(config);
@@ -421,7 +419,7 @@ public class InvoiceGeneratorTest {
 
 	@Test
 	public void testFooter() throws Exception {
-		InvoiceGeneratorConfiguration config = new InvoiceGeneratorConfiguration(Alignment.LEFT);
+		InvoiceGeneratorConfiguration config = new InvoiceGeneratorConfiguration("DVB", Alignment.LEFT);
 		initConfiguration(config);
 
 		String expected = "XXX-Footer-XXX";
@@ -442,14 +440,14 @@ public class InvoiceGeneratorTest {
 		Invoice invoice = Invoice.createDemoInvoice(orangerEinzahlungsschein);
 
 		File file = createFile(invoiceGenerator, invoice, "target/InvoiceWithFooter.pdf");
-		String text = TestUtil.getText(new FileInputStream(file));
+		String text = TestUtil.getText(Files.newInputStream(file.toPath()));
 
 		assertThat(text, containsString(expected));
 	}
 
 	@Test
 	public void testMultipliedLeading() throws Exception {
-		InvoiceGeneratorConfiguration config = new InvoiceGeneratorConfiguration(Alignment.LEFT);
+		InvoiceGeneratorConfiguration config = new InvoiceGeneratorConfiguration("DVB", Alignment.LEFT);
 		initConfiguration(config);
 
 		config.setMultipliedLeadingH1(5);

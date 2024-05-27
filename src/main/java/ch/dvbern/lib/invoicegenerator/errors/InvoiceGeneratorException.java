@@ -15,7 +15,7 @@
  */
 package ch.dvbern.lib.invoicegenerator.errors;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Sämtliche innerhalb dieser Library geworfenen Exceptions erben von der InvoiceGeneratorException.
@@ -31,7 +31,7 @@ public class InvoiceGeneratorException extends Exception {
 	 *
 	 * @param message die Message
 	 */
-	public InvoiceGeneratorException(@Nonnull String message) {
+	public InvoiceGeneratorException(@NonNull String message) {
 		super(message);
 	}
 
@@ -41,7 +41,7 @@ public class InvoiceGeneratorException extends Exception {
 	 * @param message die Message
 	 * @param cause die Cause
 	 */
-	public InvoiceGeneratorException(@Nonnull String message, @Nonnull Throwable cause) {
+	public InvoiceGeneratorException(@NonNull String message, @NonNull Throwable cause) {
 		super(message, cause);
 	}
 }

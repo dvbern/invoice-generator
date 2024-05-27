@@ -13,8 +13,6 @@ package ch.dvbern.lib.invoicegenerator.dto.component;
 import java.io.IOException;
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
 import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.EinzahlungsscheinConfiguration;
 import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.QRCodeEinzahlungsschein;
@@ -31,6 +29,7 @@ import net.codecrete.qrbill.generator.GraphicsFormat;
 import net.codecrete.qrbill.generator.OutputSize;
 import net.codecrete.qrbill.generator.QRBill;
 import net.codecrete.qrbill.generator.QRBillValidationError;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Can be used to add a QR Code Receipt and Payment part to a page.
@@ -45,16 +44,16 @@ public class QRCodeComponent extends ComponentRenderer<SimpleConfiguration, QRCo
 	private float yOffset = 0;
 
 	public QRCodeComponent(
-		@Nonnull EinzahlungsscheinConfiguration config,
-		@Nonnull QRCodeEinzahlungsschein qrCodeEinzahlungsschein,
-		@Nonnull OnPage onPage) {
+		@NonNull EinzahlungsscheinConfiguration config,
+		@NonNull QRCodeEinzahlungsschein qrCodeEinzahlungsschein,
+		@NonNull OnPage onPage) {
 		super(new SimpleConfiguration(onPage), qrCodeEinzahlungsschein);
 
 		this.xOffset = config.getXOffset();
 		this.yOffset = config.getYOffset();
 	}
 
-	public static byte[] generateQRCode(@Nonnull QRCodeEinzahlungsschein qrCodeEinzahlungsschein) throws IOException,
+	public static byte[] generateQRCode(@NonNull QRCodeEinzahlungsschein qrCodeEinzahlungsschein) throws IOException,
 		QRBillValidationError {
 		// Set Rechnung format
 		Bill bill = new Bill();
@@ -84,7 +83,7 @@ public class QRCodeComponent extends ComponentRenderer<SimpleConfiguration, QRCo
 	}
 
 	@Override
-	public void render(@Nonnull PdfWriter pdfWriter, @Nonnull PdfElementGenerator pdfElementGenerator)
+	public void render(@NonNull PdfWriter pdfWriter, @NonNull PdfElementGenerator pdfElementGenerator)
 		throws InvoiceGeneratorRuntimeException {
 		Objects.requireNonNull(getPayload());
 
@@ -99,7 +98,7 @@ public class QRCodeComponent extends ComponentRenderer<SimpleConfiguration, QRCo
 
 	@Override
 	public void render(
-		@Nonnull PdfContentByte directContent,
-		@Nonnull PdfElementGenerator pdfElementGenerator) throws DocumentException {
+		@NonNull PdfContentByte directContent,
+		@NonNull PdfElementGenerator pdfElementGenerator) throws DocumentException {
 	}
 }

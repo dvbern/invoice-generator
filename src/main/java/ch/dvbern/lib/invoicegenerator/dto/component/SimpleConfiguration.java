@@ -16,27 +16,26 @@
 
 package ch.dvbern.lib.invoicegenerator.dto.component;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
+import org.jspecify.annotations.NonNull;
 
 public class SimpleConfiguration implements ComponentConfiguration {
 
-	@Nonnull
+	@NonNull
 	private OnPage onPage;
 
-	public SimpleConfiguration(@Nonnull OnPage onPage) {
+	public SimpleConfiguration(@NonNull OnPage onPage) {
 		this.onPage = onPage;
 	}
 
-	@Nonnull
+	@NonNull
 	@Override
 	public OnPage getOnPage() {
 		return this.onPage;
 	}
 
 	@Override
-	public void setOnPage(@Nonnull OnPage onPage) {
+	public void setOnPage(@NonNull OnPage onPage) {
 		this.onPage = onPage;
 	}
 }

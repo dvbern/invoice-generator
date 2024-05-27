@@ -22,8 +22,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.dto.component.Logo;
 import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.OrangerEinzahlungsschein;
 import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.QRCodeEinzahlungsschein;
@@ -31,8 +29,10 @@ import ch.dvbern.lib.invoicegenerator.errors.IllegalKontoException;
 import ch.dvbern.lib.invoicegenerator.errors.InvoiceGeneratorRuntimeException;
 import net.codecrete.qrbill.generator.Address;
 import net.codecrete.qrbill.generator.Language;
+import org.jspecify.annotations.NonNull;
 
 import static ch.dvbern.lib.invoicegenerator.dto.PageConfiguration.LEFT_PAGE_DEFAULT_MARGIN_MM;
+import static java.util.Objects.requireNonNull;
 
 public final class TestDataUtil {
 
@@ -58,14 +58,14 @@ public final class TestDataUtil {
 	private TestDataUtil() {
 	}
 
-	@Nonnull
+	@NonNull
 	public static Logo defaultLogo() {
-		byte[] image = TestUtil.readURL(InvoiceGeneratorTest.class.getResource("dvbern.png"));
+		byte[] image = TestUtil.readURL(requireNonNull(InvoiceGeneratorTest.class.getResource("dvbern.png")));
 
 		return new Logo(image, LEFT_PAGE_DEFAULT_MARGIN_MM, 10, 30);
 	}
 
-	@Nonnull
+	@NonNull
 	public static OrangerEinzahlungsschein orangerEinzahlungsschein() {
 		try {
 			List<String> creditor = toLines(CREDITOR);
@@ -77,13 +77,13 @@ public final class TestDataUtil {
 		}
 	}
 
-	@Nonnull
+	@NonNull
 	public static QRCodeEinzahlungsschein qrCodeEinzahlungsschein() {
 		return new QRCodeEinzahlungsschein(CREDITOR, QR_REFERENCE, AMOUNT, QR_IBAN, DEBTOR, null, Language.DE);
 	}
 
-	@Nonnull
-	public static List<String> toLines(@Nonnull Address address) {
+	@NonNull
+	public static List<String> toLines(@NonNull Address address) {
 		return Arrays.asList(
 			address.getName(),
 			address.getStreet() + ' ' + address.getHouseNo(),
@@ -91,13 +91,13 @@ public final class TestDataUtil {
 		);
 	}
 
-	@Nonnull
+	@NonNull
 	private static Address create(
-		@Nonnull String name,
-		@Nonnull String street,
-		@Nonnull String houseNumber,
-		@Nonnull String postcode,
-		@Nonnull String town) {
+		@NonNull String name,
+		@NonNull String street,
+		@NonNull String houseNumber,
+		@NonNull String postcode,
+		@NonNull String town) {
 
 		Address address = new Address();
 		address.setName(name);
@@ -110,8 +110,8 @@ public final class TestDataUtil {
 		return address;
 	}
 
-	@Nonnull
-	private static String stripSpaces(@Nonnull String input) {
+	@NonNull
+	private static String stripSpaces(@NonNull String input) {
 		return SPACE.matcher(input).replaceAll("");
 	}
 }

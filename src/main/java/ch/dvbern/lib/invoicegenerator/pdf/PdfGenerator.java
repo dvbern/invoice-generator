@@ -17,25 +17,24 @@ package ch.dvbern.lib.invoicegenerator.pdf;
 
 import java.io.OutputStream;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.dto.PageConfiguration;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPageEventHelper;
 import com.lowagie.text.pdf.PdfWriter;
+import org.jspecify.annotations.NonNull;
 
 public class PdfGenerator {
 
-	@Nonnull
+	@NonNull
 	private final Document document;
-	@Nonnull
+	@NonNull
 	private final PdfWriter writer;
-	@Nonnull
+	@NonNull
 	private final PdfContentByte content;
 
-	public PdfGenerator(@Nonnull final OutputStream outputStream, @Nonnull PageConfiguration configuration)
+	public PdfGenerator(@NonNull final OutputStream outputStream, @NonNull PageConfiguration configuration)
 		throws DocumentException {
 
 		document = new Document(
@@ -49,7 +48,7 @@ public class PdfGenerator {
 		content = writer.getDirectContent();
 	}
 
-	@Nonnull
+	@NonNull
 	public Document getDocument() {
 		return this.document;
 	}
@@ -58,7 +57,7 @@ public class PdfGenerator {
 		document.close();
 	}
 
-	public void setPageEvent(@Nonnull PdfPageEventHelper helper) {
+	public void setPageEvent(@NonNull PdfPageEventHelper helper) {
 		this.writer.setPageEvent(helper);
 	}
 
@@ -66,7 +65,7 @@ public class PdfGenerator {
 		return writer.getVerticalPosition(false);
 	}
 
-	@Nonnull
+	@NonNull
 	public PdfContentByte getDirectContent() {
 		return content;
 	}

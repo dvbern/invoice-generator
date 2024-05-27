@@ -20,8 +20,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.dto.Alignment;
 import ch.dvbern.lib.invoicegenerator.dto.Invoice;
 import ch.dvbern.lib.invoicegenerator.dto.InvoiceGeneratorConfiguration;
@@ -32,6 +30,7 @@ import ch.dvbern.lib.invoicegenerator.dto.fonts.FontBuilder;
 import ch.dvbern.lib.invoicegenerator.dto.fonts.FontModifier;
 import ch.dvbern.lib.invoicegenerator.dto.position.RechnungsPosition;
 import ch.dvbern.lib.invoicegenerator.errors.InvoiceGeneratorException;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 
 import static ch.dvbern.lib.invoicegenerator.TestUtil.createFile;
@@ -51,7 +50,7 @@ public class CustomerInvoicesTest {
 			"031 378 24 24 • hallo@dvbern.ch • www.dvbern.ch");
 		final List<String> zahlungskonto = Arrays.asList("Zahlungsverbindung:", "Berner Kantonalbank AG",
 			"IBAN: CH44 0079 0016 2683 1167");
-		final InvoiceGeneratorConfiguration configuration = new InvoiceGeneratorConfiguration(Alignment.RIGHT);
+		final InvoiceGeneratorConfiguration configuration = new InvoiceGeneratorConfiguration("DVB", Alignment.RIGHT);
 
 		final PhraseRenderer footer = new PhraseRenderer(
 			footerLines,
@@ -90,7 +89,7 @@ public class CustomerInvoicesTest {
 		final PhraseRenderer header = new PhraseRenderer(headerLines, RECHTE_ADRESSE_LEFT_MARGIN_MM, 18, 80, 40);
 		final List<String> zahlungskonto = Arrays.asList("Zahlungsverbindung:", "Postfinance",
 			"Konto-Nr.: 30-12345-0", "IBAN: CH79 0000 0000 0000 0000 0", "SWIFT-Code/BIC: POFICHBEXXX");
-		final InvoiceGeneratorConfiguration configuration = new InvoiceGeneratorConfiguration(Alignment.RIGHT);
+		final InvoiceGeneratorConfiguration configuration = new InvoiceGeneratorConfiguration("DVB", Alignment.RIGHT);
 		configuration.setLogo(logo);
 		configuration.setHeader(header);
 		configuration.setZahlungsKonditionen(zahlungskonto);
@@ -113,7 +112,7 @@ public class CustomerInvoicesTest {
 		final List<String> headerLines = Arrays.asList("DV Bern AG", "Nussbaumstrasse 21", "CH-3000 Bern 22",
 			"http://www.dvbern.ch");
 		final PhraseRenderer header = new PhraseRenderer(headerLines, RECHTE_ADRESSE_LEFT_MARGIN_MM, 10, 80, 40);
-		final InvoiceGeneratorConfiguration configuration = new InvoiceGeneratorConfiguration(Alignment.RIGHT);
+		final InvoiceGeneratorConfiguration configuration = new InvoiceGeneratorConfiguration("DVB", Alignment.RIGHT);
 		configuration.setLogo(logo);
 		configuration.setHeader(header);
 		configuration.setPp("P.P. 3000 Bern 1 POST CH AG");
@@ -129,7 +128,7 @@ public class CustomerInvoicesTest {
 			anExistingFile());
 	}
 
-	private void replacePositionenWith30SimplePositionen(@Nonnull Invoice invoice) {
+	private void replacePositionenWith30SimplePositionen(@NonNull Invoice invoice) {
 		invoice.getPositionen().clear();
 
 		IntStream.range(0, 30)

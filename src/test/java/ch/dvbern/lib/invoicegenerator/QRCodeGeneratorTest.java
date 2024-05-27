@@ -17,11 +17,10 @@
 package ch.dvbern.lib.invoicegenerator;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-
-import javax.annotation.Nonnull;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
 import ch.dvbern.lib.invoicegenerator.dto.PageConfiguration;
@@ -37,6 +36,7 @@ import net.codecrete.qrbill.generator.QRBillValidationError;
 import net.codecrete.qrbill.generator.ValidationMessage;
 import net.codecrete.qrbill.generator.ValidationMessage.Type;
 import net.codecrete.qrbill.generator.ValidationResult;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 
 import static com.spotify.hamcrest.pojo.IsPojo.pojo;
@@ -55,12 +55,10 @@ public class QRCodeGeneratorTest {
 
 		ByteArrayOutputStream outputStream = create(TestDataUtil.QR_CODE_EINZAHLUNGSSCHEIN);
 
-		String path = "target/QRCode.pdf";
-		FileOutputStream fileOutputStream = new FileOutputStream(path);
-		outputStream.writeTo(fileOutputStream);
+		Path path = Paths.get("target/QRCode.pdf");
+		outputStream.writeTo(Files.newOutputStream(path));
 
-		FileInputStream fileInputStream = new FileInputStream(path);
-		String text = TestUtil.getText(fileInputStream);
+		String text = TestUtil.getText(Files.newInputStream(path));
 
 		assertThat(text, allOf(
 			containsString(TestDataUtil.QR_IBAN),
@@ -81,7 +79,6 @@ public class QRCodeGeneratorTest {
 			null,
 			null);
 
-		//noinspection ResultOfMethodCallIgnored
 		InvoiceGeneratorRuntimeException ex =
 			assertThrows(InvoiceGeneratorRuntimeException.class, () -> create(einzahlungsschein));
 
@@ -97,8 +94,8 @@ public class QRCodeGeneratorTest {
 			));
 	}
 
-	@Nonnull
-	private ByteArrayOutputStream create(@Nonnull QRCodeEinzahlungsschein einzahlungsschein)
+	@NonNull
+	private ByteArrayOutputStream create(@NonNull QRCodeEinzahlungsschein einzahlungsschein)
 		throws QRBillValidationError {
 
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

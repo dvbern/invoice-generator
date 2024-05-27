@@ -20,9 +20,6 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.function.Consumer;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import ch.dvbern.lib.invoicegenerator.dto.Alignment;
 import ch.dvbern.lib.invoicegenerator.dto.Invoice;
 import ch.dvbern.lib.invoicegenerator.dto.InvoiceGeneratorConfiguration;
@@ -41,6 +38,8 @@ import com.lowagie.text.Element;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPTable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.ESR_HEIGHT_WITH_MARGIN;
 import static com.lowagie.text.PageSize.A4;
@@ -61,7 +60,7 @@ public class InvoiceGenerator extends BaseGenerator<InvoiceGeneratorConfiguratio
 	 * @param configuration Die Konfiguration beinhaltet das Layout der Rechnungen (Header, Footer, Zahlungskonto, ...)
 	 * sowie statische Elemente, die bei sämtlichen Rechnungen gleich bleiben, z.B. Zahlungskonditionen
 	 */
-	public InvoiceGenerator(@Nonnull final InvoiceGeneratorConfiguration configuration) {
+	public InvoiceGenerator(@NonNull final InvoiceGeneratorConfiguration configuration) {
 		super(configuration);
 	}
 
@@ -73,8 +72,8 @@ public class InvoiceGenerator extends BaseGenerator<InvoiceGeneratorConfiguratio
 	 * @throws InvoiceGeneratorException Wird bei bei technischen Problemen geworfen, z.B. falls das Logo nicht
 	 *                                   geladen werden kann
 	 */
-	@Nonnull
-	public ByteArrayOutputStream generateInvoice(@Nonnull Invoice invoice) throws InvoiceGeneratorException {
+	@NonNull
+	public ByteArrayOutputStream generateInvoice(@NonNull Invoice invoice) throws InvoiceGeneratorException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		generateInvoice(out, invoice);
 
@@ -89,7 +88,7 @@ public class InvoiceGenerator extends BaseGenerator<InvoiceGeneratorConfiguratio
 	 * @throws InvoiceGeneratorException Wird bei bei technischen Problemen geworfen, z.B. falls das Logo nicht
 	 *                                   geladen werden kann
 	 */
-	public void generateInvoice(@Nonnull OutputStream outputStream, @Nonnull Invoice invoice)
+	public void generateInvoice(@NonNull OutputStream outputStream, @NonNull Invoice invoice)
 		throws InvoiceGeneratorException {
 
 		InvoiceGeneratorConfiguration configuration = getConfiguration();
@@ -127,8 +126,8 @@ public class InvoiceGenerator extends BaseGenerator<InvoiceGeneratorConfiguratio
 	}
 
 	public void addTotalTable(
-		@Nonnull Invoice invoice,
-		@Nonnull Document document,
+		@NonNull Invoice invoice,
+		@NonNull Document document,
 		float spaceBefore) throws DocumentException {
 
 		Paragraph paragraph = getPdfElementGenerator().createParagraph(getConfiguration().getZahlungsKonditionen());
@@ -141,8 +140,8 @@ public class InvoiceGenerator extends BaseGenerator<InvoiceGeneratorConfiguratio
 		document.add(totalTable);
 	}
 
-	@Nonnull
-	public Consumer<PdfContentByte> summaryTableGenerator(@Nonnull List<SummaryEntry> summary) {
+	@NonNull
+	public Consumer<PdfContentByte> summaryTableGenerator(@NonNull List<SummaryEntry> summary) {
 		return directContent -> {
 			try {
 				Alignment summaryTablePosition = getConfiguration().getSummaryTablePosition();
@@ -161,7 +160,7 @@ public class InvoiceGenerator extends BaseGenerator<InvoiceGeneratorConfiguratio
 		};
 	}
 
-	public void addSummaryTable(@Nonnull PdfContentByte directContent, @Nonnull PdfPTable summaryTable) {
+	public void addSummaryTable(@NonNull PdfContentByte directContent, @NonNull PdfPTable summaryTable) {
 		final float leftX = getConfiguration().getLeftPageMarginInPoints();
 		final float pageHeight = getConfiguration().getPageSize().getHeight();
 		final float topLeftYPosition = pageHeight - millimetersToPoints(getConfiguration().getTopAddressMarginInMM());
@@ -169,7 +168,7 @@ public class InvoiceGenerator extends BaseGenerator<InvoiceGeneratorConfiguratio
 		summaryTable.writeSelectedRows(0, -1, leftX, topLeftYPosition, directContent);
 	}
 
-	public boolean isNewPageRequired(@Nonnull PdfGenerator pdfGenerator, @Nonnull Invoice invoice) {
+	public boolean isNewPageRequired(@NonNull PdfGenerator pdfGenerator, @NonNull Invoice invoice) {
 		if (invoice.getEinzahlungsschein() == null) {
 			return false;
 		}
@@ -185,7 +184,7 @@ public class InvoiceGenerator extends BaseGenerator<InvoiceGeneratorConfiguratio
 			&& pdfGenerator.getDocument().getPageNumber() == 0;
 	}
 
-	public void createKonditionenIfExist(@Nonnull Document document, @Nullable List<String> konditionen)
+	public void createKonditionenIfExist(@NonNull Document document, @Nullable List<String> konditionen)
 		throws DocumentException {
 
 		if (konditionen != null) {
@@ -196,7 +195,7 @@ public class InvoiceGenerator extends BaseGenerator<InvoiceGeneratorConfiguratio
 		}
 	}
 
-	public void createIntroIfExist(@Nonnull Document document, @Nullable List<String> einleitung)
+	public void createIntroIfExist(@NonNull Document document, @Nullable List<String> einleitung)
 		throws DocumentException {
 
 		if (einleitung != null) {
@@ -206,14 +205,14 @@ public class InvoiceGenerator extends BaseGenerator<InvoiceGeneratorConfiguratio
 		}
 	}
 
-	public void addNonnullElement(@Nonnull Document document, @Nullable Element element) throws DocumentException {
+	public void addNonnullElement(@NonNull Document document, @Nullable Element element) throws DocumentException {
 		if (element != null) {
 			document.add(element);
 		}
 	}
 
-	@Nonnull
-	public PdfPTable createRechnungspositionsTabelle(@Nonnull Invoice invoice) throws DocumentException {
+	@NonNull
+	public PdfPTable createRechnungspositionsTabelle(@NonNull Invoice invoice) throws DocumentException {
 		return getPdfElementGenerator()
 			.createRechnungspositionsTabelle(invoice.getRechnungsPositionColumnTitle(), invoice.getPositionen());
 	}

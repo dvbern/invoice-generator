@@ -16,16 +16,14 @@
 package ch.dvbern.lib.invoicegenerator;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import javax.annotation.Nonnull;
 
 import ch.dvbern.lib.invoicegenerator.dto.Alignment;
 import ch.dvbern.lib.invoicegenerator.dto.InvoiceGeneratorConfiguration;
@@ -37,6 +35,7 @@ import ch.dvbern.lib.invoicegenerator.pdf.PdfElementGenerator;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfGenerator;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfContentByte;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -65,7 +64,7 @@ public class OrangerEinzahlungsscheinGeneratorTest {
 
 	private final List<String> einzahlungFuerBankLong = LONG_TEXT;
 	private final List<String> zugunstenVonLong = LONG_TEXT;
-	private final InvoiceGeneratorConfiguration configuration = new InvoiceGeneratorConfiguration(Alignment.LEFT);
+	private final InvoiceGeneratorConfiguration configuration = new InvoiceGeneratorConfiguration("DVB", Alignment.LEFT);
 	private final PdfElementGenerator pdfElementGenerator = new PdfElementGenerator(configuration);
 	private final EinzahlungsscheinConfiguration defaultConfig = createConfig();
 
@@ -154,11 +153,11 @@ public class OrangerEinzahlungsscheinGeneratorTest {
 	}
 
 	private void create(
-		@Nonnull String path,
-		@Nonnull OrangerEinzahlungsschein einzahlungsschein,
-		@Nonnull EinzahlungsscheinConfiguration config) throws FileNotFoundException {
+		@NonNull String path,
+		@NonNull OrangerEinzahlungsschein einzahlungsschein,
+		@NonNull EinzahlungsscheinConfiguration config) throws IOException {
 
-		PdfGenerator generator = new PdfGenerator(new FileOutputStream(path), configuration);
+		PdfGenerator generator = new PdfGenerator(Files.newOutputStream(Paths.get(path)), configuration);
 
 		PdfContentByte content = generator.getDirectContent();
 		createEinzahlungsschein(content, pdfElementGenerator, config, einzahlungsschein);
@@ -167,7 +166,7 @@ public class OrangerEinzahlungsscheinGeneratorTest {
 		Assertions.assertTrue(new File(path).isFile());
 	}
 
-	@Nonnull
+	@NonNull
 	private EinzahlungsscheinConfiguration createConfig() {
 		EinzahlungsscheinConfiguration config = new EinzahlungsscheinConfiguration();
 		config.setAddEsrBackgroundImage(true);

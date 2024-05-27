@@ -19,25 +19,24 @@ package ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
 import ch.dvbern.lib.invoicegenerator.dto.component.ComponentRenderer;
 import ch.dvbern.lib.invoicegenerator.dto.component.QRCodeComponent;
 import ch.dvbern.lib.invoicegenerator.dto.component.SimpleConfiguration;
 import net.codecrete.qrbill.generator.Address;
 import net.codecrete.qrbill.generator.Language;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public class QRCodeEinzahlungsschein extends Einzahlungsschein {
 
-	@Nonnull
+	@NonNull
 	private final Address einzahlungFuer;
 
-	@Nonnull
+	@NonNull
 	private final Address einzahlungVon;
 
-	@Nonnull
+	@NonNull
 	private Language language = Language.DE;
 
 	@Nullable
@@ -58,11 +57,11 @@ public class QRCodeEinzahlungsschein extends Einzahlungsschein {
 	 * @param language optionale QR Rechnung Sprache - Default ist "DE"
 	 */
 	public QRCodeEinzahlungsschein(
-		@Nonnull Address einzahlungFuer,
-		@Nonnull BigInteger referenzNr,
-		@Nonnull BigDecimal betrag,
-		@Nonnull String konto,
-		@Nonnull Address einbezahltVon,
+		@NonNull Address einzahlungFuer,
+		@NonNull BigInteger referenzNr,
+		@NonNull BigDecimal betrag,
+		@NonNull String konto,
+		@NonNull Address einbezahltVon,
 		@Nullable String additionalText,
 		@Nullable Language language) {
 		super(EinzahlungType.QR_CODE, referenzNr, betrag, konto);
@@ -75,15 +74,15 @@ public class QRCodeEinzahlungsschein extends Einzahlungsschein {
 		}
 	}
 
-	@Nonnull
+	@NonNull
 	@Override
 	public ComponentRenderer<SimpleConfiguration, ? extends Einzahlungsschein> componentRenderer(
-		@Nonnull EinzahlungsscheinConfiguration configuration,
-		@Nonnull OnPage onPage) {
+		@NonNull EinzahlungsscheinConfiguration configuration,
+		@NonNull OnPage onPage) {
 		return new QRCodeComponent(configuration, this, onPage);
 	}
 
-	@Nonnull
+	@NonNull
 	public Language getLanguage() {
 		return language;
 	}
@@ -93,12 +92,12 @@ public class QRCodeEinzahlungsschein extends Einzahlungsschein {
 		return additionalText;
 	}
 
-	@Nonnull
+	@NonNull
 	public Address getEinzahlungFuer() {
 		return einzahlungFuer;
 	}
 
-	@Nonnull
+	@NonNull
 	public Address getEinzahlungVon() {
 		return einzahlungVon;
 	}

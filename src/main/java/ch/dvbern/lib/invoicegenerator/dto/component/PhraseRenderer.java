@@ -18,15 +18,14 @@ package ch.dvbern.lib.invoicegenerator.dto.component;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import ch.dvbern.lib.invoicegenerator.dto.Alignment;
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
 import ch.dvbern.lib.invoicegenerator.dto.PageConfiguration;
 import com.lowagie.text.Font;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.pdf.ColumnText;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.DEFAULT_MULTIPLIED_LEADING;
 import static ch.dvbern.lib.invoicegenerator.pdf.PdfUtilities.joinListToString;
@@ -36,21 +35,21 @@ import static com.lowagie.text.Element.ALIGN_RIGHT;
 public class PhraseRenderer extends TextComponentRenderer<PhraseComponent, List<String>> {
 
 	public PhraseRenderer(
-		@Nonnull List<String> lines,
+		@NonNull List<String> lines,
 		float leftInMm,
 		float topInMm,
 		float widthInMm,
 		float heightInMm,
-		@Nonnull OnPage onPage,
+		@NonNull OnPage onPage,
 		@Nullable Font font,
-		@Nonnull Alignment alignment,
+		@NonNull Alignment alignment,
 		float leading) {
 
 		super(new PhraseComponent(leftInMm, topInMm, widthInMm, heightInMm, onPage, font, alignment, leading), lines);
 	}
 
 	public PhraseRenderer(
-		@Nonnull List<String> lines,
+		@NonNull List<String> lines,
 		float leftInMm,
 		float topInMm,
 		float widthInMm,
@@ -67,7 +66,7 @@ public class PhraseRenderer extends TextComponentRenderer<PhraseComponent, List<
 	}
 
 	public PhraseRenderer(
-		@Nonnull List<String> lines,
+		@NonNull List<String> lines,
 		float leftInMm,
 		float topInMm,
 		float widthInMm,
@@ -87,15 +86,15 @@ public class PhraseRenderer extends TextComponentRenderer<PhraseComponent, List<
 		setPayload(lines);
 	}
 
-	public PhraseRenderer(@Nonnull PhraseComponent componentConfiguration) {
+	public PhraseRenderer(@NonNull PhraseComponent componentConfiguration) {
 		super(componentConfiguration);
 	}
 
 	@Override
 	protected void render(
-		@Nonnull ColumnText columnText,
-		@Nonnull List<String> payload,
-		@Nonnull PageConfiguration pageConfiguration) {
+		@NonNull ColumnText columnText,
+		@NonNull List<String> payload,
+		@NonNull PageConfiguration pageConfiguration) {
 
 		PhraseComponent componentConfiguration = getComponentConfiguration();
 

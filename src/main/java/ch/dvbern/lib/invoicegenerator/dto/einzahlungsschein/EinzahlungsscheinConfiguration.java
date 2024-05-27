@@ -18,12 +18,11 @@ package ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein;
 
 import java.util.StringJoiner;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.strategy.einzahlungfuer.EinzahlungFuerBankStrategy;
 import ch.dvbern.lib.invoicegenerator.strategy.einzahlungfuer.EinzahlungFuerPostStrategy;
 import ch.dvbern.lib.invoicegenerator.strategy.einzahlungfuer.EinzahlungFuerStrategy;
 import com.lowagie.text.Utilities;
+import org.jspecify.annotations.NonNull;
 
 public class EinzahlungsscheinConfiguration {
 
@@ -40,8 +39,8 @@ public class EinzahlungsscheinConfiguration {
 		this.yOffset = -Utilities.millimetersToPoints(topOffsetInMm);
 	}
 
-	@Nonnull
-	public EinzahlungFuerStrategy createEinzahlungFuerStrategy(@Nonnull OrangerEinzahlungsschein einzahlungsschein) {
+	@NonNull
+	public EinzahlungFuerStrategy createEinzahlungFuerStrategy(@NonNull OrangerEinzahlungsschein einzahlungsschein) {
 		return (einzahlungsschein instanceof OrangerEinzahlungsscheinBank) ?
 			new EinzahlungFuerBankStrategy(xOffset, yOffset) :
 			new EinzahlungFuerPostStrategy(xOffset, yOffset);
@@ -72,7 +71,7 @@ public class EinzahlungsscheinConfiguration {
 	}
 
 	@Override
-	@Nonnull
+	@NonNull
 	public String toString() {
 		return new StringJoiner(", ", EinzahlungsscheinConfiguration.class.getSimpleName() + '[', "]")
 			.add("xOffset=" + xOffset)

@@ -17,9 +17,8 @@ package ch.dvbern.lib.invoicegenerator.dto.component;
 
 import java.util.StringJoiner;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.dto.OnPage;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Eine abstrakte Text-Komponente, welches absolut positioniert werden kann.
@@ -28,7 +27,7 @@ import ch.dvbern.lib.invoicegenerator.dto.OnPage;
  */
 public abstract class TextComponent implements ComponentConfiguration {
 
-	@Nonnull
+	@NonNull
 	private OnPage onPage;
 	private float leftInMm;
 	private float topInMm;
@@ -40,7 +39,7 @@ public abstract class TextComponent implements ComponentConfiguration {
 		float topInMm,
 		float widthInMm,
 		float heightInMm,
-		@Nonnull OnPage onPage) {
+		@NonNull OnPage onPage) {
 
 		this.leftInMm = leftInMm;
 		this.topInMm = topInMm;
@@ -49,19 +48,19 @@ public abstract class TextComponent implements ComponentConfiguration {
 		this.onPage = onPage;
 	}
 
-	@Nonnull
+	@NonNull
 	@Override
 	public OnPage getOnPage() {
 		return onPage;
 	}
 
 	@Override
-	public void setOnPage(@Nonnull OnPage onPage) {
+	public void setOnPage(@NonNull OnPage onPage) {
 		this.onPage = onPage;
 	}
 
 	@Override
-	@Nonnull
+	@NonNull
 	public String toString() {
 		return new StringJoiner(", ", TextComponent.class.getSimpleName() + '[', "]")
 			.add("leftInMm=" + leftInMm)

@@ -15,13 +15,12 @@
  */
 package ch.dvbern.lib.invoicegenerator.strategy.einzahlungfuer;
 
-import javax.annotation.Nonnull;
-
 import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.OrangerEinzahlungsschein;
 import ch.dvbern.lib.invoicegenerator.dto.einzahlungsschein.OrangerEinzahlungsscheinBank;
 import ch.dvbern.lib.invoicegenerator.pdf.PdfElementGenerator;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfContentByte;
+import org.jspecify.annotations.NonNull;
 
 import static ch.dvbern.lib.invoicegenerator.OrangerEinzahlungsscheinConstants.EINZAHLUNG_FUER_BANK_1_HEIGHT;
 import static ch.dvbern.lib.invoicegenerator.OrangerEinzahlungsscheinConstants.EINZAHLUNG_FUER_BANK_1_WIDTH;
@@ -52,7 +51,7 @@ public class EinzahlungFuerBankStrategy extends EinzahlungFuerStrategy {
 		this.yOffset = yOffset;
 	}
 
-	@Nonnull
+	@NonNull
 	@Override
 	public String getEsrBackgroundImageName() {
 		return EinzahlungFuerBankStrategy.ESR_IMG;
@@ -60,9 +59,9 @@ public class EinzahlungFuerBankStrategy extends EinzahlungFuerStrategy {
 
 	@Override
 	public void writeEinzahlungFuer(
-		@Nonnull PdfContentByte directContent,
-		@Nonnull PdfElementGenerator pdfElementGenerator,
-		@Nonnull OrangerEinzahlungsschein orangerEinzahlungsschein)
+		@NonNull PdfContentByte directContent,
+		@NonNull PdfElementGenerator pdfElementGenerator,
+		@NonNull OrangerEinzahlungsschein orangerEinzahlungsschein)
 		throws DocumentException {
 
 		if (orangerEinzahlungsschein instanceof OrangerEinzahlungsscheinBank) {
